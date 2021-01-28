@@ -1,3 +1,34 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h1>Hello, @_userName!</h1>
+
+@if (_claims.Count() > 0)
+{
+    <ul>
+        @foreach (var claim in _claims)
+        {
+            <li>@claim.Type: @claim.Value</li>
+        }
+    </ul>
+}
+
+@code {
+    private string _userName;
+    private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _claims = user.Claims;
+            _userName = _claims.Take(2).Last().Value;
+        }
+    }
+}

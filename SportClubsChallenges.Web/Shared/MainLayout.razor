@@ -6,7 +6,11 @@
 
 <div class="main">
     <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/en-us/aspnet/" target="_blank">About</a>
+        <AuthorizeView>
+            <Authorized>
+                Hello @(context.User?.Identity?.Name ?? context.User.Claims.Take(2).Last().Value)!
+            </Authorized>
+        </AuthorizeView>
     </div>
 
     <div class="content px-4">

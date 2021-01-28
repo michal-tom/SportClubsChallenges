@@ -11,6 +11,8 @@ namespace SportClubsChallenges.Web
     using SportClubsChallenges.Domain.Services;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Domain.Mappings;
+    using Microsoft.AspNetCore.Authentication.Cookies;
+    using AspNet.Security.OAuth.Strava;
 
     public class Startup
     {
@@ -23,6 +25,38 @@ namespace SportClubsChallenges.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = StravaAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddStrava(options =>
+            {
+                options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.ClientId = "60033";
+                options.ClientSecret = "45b4066142165ecd3dee2d28556da83d77081bea";
+                options.Scope.Add("activity:read");
+                options.Scope.Add("activity:read_all");
+                options.Scope.Add("profile:read_all");
+                options.SaveTokens = true;
+
+                //options.Events.OnTicketReceived = ctx =>
+                //{
+                //    List<AuthenticationToken> tokens = ctx.Properties.GetTokens().ToList();
+
+                //    tokens.Add(new AuthenticationToken()
+                //    {
+                //        Name = "TicketCreated",
+                //        Value = DateTime.UtcNow.ToString()
+                //    });
+
+                //    ctx.Properties.StoreTokens(tokens);
+
+                //    return Task.CompletedTask;
+                //};
+            });
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
@@ -32,17 +66,7 @@ namespace SportClubsChallenges.Web
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IClubService, ClubService>();
-
             services.AddScoped<IChallengeService, ChallengeService>();
-
-            //services.AddDbContext<DataAccess.AppContext>(options =>
-            //              options.UseSqlServer(
-            //                  Configuration.GetConnectionString("DefaultConnection2")));
-
-            ////Article service  
-            //services.AddScoped<IArticleManager, ArticleManager>();
-            ////Register dapper in scope  
-            //services.AddScoped<IDapperManager, DapperManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +86,10 @@ namespace SportClubsChallenges.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
