@@ -1,0 +1,96 @@
+﻿@page "/addChallenge"
+
+@inject IChallengeService challengeService
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+
+<h1>
+    Add Challenge
+</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="Club" class="control-label">Club</label>
+                <select for="Club" class="form-control selectpicker" required @bind="challenge.ClubId">
+                    @foreach (var club in clubs)
+                    {
+                        <option value="@club.Key">@club.Value</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">Name</label>
+                <input for="Name" class="form-control" required @bind-value="@challenge.Name" />
+            </div>
+            <div class="form-group">
+                <label for="Description" class="control-label">Description</label>
+                <textarea for="Description" class="form-control" required @bind="@challenge.Description" />
+            </div>
+            <div class="form-group">
+                <label for="StartDate" class="control-label">Start Date</label>
+                <input for="StartDate" class="form-control" type="date" required @bind-value="@challenge.StartDate" />
+            </div>
+            <div class="form-group">
+                <label for="EndDate" class="control-label">End Date</label>
+                <input for="EndDate" class="form-control" type="date" required @bind-value="@challenge.EndDate" />
+            </div>
+            <div class="form-group">
+                <label for="ChallengeType" class="control-label">Challenge type</label>
+                <select for="ChallengeType" class="form-control selectpicker" required @bind="@challenge.ChallengeType">
+                    @foreach (var type in challengeTypes)
+                    {
+                        <option value="@type.Key">@type.Value</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ActivityTypesIds" class="control-label">Activity types</label>
+                <select for="ActivityTypesIds" multiple="multiple" class="form-control selectpicker" required>
+                    @foreach (var type in activityTypes)
+                    {
+                        <option value="@type.Key">@type.Value</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="PreventManualActivities" class="control-label">Prevent manual activities</label>
+                <input for="PreventManualActivities" class="form-control" type="checkbox" required @bind-value="@challenge.PreventManualActivities" />
+            </div>
+            <div class="form-group">
+                <label for="IncludeOnlyGpsActivities" class="control-label">Prevent non-GPS activities</label>
+                <input for="IncludeOnlyGpsActivities" class="form-control" type="checkbox" required @bind-value="@challenge.IncludeOnlyGpsActivities" />
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" @onclick="() => CreateChallenge()">Save</button>
+                <button type="button" class="btn btn-danger" @onclick="() => cancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@code {
+
+    ChallengeDto challenge = new ChallengeDto();
+    Dictionary<long, string> clubs = new Dictionary<long, string>();
+    Dictionary<byte, string> activityTypes = new Dictionary<byte, string>();
+    Dictionary<byte, string> challengeTypes = new Dictionary<byte, string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        clubs = await challengeService.GetAvailableClubs();
+        activityTypes = await challengeService.GetAvailableActivityTypes();
+        challengeTypes = challengeService.GetAvailableChallengeTypes();
+    }
+
+    protected async Task CreateChallenge()
+    {
+        await challengeService.AddChallenge(challenge);
+        navigationManager.NavigateTo("/challenges");
+    }
+
+    void cancel()
+    {
+        navigationManager.NavigateTo("/challenges");
+    }
+}

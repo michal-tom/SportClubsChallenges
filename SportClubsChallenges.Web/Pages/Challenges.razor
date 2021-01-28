@@ -1,0 +1,92 @@
+﻿@page "/challenges"
+
+@inject IChallengeService challengeService
+
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<style>
+    .sort-th {
+        cursor: pointer;
+    }
+
+    .fa {
+        float: right;
+    }
+
+    .btn-custom {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 2px solid #000;
+        margin: 0px 5px 0px 5px;
+    }
+</style>
+
+<div>
+    <a class="btn btn-primary" href='/addChallenge'>Add new challenge</a>
+</div>
+<br />
+
+@if (challengesModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th class="sort-th">
+                    Id
+                </th>
+                <th class="sort-th">
+                    Name
+                </th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (challengesModel == null || challengesModel.Count == 0)
+            {
+                <tr>
+                    <td colspan="3">
+                        No Records to display
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var challenge in challengesModel)
+                {
+                    <tr>
+                        <td>@challenge.Id</td>
+                        <td>@challenge.Name</td>
+                        <td>
+                            <a class="btn btn-primary" href='/editArticle/@challenge.Id'>Edit</a>  |
+                            <a class="btn btn-danger" @onclick="() => DeleteClub(challenge.Id)">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+}
+
+@code {
+
+    List<ChallengeDto> challengesModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        challengesModel = await challengeService.GetAllChallenges();
+    }
+
+    protected async Task DeleteClub(long id)
+    {
+        await challengeService.DeleteChallenge(id);
+        challengesModel = await challengeService.GetAllChallenges();
+    }
+}
