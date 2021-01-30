@@ -1,17 +1,19 @@
 ﻿@page "/"
 
 @using System.Security.Claims
-@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Http
 
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IHttpContextAccessor httpContextAccessor
 
 <div>
     <AuthorizeView>
         <Authorized>
-            <h1>Hello, @_userName!</h1>
+            <h2>Hello, @_userName!</h2>
 
             @if (_claims.Count() > 0)
             {
+                <br />
+                <h4>Your claims:</h4>
                 <ul>
                     @foreach (var claim in _claims)
                     {
@@ -20,8 +22,11 @@
                 </ul>
             }
         </Authorized>
+        <Authorizing>
+            <h2>Authentication in progress</h2>
+        </Authorizing>
         <NotAuthorized>
-            <h1>Please log in!</h1>
+            <h2>Please log in!</h2>
         </NotAuthorized>
     </AuthorizeView>
 </div>
@@ -32,8 +37,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
+        var user = httpContextAccessor.HttpContext.User;
 
         if (user.Identity.IsAuthenticated)
         {

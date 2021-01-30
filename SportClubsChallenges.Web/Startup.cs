@@ -13,6 +13,12 @@ namespace SportClubsChallenges.Web
     using SportClubsChallenges.Domain.Mappings;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using AspNet.Security.OAuth.Strava;
+    using System;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authentication;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
 
     public class Startup
     {
@@ -41,21 +47,32 @@ namespace SportClubsChallenges.Web
                 options.Scope.Add("profile:read_all");
                 options.SaveTokens = true;
 
-                //options.Events.OnTicketReceived = ctx =>
-                //{
-                //    List<AuthenticationToken> tokens = ctx.Properties.GetTokens().ToList();
+                options.Events.OnTicketReceived = async ctx =>
+                {
+                    var user = (ClaimsIdentity) ctx.Principal.Identity;
+                    if (user.IsAuthenticated)
+                    {
+                        var athleteService = ctx.HttpContext.RequestServices.GetService<IAthleteService>();
+                        await athleteService.OnAthleteLogin(user, ctx.Properties.GetTokens());
+                    }
 
-                //    tokens.Add(new AuthenticationToken()
-                //    {
-                //        Name = "TicketCreated",
-                //        Value = DateTime.UtcNow.ToString()
-                //    });
+                    return;
 
-                //    ctx.Properties.StoreTokens(tokens);
+                    //List<AuthenticationToken> tokens = ctx.Properties.GetTokens().ToList();
 
-                //    return Task.CompletedTask;
-                //};
+                    //tokens.Add(new AuthenticationToken()
+                    //{
+                    //    Name = "TicketCreated",
+                    //    Value = DateTime.UtcNow.ToString()
+                    //});
+
+                    //ctx.Properties.StoreTokens(tokens);
+
+                    //return Task.CompletedTask;
+                };
             });
+
+            services.AddHttpContextAccessor();
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -65,8 +82,12 @@ namespace SportClubsChallenges.Web
             services.AddDbContext<SportClubsChallengesDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddHttpClient<StravaTokenService>();
+
             services.AddScoped<IClubService, ClubService>();
             services.AddScoped<IChallengeService, ChallengeService>();
+            services.AddScoped<IAthleteService, AthleteService>();
+            services.AddScoped<IStravaTokenService, StravaTokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,7 +109,6 @@ namespace SportClubsChallenges.Web
             app.UseRouting();
 
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

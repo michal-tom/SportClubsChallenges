@@ -2,24 +2,32 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Athlete
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public long Id { get; set; }
 
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
 
-        public byte[] Icon { get; set; }
+        public string IconUrlLarge { get; set; }
+
+        public string IconUrlMedium { get; set; }
 
         public string City { get; set; }
 
         public string Gender { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public string Country { get; set; }
 
-        public DateTime LastLoginDate { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
+
+        public DateTimeOffset LastLoginDate { get; set; }
 
         public long AthleteStravaTokenId { get; set; }
 

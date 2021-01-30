@@ -10,8 +10,8 @@ using SportClubsChallenges.Database.Data;
 namespace SportClubsChallenges.Database.Migrations
 {
     [DbContext(typeof(SportClubsChallengesDbContext))]
-    [Migration("20210126185622_inital")]
-    partial class inital
+    [Migration("20210130174107_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -69,14 +69,15 @@ namespace SportClubsChallenges.Database.Migrations
             modelBuilder.Entity("SportClubsChallenges.Database.Entities.Athlete", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
 
                     b.Property<long>("AthleteStravaTokenId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationDate")
@@ -88,8 +89,11 @@ namespace SportClubsChallenges.Database.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Icon")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("IconUrlLarge")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IconUrlMedium")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime2");
@@ -125,8 +129,11 @@ namespace SportClubsChallenges.Database.Migrations
                     b.Property<string>("AccessToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("ExpirationDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("LastUpdateDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
@@ -143,7 +150,8 @@ namespace SportClubsChallenges.Database.Migrations
                         {
                             Id = 1L,
                             AccessToken = "00000000-0000-0000-0000-000000000000",
-                            ExpirationDate = new DateTime(2021, 1, 27, 19, 56, 21, 418, DateTimeKind.Local).AddTicks(3143),
+                            ExpirationDate = new DateTimeOffset(new DateTime(2021, 1, 31, 18, 41, 7, 53, DateTimeKind.Unspecified).AddTicks(2776), new TimeSpan(0, 1, 0, 0, 0)),
+                            LastUpdateDate = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             RefreshToken = "00000000-0000-0000-0000-000000000000"
                         });
                 });

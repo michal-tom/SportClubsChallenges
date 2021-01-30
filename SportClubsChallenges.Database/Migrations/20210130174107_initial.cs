@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SportClubsChallenges.Database.Migrations
 {
-    public partial class inital : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,7 +28,8 @@ namespace SportClubsChallenges.Database.Migrations
                     AccessToken = table.Column<string>(nullable: true),
                     RefreshToken = table.Column<string>(nullable: true),
                     TokenType = table.Column<string>(nullable: true),
-                    ExpirationDate = table.Column<DateTime>(nullable: false)
+                    ExpirationDate = table.Column<DateTimeOffset>(nullable: false),
+                    LastUpdateDate = table.Column<DateTimeOffset>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,13 +40,14 @@ namespace SportClubsChallenges.Database.Migrations
                 name: "Athletes",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    Icon = table.Column<byte[]>(nullable: true),
+                    IconUrlLarge = table.Column<string>(nullable: true),
+                    IconUrlMedium = table.Column<string>(nullable: true),
                     City = table.Column<string>(nullable: true),
                     Gender = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: false),
                     LastLoginDate = table.Column<DateTime>(nullable: false),
                     AthleteStravaTokenId = table.Column<long>(nullable: false)
@@ -187,13 +189,13 @@ namespace SportClubsChallenges.Database.Migrations
 
             migrationBuilder.InsertData(
                 table: "AthleteStravaTokens",
-                columns: new[] { "Id", "AccessToken", "ExpirationDate", "RefreshToken", "TokenType" },
-                values: new object[] { 1L, "00000000-0000-0000-0000-000000000000", new DateTime(2021, 1, 27, 19, 56, 21, 418, DateTimeKind.Local).AddTicks(3143), "00000000-0000-0000-0000-000000000000", null });
+                columns: new[] { "Id", "AccessToken", "ExpirationDate", "LastUpdateDate", "RefreshToken", "TokenType" },
+                values: new object[] { 1L, "00000000-0000-0000-0000-000000000000", new DateTimeOffset(new DateTime(2021, 1, 31, 18, 41, 7, 53, DateTimeKind.Unspecified).AddTicks(2776), new TimeSpan(0, 1, 0, 0, 0)), new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "00000000-0000-0000-0000-000000000000", null });
 
             migrationBuilder.InsertData(
                 table: "Athletes",
-                columns: new[] { "Id", "AthleteStravaTokenId", "City", "CreationDate", "FirstName", "Gender", "Icon", "LastLoginDate", "LastName" },
-                values: new object[] { 1L, 1L, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "John", null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Smith" });
+                columns: new[] { "Id", "AthleteStravaTokenId", "City", "Country", "CreationDate", "FirstName", "Gender", "IconUrlLarge", "IconUrlMedium", "LastLoginDate", "LastName" },
+                values: new object[] { 1L, 1L, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "John", null, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Smith" });
 
             migrationBuilder.InsertData(
                 table: "Clubs",
