@@ -2,28 +2,6 @@
 
 @inject IChallengeService challengeService
 
-<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-<style>
-    .sort-th {
-        cursor: pointer;
-    }
-
-    .fa {
-        float: right;
-    }
-
-    .btn-custom {
-        color: black;
-        float: left;
-        padding: 8px 16px;
-        text-decoration: none;
-        transition: background-color .3s;
-        border: 2px solid #000;
-        margin: 0px 5px 0px 5px;
-    }
-</style>
-
 <div>
     <a class="btn btn-primary" href='/addChallenge'>Add new challenge</a>
 </div>
@@ -65,7 +43,7 @@ else
                         <td>@challenge.Name</td>
                         <td>
                             <a class="btn btn-primary" href='/editArticle/@challenge.Id'>Edit</a>  |
-                            <a class="btn btn-danger" @onclick="() => DeleteClub(challenge.Id)">Delete</a>
+                            <a class="btn btn-danger" @onclick="() => DeleteChallenge(challenge.Id)">Delete</a>
                         </td>
                     </tr>
                 }
@@ -84,7 +62,7 @@ else
         challengesModel = await challengeService.GetAllChallenges();
     }
 
-    protected async Task DeleteClub(long id)
+    protected async Task DeleteChallenge(long id)
     {
         await challengeService.DeleteChallenge(id);
         challengesModel = await challengeService.GetAllChallenges();
