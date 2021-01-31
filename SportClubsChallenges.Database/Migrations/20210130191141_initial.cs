@@ -48,8 +48,8 @@ namespace SportClubsChallenges.Database.Migrations
                     City = table.Column<string>(nullable: true),
                     Gender = table.Column<string>(nullable: true),
                     Country = table.Column<string>(nullable: true),
-                    CreationDate = table.Column<DateTime>(nullable: false),
-                    LastLoginDate = table.Column<DateTime>(nullable: false),
+                    CreationDate = table.Column<DateTimeOffset>(nullable: false),
+                    LastLoginDate = table.Column<DateTimeOffset>(nullable: false),
                     AthleteStravaTokenId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
@@ -190,12 +190,12 @@ namespace SportClubsChallenges.Database.Migrations
             migrationBuilder.InsertData(
                 table: "AthleteStravaTokens",
                 columns: new[] { "Id", "AccessToken", "ExpirationDate", "LastUpdateDate", "RefreshToken", "TokenType" },
-                values: new object[] { 1L, "00000000-0000-0000-0000-000000000000", new DateTimeOffset(new DateTime(2021, 1, 31, 18, 41, 7, 53, DateTimeKind.Unspecified).AddTicks(2776), new TimeSpan(0, 1, 0, 0, 0)), new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "00000000-0000-0000-0000-000000000000", null });
+                values: new object[] { 1L, "00000000-0000-0000-0000-000000000000", new DateTimeOffset(new DateTime(2021, 1, 31, 20, 11, 40, 600, DateTimeKind.Unspecified).AddTicks(4540), new TimeSpan(0, 1, 0, 0, 0)), new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "00000000-0000-0000-0000-000000000000", null });
 
             migrationBuilder.InsertData(
                 table: "Athletes",
                 columns: new[] { "Id", "AthleteStravaTokenId", "City", "Country", "CreationDate", "FirstName", "Gender", "IconUrlLarge", "IconUrlMedium", "LastLoginDate", "LastName" },
-                values: new object[] { 1L, 1L, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "John", null, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Smith" });
+                values: new object[] { 1L, 1L, null, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "John", null, null, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Smith" });
 
             migrationBuilder.InsertData(
                 table: "Clubs",

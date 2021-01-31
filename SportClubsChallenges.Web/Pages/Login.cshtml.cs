@@ -21,7 +21,7 @@ namespace SportClubsChallenges.Web.Pages
 
             await HttpContext.ChallengeAsync(
                StravaAuthenticationDefaults.AuthenticationScheme,
-               new AuthenticationProperties { RedirectUri = redirectUri });
+               new AuthenticationProperties { RedirectUri = "/" });
         }
     }
 }

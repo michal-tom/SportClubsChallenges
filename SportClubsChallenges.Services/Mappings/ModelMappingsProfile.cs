@@ -4,6 +4,7 @@
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Model.Dto;
     using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Strava;
     using SportClubsChallenges.Utils.Helpers;
     using System.Linq;
 
@@ -23,6 +24,8 @@
                 .ForMember(dest => dest.ActivityTypes, opt => opt.MapFrom(src => string.Join(",", src.ChallengeActivityTypes.Select(p => p.ActivityType.Name))))
                 .ForMember(dest => dest.ParticipantsCount, opt => opt.MapFrom(src => src.ChallengeParticipants.Count))
                 .ReverseMap();
+
+            this.CreateMap<AthleteStravaToken, StravaToken>();
         }
     }
 }

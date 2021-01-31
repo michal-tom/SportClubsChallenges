@@ -19,6 +19,7 @@ namespace SportClubsChallenges.Web
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
+    using SportClubsChallenges.Strava;
 
     public class Startup
     {
@@ -57,18 +58,6 @@ namespace SportClubsChallenges.Web
                     }
 
                     return;
-
-                    //List<AuthenticationToken> tokens = ctx.Properties.GetTokens().ToList();
-
-                    //tokens.Add(new AuthenticationToken()
-                    //{
-                    //    Name = "TicketCreated",
-                    //    Value = DateTime.UtcNow.ToString()
-                    //});
-
-                    //ctx.Properties.StoreTokens(tokens);
-
-                    //return Task.CompletedTask;
                 };
             });
 
@@ -82,12 +71,12 @@ namespace SportClubsChallenges.Web
             services.AddDbContext<SportClubsChallengesDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddHttpClient<StravaTokenService>();
+            services.AddHttpClient<StravaApiWrapper>();
 
             services.AddScoped<IClubService, ClubService>();
             services.AddScoped<IChallengeService, ChallengeService>();
             services.AddScoped<IAthleteService, AthleteService>();
-            services.AddScoped<IStravaTokenService, StravaTokenService>();
+            services.AddScoped<IStravaApiWrapper, StravaApiWrapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

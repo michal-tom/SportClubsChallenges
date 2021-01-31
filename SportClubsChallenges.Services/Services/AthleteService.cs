@@ -1,10 +1,12 @@
 ﻿namespace SportClubsChallenges.Domain.Services
 {
+    using AutoMapper;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
+    using SportClubsChallenges.Strava;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -16,9 +18,15 @@
     {
         private readonly SportClubsChallengesDbContext db;
 
-        public AthleteService(SportClubsChallengesDbContext db)
+        private readonly IStravaApiWrapper stravaWrapper;
+
+        private readonly IMapper mapper;
+
+        public AthleteService(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, IMapper mapper)
         {
             this.db = db;
+            this.stravaWrapper = stravaWrapper;
+            this.mapper = mapper;
         }
 
         public async Task OnAthleteLogin(ClaimsIdentity identity, IEnumerable<AuthenticationToken> tokens)
@@ -33,9 +41,13 @@
             var athlete = this.UpdateAthleteData(identity, athleteId.Value);
             this.UpdateStravaToken(athlete, tokens);
 
-            // TODO: get activites + get clubs
-
             await db.SaveChangesAsync();
+
+            // TODO: get activites + get clubs
+            var stravaToken = this.mapper.Map<StravaToken>(athlete.AthleteStravaToken);
+            await this.stravaWrapper.RetrieveAccessTokenAsync(stravaToken);
+
+            this.stravaWrapper.GetAthleteActivites(stravaToken, startTime: null, endTime: null);
         }
 
         private Athlete UpdateAthleteData(ClaimsIdentity identity, long athleteId)
@@ -51,10 +63,9 @@
             athlete.LastName = GetClaimValueFromIdentity(identity, ClaimTypes.Surname);
             athlete.Gender = GetClaimValueFromIdentity(identity, ClaimTypes.Gender);
             athlete.Country = GetClaimValueFromIdentity(identity, ClaimTypes.Country);
-            // TODO: move to const
-            athlete.City = GetClaimValueFromIdentity(identity, "urn:strava:city");
-            athlete.IconUrlLarge = GetClaimValueFromIdentity(identity, "urn:strava:profile");
-            athlete.IconUrlMedium = GetClaimValueFromIdentity(identity, "urn:strava:profile-medium");
+            athlete.City = GetClaimValueFromIdentity(identity, StravaConsts.CityClaimType);
+            athlete.IconUrlLarge = GetClaimValueFromIdentity(identity, StravaConsts.LargeIconClaimType);
+            athlete.IconUrlMedium = GetClaimValueFromIdentity(identity, StravaConsts.MediumIconClaimType);
 
             return athlete;
         }

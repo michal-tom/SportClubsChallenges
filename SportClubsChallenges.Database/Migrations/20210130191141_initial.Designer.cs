@@ -10,7 +10,7 @@ using SportClubsChallenges.Database.Data;
 namespace SportClubsChallenges.Database.Migrations
 {
     [DbContext(typeof(SportClubsChallengesDbContext))]
-    [Migration("20210130174107_initial")]
+    [Migration("20210130191141_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,8 +80,8 @@ namespace SportClubsChallenges.Database.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -95,8 +95,8 @@ namespace SportClubsChallenges.Database.Migrations
                     b.Property<string>("IconUrlMedium")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastLoginDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("LastLoginDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
@@ -112,9 +112,9 @@ namespace SportClubsChallenges.Database.Migrations
                         {
                             Id = 1L,
                             AthleteStravaTokenId = 1L,
-                            CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreationDate = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             FirstName = "John",
-                            LastLoginDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LastLoginDate = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             LastName = "Smith"
                         });
                 });
@@ -150,7 +150,7 @@ namespace SportClubsChallenges.Database.Migrations
                         {
                             Id = 1L,
                             AccessToken = "00000000-0000-0000-0000-000000000000",
-                            ExpirationDate = new DateTimeOffset(new DateTime(2021, 1, 31, 18, 41, 7, 53, DateTimeKind.Unspecified).AddTicks(2776), new TimeSpan(0, 1, 0, 0, 0)),
+                            ExpirationDate = new DateTimeOffset(new DateTime(2021, 1, 31, 20, 11, 40, 600, DateTimeKind.Unspecified).AddTicks(4540), new TimeSpan(0, 1, 0, 0, 0)),
                             LastUpdateDate = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             RefreshToken = "00000000-0000-0000-0000-000000000000"
                         });
