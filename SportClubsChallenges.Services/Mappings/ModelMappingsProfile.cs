@@ -4,7 +4,7 @@
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Model.Dto;
     using SportClubsChallenges.Model.Enums;
-    using SportClubsChallenges.Strava;
+    using SportClubsChallenges.Strava.Model;
     using SportClubsChallenges.Utils.Helpers;
     using System.Linq;
 

@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Strava
+﻿namespace SportClubsChallenges.Strava.Model
 {
     using System;
 

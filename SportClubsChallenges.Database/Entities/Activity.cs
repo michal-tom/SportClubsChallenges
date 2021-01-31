@@ -1,9 +1,13 @@
 ﻿namespace SportClubsChallenges.Database.Entities
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Activity
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public long Id { get; set; }
 
         public string Name { get; set; }
@@ -12,9 +16,9 @@
 
         public byte ActivityTypeId { get; set; }
 
-        public DateTime StartDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
 
         public int Duration { get; set; }
 
@@ -22,9 +26,11 @@
 
         public int Elevation { get; set; }
 
-        public decimal Pace { get; set; }
+        public float Pace { get; set; }
 
-        public string Map { get; set; }
+        public bool IsManual { get; set; }
+
+        public bool IsGps { get; set; }
 
         #region References
 

@@ -7,6 +7,7 @@
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Strava;
+    using SportClubsChallenges.Strava.Model;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -47,7 +48,8 @@
             var stravaToken = this.mapper.Map<StravaToken>(athlete.AthleteStravaToken);
             await this.stravaWrapper.RetrieveAccessTokenAsync(stravaToken);
 
-            this.stravaWrapper.GetAthleteActivites(stravaToken, startTime: null, endTime: null);
+            var stravaSummaryActivites = this.stravaWrapper.GetAthleteActivites(stravaToken, startTime: null, endTime: null);
+            this.mapper.Map<List<Activity>>(stravaSummaryActivites);
         }
 
         private Athlete UpdateAthleteData(ClaimsIdentity identity, long athleteId)
@@ -56,6 +58,7 @@
             if (athlete == null)
             {
                 athlete = new Athlete { Id = athleteId, CreationDate = DateTimeOffset.Now };
+                this.db.Athletes.Add(athlete);
             }
 
             athlete.LastLoginDate = DateTimeOffset.Now;

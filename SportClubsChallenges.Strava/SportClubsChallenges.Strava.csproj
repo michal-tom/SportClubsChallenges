@@ -6,10 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OAuth.Strava" Version="3.1.6" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="IdentityModel" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SportClubsChallenges.Database\SportClubsChallenges.Database.csproj" />
+    <ProjectReference Include="..\SportClubsChallenges.Utils\SportClubsChallenges.Utils.csproj" />
     <ProjectReference Include="..\Strava.NET\Strava.NET.csproj" />
   </ItemGroup>
 

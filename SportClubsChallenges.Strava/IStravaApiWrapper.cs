@@ -1,6 +1,7 @@
 ﻿namespace SportClubsChallenges.Strava
 {
     using global::Strava.NET.Model;
+    using SportClubsChallenges.Strava.Model;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;

@@ -20,6 +20,7 @@ namespace SportClubsChallenges.Web
     using System.Linq;
     using System.Security.Claims;
     using SportClubsChallenges.Strava;
+    using SportClubsChallenges.Strava.Mappings;
 
     public class Startup
     {
@@ -67,6 +68,7 @@ namespace SportClubsChallenges.Web
             services.AddServerSideBlazor();
 
             services.AddAutoMapper(typeof(ModelMappingsProfile));
+            services.AddAutoMapper(typeof(StravaModelMappingsProfile));
 
             services.AddDbContext<SportClubsChallengesDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

@@ -2,7 +2,9 @@
 {
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Entities;
+    using SportClubsChallenges.Model.Enums;
     using System;
+    using System.Linq;
 
     public class SportClubsChallengesDbContext : DbContext
     {
@@ -54,12 +56,9 @@
         private void Seed(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActivityType>().HasData(
-                new ActivityType { Id = 1, Name = "Run" },
-                new ActivityType { Id = 2, Name = "Ride" },
-                new ActivityType { Id = 3, Name = "Swim" },
-                new ActivityType { Id = 4, Name = "VirtualRide" },
-                new ActivityType { Id = 5, Name = "Walk" },
-                new ActivityType { Id = 6, Name = "Other" }
+                Enum.GetValues(typeof(ActivityTypeEnum))
+                    .Cast<ActivityTypeEnum>()
+                    .Select(p => new ActivityType { Id = (byte)p, Name = ((ActivityTypeEnum)p).ToString() })
             );
 
             modelBuilder.Entity<AthleteStravaToken>().HasData(
