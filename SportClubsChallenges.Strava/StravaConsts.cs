@@ -7,5 +7,7 @@
         public const string LargeIconClaimType = "urn:strava:profile";
 
         public const string MediumIconClaimType = "urn:strava:profile-medium";
+
+        public const byte MaxApiRecordsPerPage = 200;
     }
 }

@@ -24,6 +24,14 @@
                 .ForMember(dest => dest.IsManual, opt => opt.MapFrom(src => src.Manual))
                 .ForMember(dest => dest.IsGps, opt => opt.MapFrom(src => src.Map != null && !string.IsNullOrEmpty(src.Map.SummaryPolyline)))
                 .ForMember(dest => dest.Athlete, opt => opt.Ignore());
+
+            this.CreateMap<SummaryClub, Club>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.SportType, opt => opt.MapFrom(src => src.SportType))
+                .ForMember(dest => dest.IconUrl, opt => opt.MapFrom(src => src.ProfileMedium))
+                .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Url))
+                .ForMember(dest => dest.MembersCount, opt => opt.MapFrom(src => src.MemberCount ?? 0));
         }
     }
 }

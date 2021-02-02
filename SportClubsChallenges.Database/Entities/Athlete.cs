@@ -37,7 +37,7 @@
 
         public virtual ICollection<ChallengeParticipant> ChallengeParticipants { get; set; }
 
-        public virtual ICollection<Club> OwnedClubs { get; set; }
+        public virtual ICollection<ClubMember> ClubMembers { get; set; }
 
         #endregion
     }

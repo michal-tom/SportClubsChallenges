@@ -12,10 +12,7 @@
     {
         public ModelMappingsProfile()
         {
-            this.CreateMap<Club, ClubDto>()
-                .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner.FirstName + " " + src.Owner.LastName))
-                .ReverseMap()
-                .ForMember(dest => dest.Icon, opt => opt.Ignore());
+            this.CreateMap<Club, ClubDto>();
 
             this.CreateMap<Challenge, ChallengeDto>()
                 .ForMember(dest => dest.ChallengeTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeTypeEnum) src.ChallengeType)))

@@ -8,8 +8,8 @@
 
     public interface IStravaApiWrapper
     {
-        Task<StravaToken> RetrieveAccessTokenAsync(StravaToken token);
+        Task<List<SummaryActivity>> GetAthleteActivites(StravaToken token, DateTimeOffset startTime, DateTimeOffset? endTime = null);
 
-        List<SummaryActivity> GetAthleteActivites(StravaToken token, DateTimeOffset? startTime = null, DateTimeOffset? endTime = null);
+        Task<List<SummaryClub>> GetAthleteClubs(StravaToken token);
     }
 }

@@ -46,10 +46,89 @@
 
             // TODO: get activites + get clubs
             var stravaToken = this.mapper.Map<StravaToken>(athlete.AthleteStravaToken);
-            await this.stravaWrapper.RetrieveAccessTokenAsync(stravaToken);
 
-            var stravaSummaryActivites = this.stravaWrapper.GetAthleteActivites(stravaToken, startTime: null, endTime: null);
-            this.mapper.Map<List<Activity>>(stravaSummaryActivites);
+            await this.UpdateAthleteActivities(athleteId.Value, stravaToken, new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero), endTime: null);
+            await this.UpdateAthleteClubs(athleteId.Value, stravaToken);
+
+            if (stravaToken.IsRefreshed)
+            {
+                this.UpdateStravaToken(athlete, stravaToken);
+            }
+
+            await db.SaveChangesAsync();
+        }
+
+        private async Task UpdateAthleteClubs(long athleteId, StravaToken stravaToken)
+        {
+            var stravaSummaryClubs = await this.stravaWrapper.GetAthleteClubs(stravaToken);
+            var clubsInStrava = this.mapper.Map<List<Club>>(stravaSummaryClubs);
+
+            var clubsInDb = await this.db.Clubs.ToListAsync();
+            var athleteClubMemebershipInDb = await this.db.ClubMembers.Where(p => p.AthleteId == athleteId).ToListAsync();
+
+            foreach (var clubInStrava in clubsInStrava)
+            {
+                var currentClubInDb = clubsInDb.FirstOrDefault(p => p.Id == clubInStrava.Id);
+                if (currentClubInDb == null)
+                {
+                    this.db.Clubs.Add(clubInStrava);
+                }
+                else if (currentClubInDb.Name != clubInStrava.Name
+                    || currentClubInDb.MembersCount != clubInStrava.MembersCount
+                    || currentClubInDb.IconUrl != clubInStrava.IconUrl)
+                {
+                    currentClubInDb.Name = clubInStrava.Name;
+                    currentClubInDb.MembersCount = clubInStrava.MembersCount;
+                    currentClubInDb.IconUrl = clubInStrava.IconUrl;
+                }
+
+                var currentAthleteClubMemebershipInDb = athleteClubMemebershipInDb.FirstOrDefault(p => p.ClubId == clubInStrava.Id);
+                if (currentAthleteClubMemebershipInDb == null)
+                {
+                    this.db.ClubMembers.Add(new ClubMember { AthleteId = athleteId, ClubId = clubInStrava.Id });
+                }
+            }
+        }
+
+        private async Task UpdateAthleteActivities(long athleteId, StravaToken stravaToken, DateTimeOffset startTime, DateTimeOffset? endTime)
+        {
+            var stravaSummaryActivites = await this.stravaWrapper.GetAthleteActivites(stravaToken, startTime, endTime: null);
+            var activitesInStrava = this.mapper.Map<List<Activity>>(stravaSummaryActivites);
+
+            var activitiesInDb = await this.db.Activities.Where(p => p.AthleteId == athleteId && p.StartDate >= startTime).ToListAsync();
+
+            foreach (var activityInStrava in activitesInStrava)
+            {
+                var currentActivityInDb = activitiesInDb.FirstOrDefault(p => p.Id == activityInStrava.Id);
+                if (currentActivityInDb == null)
+                {
+                    this.db.Activities.Add(activityInStrava);
+                }
+                else if (currentActivityInDb.Name != activityInStrava.Name 
+                    || currentActivityInDb.ActivityTypeId != activityInStrava.ActivityTypeId
+                    || currentActivityInDb.Duration != activityInStrava.Duration
+                    || currentActivityInDb.IsDeleted)
+                {
+                    currentActivityInDb.Name = currentActivityInDb.Name;
+                    currentActivityInDb.ActivityTypeId = currentActivityInDb.ActivityTypeId;
+                    currentActivityInDb.Duration = currentActivityInDb.Duration;
+                    currentActivityInDb.Distance = currentActivityInDb.Distance;
+                    currentActivityInDb.Elevation = currentActivityInDb.Elevation;
+                    currentActivityInDb.Pace = currentActivityInDb.Pace;
+                    currentActivityInDb.StartDate = currentActivityInDb.StartDate;
+                    currentActivityInDb.EndDate = currentActivityInDb.EndDate;
+                    currentActivityInDb.IsDeleted = false;
+                }
+            }
+
+            foreach (var currentActivityInDb in activitiesInDb.Where(p => !p.IsDeleted && !activitesInStrava.Exists(a => a.Id == p.Id)))
+            {
+                // TODO: test if works
+                if (!endTime.HasValue || endTime.Value > currentActivityInDb.StartDate)
+                {
+                    currentActivityInDb.IsDeleted = true;
+                }
+            }
         }
 
         private Athlete UpdateAthleteData(ClaimsIdentity identity, long athleteId)
@@ -73,7 +152,24 @@
             return athlete;
         }
 
-        private void UpdateStravaToken(Athlete athlete, IEnumerable<AuthenticationToken> tokens)
+        private void UpdateStravaToken(Athlete athlete, IEnumerable<AuthenticationToken> authenticationTokens)
+        {
+            var stravaToken = new StravaToken
+            {
+                AccessToken = authenticationTokens.FirstOrDefault(p => p.Name == "access_token")?.Value,
+                RefreshToken = authenticationTokens.FirstOrDefault(p => p.Name == "refresh_token")?.Value,
+                TokenType = authenticationTokens.FirstOrDefault(p => p.Name == "token_type")?.Value
+            };
+
+            var expiresAt = authenticationTokens.FirstOrDefault(p => p.Name == "expires_at")?.Value;
+            stravaToken.ExpirationDate = DateTimeOffset.TryParse(expiresAt, CultureInfo.InvariantCulture, DateTimeStyles.None, out var expiration)
+                ? expiration
+                : DateTimeOffset.UtcNow;
+
+            this.UpdateStravaToken(athlete, stravaToken);
+        }
+
+        private void UpdateStravaToken(Athlete athlete, StravaToken token)
         {
             if (athlete.AthleteStravaToken == null)
             {
@@ -81,19 +177,10 @@
             }
 
             athlete.AthleteStravaToken.LastUpdateDate = DateTimeOffset.UtcNow;
-            athlete.AthleteStravaToken.AccessToken = tokens.FirstOrDefault(p => p.Name == "access_token").Value;
-            athlete.AthleteStravaToken.RefreshToken = tokens.FirstOrDefault(p => p.Name == "refresh_token").Value;
-            athlete.AthleteStravaToken.TokenType = tokens.FirstOrDefault(p => p.Name == "token_type").Value;
-
-            var expiresAt = tokens.FirstOrDefault(p => p.Name == "expires_at").Value;
-            if (DateTimeOffset.TryParse(expiresAt, CultureInfo.InvariantCulture, DateTimeStyles.None, out var expiration))
-            {
-                athlete.AthleteStravaToken.ExpirationDate = expiration;
-            }
-            else
-            {
-                athlete.AthleteStravaToken.ExpirationDate = DateTimeOffset.UtcNow;
-            }
+            athlete.AthleteStravaToken.AccessToken = token.AccessToken;
+            athlete.AthleteStravaToken.RefreshToken = token.RefreshToken;
+            athlete.AthleteStravaToken.TokenType = token.TokenType;
+            athlete.AthleteStravaToken.ExpirationDate = token.ExpirationDate;
         }
 
         private static long? GetAthleteIdFromIdentity(ClaimsIdentity identity)

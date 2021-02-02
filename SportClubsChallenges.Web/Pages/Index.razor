@@ -35,7 +35,7 @@
     private string _userName;
     private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         var user = httpContextAccessor.HttpContext.User;
 

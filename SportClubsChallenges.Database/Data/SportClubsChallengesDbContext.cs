@@ -16,9 +16,11 @@
         public DbSet<Athlete> Athletes { get; set; }
         public DbSet<AthleteStravaToken> AthleteStravaTokens { get; set; }
         public DbSet<Club> Clubs { get; set; }
+        public DbSet<ClubMember> ClubMembers { get; set; }
         public DbSet<Challenge> Challenges { get; set; }
         public DbSet<ChallengeParticipant> ChallengeParticipants { get; set; }
         public DbSet<ChallengeActivityType> ChallengeActivityTypes { get; set; }
+        public DbSet<Activity> Activities { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -50,6 +52,21 @@
                .HasForeignKey(pt => pt.AthleteId)
                .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<ClubMember>()
+                .HasKey(c => new { c.ClubId, c.AthleteId });
+
+            modelBuilder.Entity<ClubMember>()
+               .HasOne(pt => pt.Club)
+               .WithMany(p => p.ClubMembers)
+               .HasForeignKey(pt => pt.ClubId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ClubMember>()
+               .HasOne(pt => pt.Athlete)
+               .WithMany(p => p.ClubMembers)
+               .HasForeignKey(pt => pt.AthleteId)
+               .OnDelete(DeleteBehavior.Restrict);
+
             this.Seed(modelBuilder);
         }
 
@@ -70,8 +87,8 @@
             );
 
             modelBuilder.Entity<Club>().HasData(
-                new Club { Id = 1, Name = "Bike Club", Description = "My first bike club", OwnerId = 1, SportType = "Bike"  },
-                new Club { Id = 2, Name = "Club for runners", Description = "Club for my running collages", OwnerId = 1, SportType = "Run" }
+                new Club { Id = 1, Name = "Bike Club", SportType = "Bike"  },
+                new Club { Id = 2, Name = "Club for runners", SportType = "Run" }
             );
         }
     }

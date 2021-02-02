@@ -15,19 +15,96 @@
     {
         private readonly IHttpClientFactory httpClientFactory;
 
-        private static readonly DateTimeOffset MinDataTime = (new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero));
+        private static readonly DateTimeOffset ActivitiesMinDataTime = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
         public StravaApiWrapper(IHttpClientFactory httpClientFactory)
         {
             this.httpClientFactory = httpClientFactory;
         }
 
-        public async Task<StravaToken> RetrieveAccessTokenAsync(StravaToken token)
+        public async Task<List<SummaryActivity>> GetAthleteActivites(StravaToken token, DateTimeOffset startTime, DateTimeOffset? endTime = null)
+        {
+            var allActivites = new List<SummaryActivity>();
+
+            var minActivityDateTime = startTime> ActivitiesMinDataTime ? startTime : ActivitiesMinDataTime;
+            var maxActivityDateTime = endTime ?? DateTimeOffset.UtcNow;
+            var minActivityEpochTime = (int) minActivityDateTime.ToUnixTimeSeconds();
+            var maxActivityEpochTime = (int) maxActivityDateTime.ToUnixTimeSeconds();
+            var pageNumber = 1;
+
+            try
+            {
+                await this.RefreshAccessTokenIfNeededAsync(token);
+
+                var apiClient = new ApiClient { AccessToken = token.AccessToken };
+                var apiInstance = new ActivitiesApi(apiClient);
+
+                while(true)
+                {
+                    var activites = apiInstance.GetLoggedInAthleteActivities(maxActivityEpochTime, minActivityEpochTime, pageNumber, StravaConsts.MaxApiRecordsPerPage);
+                    allActivites.AddRange(activites);
+
+                    if (activites.Count <= StravaConsts.MaxApiRecordsPerPage * 0.9)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        pageNumber++;
+                    }
+                }
+            }
+            catch(Exception)
+            {
+                // TODO: log error
+                throw;
+            }
+
+            return allActivites;
+        }
+
+        public async Task<List<SummaryClub>> GetAthleteClubs(StravaToken token)
+        {
+            var allClubs = new List<SummaryClub>();
+            var pageNumber = 1;
+
+            try
+            {
+                await this.RefreshAccessTokenIfNeededAsync(token);
+
+                var apiClient = new ApiClient { AccessToken = token.AccessToken };
+                var apiInstance = new ClubsApi(apiClient);
+
+                while (true)
+                {
+                    var clubs = apiInstance.GetLoggedInAthleteClubs(pageNumber, StravaConsts.MaxApiRecordsPerPage);
+                    allClubs.AddRange(clubs);
+
+                    if (clubs.Count <= StravaConsts.MaxApiRecordsPerPage * 0.9)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        pageNumber++;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // TODO: log error
+                throw;
+            }
+
+            return allClubs;
+        }
+
+        private async Task RefreshAccessTokenIfNeededAsync(StravaToken token)
         {
             // check if strava token should be refreshed 
             if ((token.ExpirationDate.AddSeconds(-60)).ToUniversalTime() > DateTimeOffset.UtcNow)
             {
-                return token;
+                return;
             }
 
             var httpClient = this.httpClientFactory.CreateClient();
@@ -46,31 +123,7 @@
             token.RefreshToken = refreshResponse.RefreshToken;
             token.TokenType = refreshResponse.TokenType;
             token.ExpirationDate = DateTimeOffset.UtcNow.AddSeconds(refreshResponse.ExpiresIn);
-
-            return token;
-        }
-
-        public List<SummaryActivity> GetAthleteActivites(StravaToken token, DateTimeOffset? startTime = null, DateTimeOffset? endTime = null)
-        {
-            startTime = startTime == null || startTime < MinDataTime ? MinDataTime : startTime;
-
-            Configuration.DefaultApiClient.AccessToken = token.AccessToken;
-
-            var apiInstance = new ActivitiesApi();
-            var before = endTime.HasValue ? (int) endTime.Value.ToUnixTimeSeconds() : (int?) null;
-            var after = startTime.HasValue ? (int) startTime.Value.ToUnixTimeSeconds() : (int?) null;
-            var page = 1;
-            var perPage = 200;
-
-            try
-            {
-                return apiInstance.GetLoggedInAthleteActivities(before, after, page, perPage);
-            }
-            catch(Exception)
-            {
-                // TODO: log error
-                throw;
-            }
+            token.IsRefreshed = true;
         }
     }
 }
