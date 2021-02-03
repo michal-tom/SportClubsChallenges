@@ -44,7 +44,6 @@
 
             await db.SaveChangesAsync();
 
-            // TODO: get activites + get clubs
             var stravaToken = this.mapper.Map<StravaToken>(athlete.AthleteStravaToken);
 
             await this.UpdateAthleteActivities(athleteId.Value, stravaToken, new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero), endTime: null);
