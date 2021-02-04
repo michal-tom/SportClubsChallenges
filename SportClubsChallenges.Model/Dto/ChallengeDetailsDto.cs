@@ -4,9 +4,9 @@
     using System;
     using System.Collections.Generic;
 
-    public class ChallengeDto
+    public class ChallengeDetailsDto
     {
-        public ChallengeDto()
+        public ChallengeDetailsDto()
         {
             this.IsActive = true;
             this.ChallengeType = (byte) ChallengeTypeEnum.Distance;

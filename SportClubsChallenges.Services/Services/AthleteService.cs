@@ -40,21 +40,22 @@
             }
 
             var athlete = this.UpdateAthleteData(identity, athleteId.Value);
+            this.UpdateAthleteIdentity(identity, athlete);
             this.UpdateStravaToken(athlete, tokens);
 
             await db.SaveChangesAsync();
 
-            var stravaToken = this.mapper.Map<StravaToken>(athlete.AthleteStravaToken);
+            //var stravaToken = this.mapper.Map<StravaToken>(athlete.AthleteStravaToken);
 
-            await this.UpdateAthleteActivities(athleteId.Value, stravaToken, new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero), endTime: null);
-            await this.UpdateAthleteClubs(athleteId.Value, stravaToken);
+            //await this.UpdateAthleteActivities(athleteId.Value, stravaToken, new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero), endTime: null);
+            //await this.UpdateAthleteClubs(athleteId.Value, stravaToken);
 
-            if (stravaToken.IsRefreshed)
-            {
-                this.UpdateStravaToken(athlete, stravaToken);
-            }
+            //if (stravaToken.IsRefreshed)
+            //{
+            //    this.UpdateStravaToken(athlete, stravaToken);
+            //}
 
-            await db.SaveChangesAsync();
+            //await db.SaveChangesAsync();
         }
 
         private async Task UpdateAthleteClubs(long athleteId, StravaToken stravaToken)
@@ -149,6 +150,19 @@
             athlete.IconUrlMedium = GetClaimValueFromIdentity(identity, StravaConsts.MediumIconClaimType);
 
             return athlete;
+        }
+
+        private void UpdateAthleteIdentity(ClaimsIdentity identity, Athlete athlete)
+        {
+            if (!identity.HasClaim(p => p.Type == ClaimTypes.Name))
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Name, $"{athlete.FirstName} {athlete.LastName}"));
+            }
+
+            if (athlete.IsAdmin)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
+            }
         }
 
         private void UpdateStravaToken(Athlete athlete, IEnumerable<AuthenticationToken> authenticationTokens)

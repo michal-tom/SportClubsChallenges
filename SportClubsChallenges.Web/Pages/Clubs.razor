@@ -2,6 +2,8 @@
 
 @inject IClubService clubService
 
+@attribute [Authorize(Roles = "admin, superuser")]
+
 <div>
     <a class="btn btn-primary" href='/addArticle'>Add</a>
 </div>

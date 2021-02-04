@@ -1,16 +1,20 @@
 ﻿namespace SportClubsChallenges.Model.Enums
 {
+    using SportClubsChallenges.Model.Attributes;
     using System.ComponentModel;
 
     public enum ChallengeTypeEnum : byte
     {
-        [Description("Suma pokonanych kilometrów")]
+        [Description("Activity distance sum")]
+        [Unit("m")]
         Distance = 0,
 
-        [Description("Suma czasu aktywności")]
+        [Description("Activity time sum")]
+        [Unit("s")]
         Time = 1,
 
-        [Description("Suma wzniesień")]
+        [Description("Activity elevation sum")]
+        [Unit("m")]
         Elevation = 2
     }
 }

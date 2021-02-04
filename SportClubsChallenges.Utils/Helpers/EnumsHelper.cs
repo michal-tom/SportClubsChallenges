@@ -22,6 +22,12 @@
 
         public static string GetEnumDescription(Enum value)
         {
+            var attribute = GetEnumAttribute<DescriptionAttribute>(value);
+            return attribute?.Description ?? string.Empty;
+        }
+
+        public static T GetEnumAttribute<T> (Enum value) where T : Attribute
+        {
             if (value == null)
             {
                 throw new ArgumentNullException(nameof(value));
@@ -31,17 +37,10 @@
             var fieldInfo = value.GetType().GetField(name);
             if (fieldInfo == null)
             {
-                return string.Empty;
+                return null;
             }
 
-            var attributes = (DescriptionAttribute[]) fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-            if (attributes.Length > 0)
-            {
-                name = attributes[0].Description;
-            }
-
-            return name;
+            return (T) fieldInfo.GetCustomAttributes(typeof(T), false).FirstOrDefault();
         }
 
         public static byte GetEnumIdByName<TEnum>(string valueString) where TEnum : struct, IConvertible

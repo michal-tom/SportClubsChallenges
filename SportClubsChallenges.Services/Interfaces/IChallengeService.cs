@@ -6,13 +6,15 @@
 
     public interface IChallengeService
     {
-        Task<List<ChallengeDto>> GetAllChallenges();
+        Task<List<ChallengeOverviewDto>> GetAllChallenges();
 
-        Task<ChallengeDto> GetChallenge(long id);
+        Task<List<ChallengeParticipationDto>> GetAthleteChallengeParticipations(long athleteId);
 
-        Task AddChallenge(ChallengeDto dto);
+        Task<ChallengeDetailsDto> GetChallenge(long id);
 
-        Task UpdatChallenge(ChallengeDto dto);
+        Task AddChallenge(ChallengeDetailsDto dto);
+
+        Task UpdatChallenge(ChallengeDetailsDto dto);
 
         Task DeleteChallenge(long id);
 

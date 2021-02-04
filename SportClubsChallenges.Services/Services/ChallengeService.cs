@@ -11,6 +11,7 @@
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Model.Dto;
     using SportClubsChallenges.Model.Enums;
+    using System.Linq;
 
     public class ChallengeService : IChallengeService
     {
@@ -24,18 +25,27 @@
             this.db = db;
         }
 
-        public async Task<List<ChallengeDto>> GetAllChallenges()
+        public async Task<List<ChallengeOverviewDto>> GetAllChallenges()
         {
-            return await mapper.ProjectTo<ChallengeDto>(db.Challenges.AsNoTracking()).ToListAsync();
+            var challenges = db.Challenges.AsNoTracking();
+            return await mapper.ProjectTo<ChallengeOverviewDto>(challenges).ToListAsync();
         }
 
-        public async Task<ChallengeDto> GetChallenge(long id)
+        public async Task<List<ChallengeParticipationDto>> GetAthleteChallengeParticipations(long athleteId)
+        {
+            var challengeParticipations = db.ChallengeParticipants.AsNoTracking()
+                .Where(p => p.AthleteId == athleteId)
+                .OrderByDescending(p => p.RegistrationDate);
+            return await mapper.ProjectTo<ChallengeParticipationDto>(challengeParticipations).ToListAsync();
+        }
+
+        public async Task<ChallengeDetailsDto> GetChallenge(long id)
         {
             var entity = await db.Challenges.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
-            return mapper.Map<ChallengeDto>(entity);
+            return mapper.Map<ChallengeDetailsDto>(entity);
         }
 
-        public async Task AddChallenge(ChallengeDto dto)
+        public async Task AddChallenge(ChallengeDetailsDto dto)
         {
             var entity = mapper.Map<Challenge>(dto);
             entity.CreationDate = DateTime.Now;
@@ -45,7 +55,7 @@
             await db.SaveChangesAsync();
         }
 
-        public async Task UpdatChallenge(ChallengeDto dto)
+        public async Task UpdatChallenge(ChallengeDetailsDto dto)
         {
             var entity = db.Challenges.Find(dto.Id);
             mapper.Map(dto, entity);

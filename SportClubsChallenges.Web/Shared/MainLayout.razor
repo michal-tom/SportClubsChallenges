@@ -8,7 +8,7 @@
     <div class="top-row px-4">
         <AuthorizeView>
             <Authorized>
-                Hello @(context.User?.Identity?.Name ?? context.User.Claims.Take(2).Last().Value)!
+                Hello @(context.User?.Identity?.Name)!
             </Authorized>
         </AuthorizeView>
     </div>

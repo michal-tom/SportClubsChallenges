@@ -1,0 +1,58 @@
+﻿@page "/mychallenges"
+
+@inject IChallengeService challengeService
+
+<br />
+
+@if (challengeParticipations == null)
+{
+    <p><em>Loading, please wait...</em></p>
+}
+else
+{
+    <h3>My challenges</h3>
+
+    @if (challengeParticipations == null || challengeParticipations.Count == 0)
+    {
+        <p>You are not registered to any challenge!</p>
+        <br />
+        <p>Please go Challenge page to join to any challenge from your Strava club.</p>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Challenge name</th>
+                    <th>Date range</th>
+                    <th>Club</th>
+                    <th>Rank</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var participation in challengeParticipations)
+                {
+                    <tr>
+                        <td>@participation.ChallengeName</td>
+                        <td>@participation.ChallengeStartDate.ToShortDateString() - @participation.ChallengeEndDate.ToShortDateString()</td>
+                        <td>@participation.ClubName</td>
+                        <td># @participation.Rank</td>
+                        <td>@participation.Score @participation.ScoreUnit</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+
+    List<ChallengeParticipationDto> challengeParticipations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // TODO: pass correct athelte id
+        challengeParticipations = await challengeService.GetAthleteChallengeParticipations(1);
+    }
+}

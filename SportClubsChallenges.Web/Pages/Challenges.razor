@@ -55,16 +55,21 @@ else
 
 @code {
 
-    List<ChallengeDto> challengesModel;
+    List<ChallengeOverviewDto> challengesModel;
 
     protected override async Task OnInitializedAsync()
     {
-        challengesModel = await challengeService.GetAllChallenges();
+        await LoadChallenges();
     }
 
     protected async Task DeleteChallenge(long id)
     {
         await challengeService.DeleteChallenge(id);
+        await LoadChallenges();
+    }
+
+    private async Task LoadChallenges()
+    {
         challengesModel = await challengeService.GetAllChallenges();
     }
 }

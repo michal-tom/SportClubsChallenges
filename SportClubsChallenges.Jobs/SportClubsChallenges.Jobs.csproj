@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SportClubsChallenges.Database\SportClubsChallenges.Database.csproj" />
+    <ProjectReference Include="..\SportClubsChallenges.Model\SportClubsChallenges.Model.csproj" />
+    <ProjectReference Include="..\SportClubsChallenges.Strava\SportClubsChallenges.Strava.csproj" />
+  </ItemGroup>
+
+</Project>
