@@ -31,11 +31,31 @@
             return await mapper.ProjectTo<ChallengeOverviewDto>(challenges).ToListAsync();
         }
 
-        public async Task<List<ChallengeParticipationDto>> GetAthleteChallengeParticipations(long athleteId)
+        public async Task<List<ChallengeOverviewDto>> GetAvailableChallenges(long athleteId)
+        {
+            var challenges = db.Challenges.AsNoTracking()
+                .Where(p => p.Club.ClubMembers.Any(p => p.AthleteId == athleteId))
+                .OrderByDescending(p => p.StartDate);
+
+            var challengesParticipations = challenges
+                .SelectMany(p => p.ChallengeParticipants)
+                .Where(p => p.AthleteId == athleteId);
+
+            var challengesOverview = await mapper.ProjectTo<ChallengeOverviewDto>(challenges).ToListAsync();
+
+            challengesOverview.ForEach(
+                p => p.IsAthleteRegistred = challengesParticipations.Any(c => c.ChallengeId == p.Id)
+            );
+
+            return challengesOverview;
+        }
+
+        public async Task<List<ChallengeParticipationDto>> GetChallengeParticipations(long athleteId)
         {
             var challengeParticipations = db.ChallengeParticipants.AsNoTracking()
                 .Where(p => p.AthleteId == athleteId)
                 .OrderByDescending(p => p.RegistrationDate);
+
             return await mapper.ProjectTo<ChallengeParticipationDto>(challengeParticipations).ToListAsync();
         }
 
@@ -66,6 +86,49 @@
         {
             var challenge = db.Challenges.Find(id);
             db.Challenges.Remove(challenge);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task LeaveChallenge(long athleteId, long challengeId)
+        {
+            var challengeParticipation = await db.ChallengeParticipants
+                .FirstOrDefaultAsync(p => p.AthleteId == athleteId && p.ChallengeId == challengeId);
+
+            if (challengeParticipation == null)
+            {
+                return;
+            }
+
+            db.ChallengeParticipants.Remove(challengeParticipation);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task JoinChallenge(long athleteId, long challengeId)
+        {
+            var challengeParticipants = db.ChallengeParticipants.Where(p => p.ChallengeId == challengeId);
+
+            if (challengeParticipants.Any(p => p.AthleteId == athleteId))
+            {
+                return;
+            }
+
+            var atheleteMembershipInChallengeClub = await db.Challenges
+                .Where(p => p.Id == challengeId)
+                .SelectMany(p => p.Club.ClubMembers)
+                .FirstOrDefaultAsync(p => p.AthleteId == athleteId);
+
+            if (atheleteMembershipInChallengeClub == null)
+            {
+                return;
+            }
+
+            var challengeParticipation = new ChallengeParticipant { AthleteId = athleteId, ChallengeId = challengeId };
+            challengeParticipation.Score = 0;
+            challengeParticipation.RegistrationDate = DateTime.Now;
+            challengeParticipation.LastUpdateDate = DateTime.Now;
+            challengeParticipation.Rank = await challengeParticipants.CountAsync(p => p.ChallengeId == challengeId) + 1;
+
+            db.ChallengeParticipants.Add(challengeParticipation);
             await db.SaveChangesAsync();
         }
 

@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strava.NET", "Strava.NET\St
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.Strava", "SportClubsChallenges.Strava\SportClubsChallenges.Strava.csproj", "{2036B48B-DE90-4D2B-BE75-9A22D4F67D11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportClubsChallenges.Jobs", "SportClubsChallenges.Jobs\SportClubsChallenges.Jobs.csproj", "{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.Jobs", "SportClubsChallenges.Jobs\SportClubsChallenges.Jobs.csproj", "{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,90 @@
+﻿@page "/challenges/list"
+
+@inject IChallengeService challengeService
+
+<br />
+
+@if (challengesModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Date Range</th>
+                <th>Club</th>
+                <th>Participants Count</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (challengesModel == null || challengesModel.Count == 0)
+            {
+                <tr>
+                    <td colspan="6">
+                        No active challenges
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var challenge in challengesModel)
+                {
+                    <tr>
+                        <td>@challenge.Name</td>
+                        <td>@challenge.Description</td>
+                        <td>@challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()</td>                      
+                        <td>@challenge.ClubName</td>
+                        <td>@challenge.ParticipantsCount</td>
+                        <td>
+                            @if (challenge.IsAthleteRegistred)
+                            {
+                            <a class="btn btn-warning" @onclick="() => LeaveChallenge(challenge.Id)">Leave</a>
+                            }
+                            else
+                            {
+                            <a class="btn btn-success" @onclick="() => JoinChallenge(challenge.Id)">Join</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+}
+
+@code {
+
+    List<ChallengeOverviewDto> challengesModel;
+
+    long athleteId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // TODO: pass correct athlete id
+        athleteId = 1;
+        await LoadChallenges();
+    }
+
+    private async Task LoadChallenges()
+    {
+        challengesModel = await challengeService.GetAvailableChallenges(this.athleteId);
+    }
+
+    protected async Task LeaveChallenge(long challengeId)
+    {
+        await challengeService.LeaveChallenge(this.athleteId, challengeId);
+        await LoadChallenges();
+    }
+
+    protected async Task JoinChallenge(long challengeId)
+    {
+        await challengeService.JoinChallenge(this.athleteId, challengeId);
+        await LoadChallenges();
+    }
+}

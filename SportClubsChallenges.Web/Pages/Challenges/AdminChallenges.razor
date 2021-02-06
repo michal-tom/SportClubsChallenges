@@ -1,9 +1,11 @@
-﻿@page "/challenges"
+﻿@page "/challenges/admin"
 
 @inject IChallengeService challengeService
 
+@attribute [Authorize(Roles = "Admin")]
+
 <div>
-    <a class="btn btn-primary" href='/addChallenge'>Add new challenge</a>
+    <a class="btn btn-primary" href='/challenges/add'>Add new challenge</a>
 </div>
 <br />
 
@@ -42,7 +44,7 @@ else
                         <td>@challenge.Id</td>
                         <td>@challenge.Name</td>
                         <td>
-                            <a class="btn btn-primary" href='/editArticle/@challenge.Id'>Edit</a>  |
+                            <a class="btn btn-primary" href='/challenges/edit/@challenge.Id'>Edit</a>  |
                             <a class="btn btn-danger" @onclick="() => DeleteChallenge(challenge.Id)">Delete</a>
                         </td>
                     </tr>

@@ -1,4 +1,4 @@
-﻿@page "/mychallenges"
+﻿@page "/challenges/my"
 
 @inject IChallengeService challengeService
 
@@ -16,7 +16,7 @@ else
     {
         <p>You are not registered to any challenge!</p>
         <br />
-        <p>Please go Challenge page to join to any challenge from your Strava club.</p>
+        <p>Please go <a class="btn btn-primary" href='/challenges/admin'>Challenge</a> page to join to any challenge from your Strava club.</p>
     }
     else
     {
@@ -52,7 +52,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // TODO: pass correct athelte id
-        challengeParticipations = await challengeService.GetAthleteChallengeParticipations(1);
+        // TODO: pass correct athlete id
+        var athleteId = 1;
+        challengeParticipations = await challengeService.GetChallengeParticipations(athleteId);
     }
 }

@@ -23,5 +23,7 @@
         public string ChallengeTypeDescription { get; set; }
 
         public int ParticipantsCount { get; set; }
+
+        public bool IsAthleteRegistred { get; set; }
     }
 }

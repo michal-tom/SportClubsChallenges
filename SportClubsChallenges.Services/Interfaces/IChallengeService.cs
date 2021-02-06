@@ -8,7 +8,9 @@
     {
         Task<List<ChallengeOverviewDto>> GetAllChallenges();
 
-        Task<List<ChallengeParticipationDto>> GetAthleteChallengeParticipations(long athleteId);
+        Task<List<ChallengeOverviewDto>> GetAvailableChallenges(long athleteId);
+
+        Task<List<ChallengeParticipationDto>> GetChallengeParticipations(long athleteId);
 
         Task<ChallengeDetailsDto> GetChallenge(long id);
 
@@ -17,6 +19,10 @@
         Task UpdatChallenge(ChallengeDetailsDto dto);
 
         Task DeleteChallenge(long id);
+
+        Task LeaveChallenge(long athleteId, long challengeId);
+
+        Task JoinChallenge(long athleteId, long challengeId);
 
         Task<Dictionary<long, string>> GetAvailableClubs();
 

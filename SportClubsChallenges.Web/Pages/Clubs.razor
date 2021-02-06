@@ -2,10 +2,10 @@
 
 @inject IClubService clubService
 
-@attribute [Authorize(Roles = "admin, superuser")]
+@attribute [Authorize(Roles = "Admin")]
 
 <div>
-    <a class="btn btn-primary" href='/addArticle'>Add</a>
+    <a class="btn btn-primary" href='/addClub'>Add</a>
 </div>
 <br />
 
@@ -44,7 +44,7 @@ else
                         <td>@club.Id</td>
                         <td>@club.Name</td>
                         <td>
-                            <a class="btn btn-primary" href='/editArticle/@club.Id'>Edit</a>
+                            <a class="btn btn-primary" href='/editClub/@club.Id'>Edit</a>
                         </td>
                     </tr>
                 }

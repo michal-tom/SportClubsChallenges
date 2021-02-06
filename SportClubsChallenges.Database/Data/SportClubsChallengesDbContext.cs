@@ -93,6 +93,12 @@
                 new Club { Id = 2, Name = "Club for runners", SportType = "Run" }
             );
 
+            modelBuilder.Entity<ClubMember>().HasData(
+                new ClubMember { ClubId = 1, AthleteId = 1 },
+                new ClubMember { ClubId = 1, AthleteId = 2 },
+                new ClubMember { ClubId = 2, AthleteId = 1 }
+            );
+
             modelBuilder.Entity<Challenge>().HasData(
                 new Challenge { Id = 1, Name = "Most km in 2021 (bike)", Description = "desc1", ChallengeType = (byte) ChallengeTypeEnum.Distance, ClubId = 1, CreationDate = DateTime.Now, StartDate = new DateTime(2021, 1, 1), EndDate = new DateTime(2022, 1, 1), IsActive = true, OwnerId = 1, EditionDate = DateTime.Now },
                 new Challenge { Id = 2, Name = "Most hours in 2021 (bike)", Description = "desc2", ChallengeType = (byte) ChallengeTypeEnum.Time, ClubId = 1, CreationDate = DateTime.Now, StartDate = new DateTime(2021, 1, 1), EndDate = new DateTime(2022, 1, 1), IsActive = true, OwnerId = 1, EditionDate = DateTime.Now },
