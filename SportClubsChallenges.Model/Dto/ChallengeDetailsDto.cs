@@ -1,6 +1,8 @@
 ﻿namespace SportClubsChallenges.Model.Dto
 {
+    using SportClubsChallenges.Model.Attributes;
     using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Utils.Helpers;
     using System;
     using System.Collections.Generic;
 
@@ -52,5 +54,7 @@
         public List<byte> ActivityTypesIds { get; set; }
 
         public int ParticipantsCount { get; set; }
+
+        public string ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeTypeEnum) this.ChallengeType)?.Unit ?? string.Empty;
     }
 }

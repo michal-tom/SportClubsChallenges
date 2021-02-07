@@ -1,5 +1,8 @@
 ﻿namespace SportClubsChallenges.Model.Dto
 {
+    using SportClubsChallenges.Model.Attributes;
+    using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Utils.Helpers;
     using System;
 
     public class ChallengeOverviewDto

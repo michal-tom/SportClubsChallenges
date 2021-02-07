@@ -27,13 +27,12 @@
 
         public async Task<List<ChallengeOverviewDto>> GetAllChallenges()
         {
-            var challenges = db.Challenges.AsNoTracking();
-            return await mapper.ProjectTo<ChallengeOverviewDto>(challenges).ToListAsync();
+            return await mapper.ProjectTo<ChallengeOverviewDto>(db.Challenges).ToListAsync();
         }
 
         public async Task<List<ChallengeOverviewDto>> GetAvailableChallenges(long athleteId)
         {
-            var challenges = db.Challenges.AsNoTracking()
+            var challenges = db.Challenges
                 .Where(p => p.Club.ClubMembers.Any(p => p.AthleteId == athleteId))
                 .OrderByDescending(p => p.StartDate);
 
@@ -52,16 +51,25 @@
 
         public async Task<List<ChallengeParticipationDto>> GetChallengeParticipations(long athleteId)
         {
-            var challengeParticipations = db.ChallengeParticipants.AsNoTracking()
+            var challengeParticipations = db.ChallengeParticipants
                 .Where(p => p.AthleteId == athleteId)
                 .OrderByDescending(p => p.RegistrationDate);
 
             return await mapper.ProjectTo<ChallengeParticipationDto>(challengeParticipations).ToListAsync();
         }
 
-        public async Task<ChallengeDetailsDto> GetChallenge(long id)
+        public async Task<List<ChallengeRankPositionDto>> GetChallengeRank(long challengeId)
         {
-            var entity = await db.Challenges.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            var challengeParticipations = db.ChallengeParticipants
+                .Where(p => p.ChallengeId == challengeId)
+                .OrderBy(p => p.Rank);
+
+            return await mapper.ProjectTo<ChallengeRankPositionDto>(challengeParticipations).ToListAsync();
+        }
+
+        public async Task<ChallengeDetailsDto> GetChallenge(long challengeId)
+        {
+            var entity = await db.Challenges.FirstOrDefaultAsync(p => p.Id == challengeId);
             return mapper.Map<ChallengeDetailsDto>(entity);
         }
 
@@ -82,9 +90,9 @@
             await db.SaveChangesAsync();
         }
 
-        public async Task DeleteChallenge(long id)
+        public async Task DeleteChallenge(long challengeId)
         {
-            var challenge = db.Challenges.Find(id);
+            var challenge = db.Challenges.Find(challengeId);
             db.Challenges.Remove(challenge);
             await db.SaveChangesAsync();
         }

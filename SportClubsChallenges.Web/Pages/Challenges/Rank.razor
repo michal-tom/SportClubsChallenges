@@ -1,0 +1,60 @@
+﻿@page "/challenges/rank/{challengeId}"
+
+@inject IChallengeService challengeService
+
+<br />
+
+@if (challengeDetails == null)
+{
+    <p><em>Loading, please wait...</em></p>
+}
+else
+{
+    <h3><b>@challengeDetails.Name</b> rank list</h3>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Athlete</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var position in rankList)
+            {
+                <tr>
+                    <td>@position.Rank</td>
+                    <td>@position.AthleteName</td>
+                    <td>@position.Score @challengeDetails.ScoreUnit</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    [Parameter]
+    public string ChallengeId { get; set; }
+
+    ChallengeDetailsDto challengeDetails;
+
+    List<ChallengeRankPositionDto> rankList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ChallengeId == null || !long.TryParse(ChallengeId, out long challengeId))
+        {
+            return;
+        }
+
+        challengeDetails = await challengeService.GetChallenge(challengeId);
+        if (challengeDetails == null)
+        {
+            return;
+        }
+
+        rankList = await challengeService.GetChallengeRank(challengeId);
+    }
+}

@@ -12,13 +12,15 @@
 
         Task<List<ChallengeParticipationDto>> GetChallengeParticipations(long athleteId);
 
-        Task<ChallengeDetailsDto> GetChallenge(long id);
+        Task<List<ChallengeRankPositionDto>> GetChallengeRank(long challengeId);
+
+        Task<ChallengeDetailsDto> GetChallenge(long challengeId);
 
         Task AddChallenge(ChallengeDetailsDto dto);
 
         Task UpdatChallenge(ChallengeDetailsDto dto);
 
-        Task DeleteChallenge(long id);
+        Task DeleteChallenge(long challengeId);
 
         Task LeaveChallenge(long athleteId, long challengeId);
 

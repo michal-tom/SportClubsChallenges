@@ -41,6 +41,7 @@ else
                         <td>@challenge.ClubName</td>
                         <td>@challenge.ParticipantsCount</td>
                         <td>
+                            <a class="btn btn-success" href="/challenges/rank/@challenge.Id">Rank</a>
                             @if (challenge.IsAthleteRegistred)
                             {
                             <a class="btn btn-warning" @onclick="() => LeaveChallenge(challenge.Id)">Leave</a>
