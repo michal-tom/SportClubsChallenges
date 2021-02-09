@@ -18,7 +18,7 @@
         public async Task Run()
         {
             var challengesToDeactivate = await this.db.Challenges
-                .Where(p => p.EndDate.Date < DateTime.Now.Date.AddDays(-1))
+                .Where(p => p.IsActive && p.EndDate.Date < DateTime.Now.Date.AddDays(-1))
                 .ToListAsync();
 
             foreach (var challenge in challengesToDeactivate)

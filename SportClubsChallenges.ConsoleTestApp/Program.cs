@@ -20,8 +20,9 @@
 
             var services = ConfigureServices();
 
-            await GetActivities(services);
-            await DeactivateChallenges(services);
+           // await GetActivities(services);
+           // await DeactivateChallenges(services);
+            await UpdateClassifications(services);
 
             Console.ReadKey();
         }
@@ -61,6 +62,14 @@
             var dbContext = services.GetRequiredService<SportClubsChallengesDbContext>();
 
             var job = new DeactivateChallengesJob(dbContext);
+            await job.Run();
+        }
+
+        private static async Task UpdateClassifications(ServiceProvider services)
+        {
+            var dbContext = services.GetRequiredService<SportClubsChallengesDbContext>();
+
+            var job = new UpdateChallengesClassificationsJob(dbContext);
             await job.Run();
         }
     }
