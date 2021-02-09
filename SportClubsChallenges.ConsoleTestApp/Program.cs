@@ -14,13 +14,14 @@
 
     class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Console.WriteLine("SportClubsChallenges Console Test App");
 
             var services = ConfigureServices();
 
-            _ = GetActivities(services);
+            await GetActivities(services);
+            await DeactivateChallenges(services);
 
             Console.ReadKey();
         }
@@ -32,6 +33,7 @@
             services.AddAutoMapper(typeof(DtoModelMappingsProfile));
             services.AddAutoMapper(typeof(StravaModelMappingsProfile));
 
+            // TODO: get connection string from config
             services.AddDbContext<SportClubsChallengesDbContext>(options =>
                 options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SportClubsChallenges;Trusted_Connection=True;MultipleActiveResultSets=true"));
 
@@ -51,6 +53,14 @@
             var mapper = services.GetRequiredService<IMapper>();
 
             var job = new GetAthleteActivitiesJob(dbContext, stravaWrapper, tokenService, mapper);
+            await job.Run();
+        }
+
+        private static async Task DeactivateChallenges(ServiceProvider services)
+        {
+            var dbContext = services.GetRequiredService<SportClubsChallengesDbContext>();
+
+            var job = new DeactivateChallengesJob(dbContext);
             await job.Run();
         }
     }
