@@ -123,7 +123,7 @@
             token.RefreshToken = refreshResponse.RefreshToken;
             token.TokenType = refreshResponse.TokenType;
             token.ExpirationDate = DateTimeOffset.UtcNow.AddSeconds(refreshResponse.ExpiresIn);
-            token.IsRefreshed = true;
+            token.TokenRefresh();
         }
     }
 }

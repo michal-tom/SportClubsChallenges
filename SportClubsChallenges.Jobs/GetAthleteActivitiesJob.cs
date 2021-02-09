@@ -4,6 +4,7 @@
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
+    using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Strava;
     using SportClubsChallenges.Strava.Model;
     using System;
@@ -17,71 +18,76 @@
 
         private readonly IStravaApiWrapper stravaWrapper;
 
+        private readonly ITokenService tokenService;
+
         private readonly IMapper mapper;
 
-        public GetAthleteActivitiesJob(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, IMapper mapper)
+        public GetAthleteActivitiesJob(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
         {
             this.db = db;
             this.stravaWrapper = stravaWrapper;
+            this.tokenService = tokenService;
             this.mapper = mapper;
         }
 
         public async Task Run()
         {
-            var athleths = await this.db.Athletes
+            var athlethsInActiveChallenges = this.db.Athletes
                 .Include(p => p.AthleteStravaToken)
-                .Include(p => p.ChallengeParticipants)
-                .Include(p => p.ChallengeParticipants.Select(p => p.Challenge))
-                .Where(p => p.ChallengeParticipants.Any())
-                .ToListAsync();
+                .Where(p => p.ChallengeParticipants.Any(c => c.Challenge.IsActive))
+                .ToList();
 
-            foreach(var athlete in athleths)
+            foreach(var athlete in athlethsInActiveChallenges)
             {
                 var firstAthleteChallenge = athlete.ChallengeParticipants
                     .Select(p => p.Challenge)
-                    .Where(p => p.EndDate >= DateTime.Now.Date.AddDays(-3))
+                    .Where(p => p.IsActive)
                     .OrderBy(p => p.StartDate)
                     .FirstOrDefault();
 
                 if (firstAthleteChallenge?.StartDate != null)
                 {
-                    await this.GetAthleteActivities(athlete, firstAthleteChallenge.StartDate, DateTimeOffset.Now);
+                    await this.GetAthleteActivitiesAsync(athlete, firstAthleteChallenge.StartDate);
                 }
             }
         }
 
-        private async Task GetAthleteActivities(Athlete athlete, DateTimeOffset startTime, DateTimeOffset endTime)
+        private async Task GetAthleteActivitiesAsync(Athlete athlete, DateTimeOffset startTime)
         {
-            var stravaToken = this.mapper.Map<StravaToken>(athlete.AthleteStravaToken);
+            var stravaToken = this.tokenService.GetStravaToken(athlete);
 
-            List<Activity> activitesFromStrava = await GetActivitiesFromStrava(stravaToken, startTime);
-            List<Activity> activitiesInDb = await GetActivitiesFromDatabase(athlete, startTime);
+            var activitesFromStrava = await GetActivitiesFromStrava(stravaToken, startTime);
+            if (activitesFromStrava == null || !activitesFromStrava.Any())
+            {
+                return;
+            }
+
+            var activitiesInDb = GetActivitiesFromDatabase(athlete.Id, startTime);
             
             this.UpdateActivitiesInDatabase(activitesFromStrava, activitiesInDb);
 
-            // TODO: move to service???
-            //if (stravaToken.IsRefreshed)
-            //{
-            //    this.UpdateStravaToken(athlete, stravaToken);
-            //}
-
-            await db.SaveChangesAsync();
+            db.SaveChanges();
         }
 
         private async Task<List<Activity>> GetActivitiesFromStrava(StravaToken stravaToken, DateTimeOffset startTime)
         {
-            var stravaActivites = await this.stravaWrapper.GetAthleteActivites(stravaToken, startTime, endTime: null);
-            return this.mapper.Map<List<Activity>>(stravaActivites);
+            try
+            {
+                var stravaActivites = await this.stravaWrapper.GetAthleteActivites(stravaToken, startTime, endTime: null);
+                return this.mapper.Map<List<Activity>>(stravaActivites);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
-        private async Task<List<Activity>> GetActivitiesFromDatabase(Athlete athlete, DateTimeOffset startTime)
+        private IQueryable<Activity> GetActivitiesFromDatabase(long athleteId, DateTimeOffset startTime)
         {
-            return await this.db.Activities
-                .Where(p => p.AthleteId == athlete.Id && p.StartDate >= startTime)
-                .ToListAsync();
+            return this.db.Activities.Where(p => p.AthleteId == athleteId && p.StartDate >= startTime);
         }
 
-        private void UpdateActivitiesInDatabase(List<Activity> activitesFromStrava, List<Activity> activitiesInDb)
+        private void UpdateActivitiesInDatabase(List<Activity> activitesFromStrava, IQueryable<Activity> activitiesInDb)
         {
             foreach (var activityFromStrava in activitesFromStrava)
             {
@@ -89,7 +95,7 @@
                 if (currentActivityInDb == null)
                 {
                     this.db.Activities.Add(activityFromStrava);
-                    return;
+                    continue;
                 }
 
                 if (IsActivityChanged(activityFromStrava, currentActivityInDb))
@@ -122,7 +128,7 @@
             currentActivityInDb.IsDeleted = false;
         }
 
-        private static void CheckRemovedActivities(List<Activity> activitesFromStrava, List<Activity> activitiesInDb)
+        private static void CheckRemovedActivities(List<Activity> activitesFromStrava, IQueryable<Activity> activitiesInDb)
         {
             foreach (var currentActivityInDb in activitiesInDb.Where(p => !p.IsDeleted && !activitesFromStrava.Exists(a => a.Id == p.Id)))
             {

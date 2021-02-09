@@ -5,10 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SportClubsChallenges.Database\SportClubsChallenges.Database.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Model\SportClubsChallenges.Model.csproj" />
-    <ProjectReference Include="..\SportClubsChallenges.Services\SportClubsChallenges.Domain.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Strava\SportClubsChallenges.Strava.csproj" />
+    <ProjectReference Include="..\Strava.NET\Strava.NET.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,17 +1,16 @@
-﻿namespace SportClubsChallenges.Domain.Mappings
+﻿namespace SportClubsChallenges.Mappings
 {
     using AutoMapper;
     using SportClubsChallenges.Database.Entities;
-    using SportClubsChallenges.Model.Attributes;
     using SportClubsChallenges.Model.Dto;
     using SportClubsChallenges.Model.Enums;
     using SportClubsChallenges.Strava.Model;
     using SportClubsChallenges.Utils.Helpers;
     using System.Linq;
 
-    public class ModelMappingsProfile : Profile
+    public class DtoModelMappingsProfile : Profile
     {
-        public ModelMappingsProfile()
+        public DtoModelMappingsProfile()
         {
             this.CreateMap<Club, ClubDto>();
 
@@ -45,7 +44,8 @@
                 .ForMember(dest => dest.Rank, opt => opt.MapFrom(src => src.Rank))
                 .ForMember(dest => dest.Score, opt => opt.MapFrom(src => src.Score));
 
-            this.CreateMap<AthleteStravaToken, StravaToken>();
+            this.CreateMap<AthleteStravaToken, StravaToken>()
+                .ForMember(dest => dest.DatabaseId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

@@ -10,17 +10,11 @@ namespace SportClubsChallenges.Web
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Domain.Services;
     using SportClubsChallenges.Domain.Interfaces;
-    using SportClubsChallenges.Domain.Mappings;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using AspNet.Security.OAuth.Strava;
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Authentication;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Security.Claims;
     using SportClubsChallenges.Strava;
-    using SportClubsChallenges.Strava.Mappings;
+    using SportClubsChallenges.Mappings;
 
     public class Startup
     {
@@ -55,7 +49,7 @@ namespace SportClubsChallenges.Web
                     if (user.IsAuthenticated)
                     {
                         var athleteService = ctx.HttpContext.RequestServices.GetService<IAthleteService>();
-                        await athleteService.OnAthleteLogin(user, ctx.Properties.GetTokens());
+                        await athleteService.OnAthleteLogin(user, ctx.Properties);
                     }
 
                     return;
@@ -67,7 +61,7 @@ namespace SportClubsChallenges.Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddAutoMapper(typeof(ModelMappingsProfile));
+            services.AddAutoMapper(typeof(DtoModelMappingsProfile));
             services.AddAutoMapper(typeof(StravaModelMappingsProfile));
 
             services.AddDbContext<SportClubsChallengesDbContext>(options =>
@@ -78,6 +72,7 @@ namespace SportClubsChallenges.Web
             services.AddScoped<IClubService, ClubService>();
             services.AddScoped<IChallengeService, ChallengeService>();
             services.AddScoped<IAthleteService, AthleteService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IStravaApiWrapper, StravaApiWrapper>();
         }
 

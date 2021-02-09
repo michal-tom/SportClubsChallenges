@@ -19,6 +19,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.Strava
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.Jobs", "SportClubsChallenges.Jobs\SportClubsChallenges.Jobs.csproj", "{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.ConsoleTestApp", "SportClubsChallenges.ConsoleTestApp\SportClubsChallenges.ConsoleTestApp.csproj", "{A803C10B-45BA-4D93-924F-E15115D7FB48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportClubsChallenges.Mappings", "SportClubsChallenges.Mappings\SportClubsChallenges.Mappings.csproj", "{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,14 @@ Global
 		{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A803C10B-45BA-4D93-924F-E15115D7FB48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A803C10B-45BA-4D93-924F-E15115D7FB48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A803C10B-45BA-4D93-924F-E15115D7FB48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A803C10B-45BA-4D93-924F-E15115D7FB48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

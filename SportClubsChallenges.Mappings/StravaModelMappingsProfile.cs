@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Strava.Mappings
+﻿namespace SportClubsChallenges.Mappings
 {
     using System;
     using AutoMapper;

@@ -7,6 +7,6 @@
 
     public interface IAthleteService
     {
-        Task OnAthleteLogin(ClaimsIdentity identity, IEnumerable<AuthenticationToken> tokens);
+        Task OnAthleteLogin(ClaimsIdentity identity, AuthenticationProperties properties);
     }
 }
