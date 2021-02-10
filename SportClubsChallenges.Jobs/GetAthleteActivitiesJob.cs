@@ -32,10 +32,10 @@
 
         public async Task Run()
         {
-            var athlethsInActiveChallenges = this.db.Athletes
+            var athlethsInActiveChallenges = await this.db.Athletes
                 .Include(p => p.AthleteStravaToken)
                 .Where(p => p.ChallengeParticipants.Any(c => c.Challenge.IsActive))
-                .ToList();
+                .ToListAsync();
 
             foreach(var athlete in athlethsInActiveChallenges)
             {
@@ -47,26 +47,26 @@
 
                 if (firstAthleteChallenge?.StartDate != null)
                 {
-                    await this.GetAthleteActivitiesAsync(athlete, firstAthleteChallenge.StartDate);
+                    await this.GetAthleteActivities(athlete, firstAthleteChallenge.StartDate);
                 }
             }
         }
 
-        private async Task GetAthleteActivitiesAsync(Athlete athlete, DateTimeOffset startTime)
+        private async Task GetAthleteActivities(Athlete athlete, DateTimeOffset startTime)
         {
             var stravaToken = this.tokenService.GetStravaToken(athlete);
 
-            var activitesFromStrava = await GetActivitiesFromStrava(stravaToken, startTime);
+            var activitesFromStrava = await this.GetActivitiesFromStrava(stravaToken, startTime);
             if (activitesFromStrava == null || !activitesFromStrava.Any())
             {
                 return;
             }
 
-            var activitiesInDb = GetActivitiesFromDatabase(athlete.Id, startTime);
+            var activitiesInDb = await this.GetActivitiesFromDatabase(athlete.Id, startTime);
             
             this.UpdateActivitiesInDatabase(activitesFromStrava, activitiesInDb);
 
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
 
         private async Task<List<Activity>> GetActivitiesFromStrava(StravaToken stravaToken, DateTimeOffset startTime)
@@ -82,12 +82,12 @@
             }
         }
 
-        private IQueryable<Activity> GetActivitiesFromDatabase(long athleteId, DateTimeOffset startTime)
+        private async Task<List<Activity>> GetActivitiesFromDatabase(long athleteId, DateTimeOffset startTime)
         {
-            return this.db.Activities.Where(p => p.AthleteId == athleteId && p.StartDate >= startTime);
+            return await this.db.Activities.Where(p => p.AthleteId == athleteId && p.StartDate >= startTime).ToListAsync();
         }
 
-        private void UpdateActivitiesInDatabase(List<Activity> activitesFromStrava, IQueryable<Activity> activitiesInDb)
+        private void UpdateActivitiesInDatabase(IList<Activity> activitesFromStrava, IList<Activity> activitiesInDb)
         {
             foreach (var activityFromStrava in activitesFromStrava)
             {
@@ -100,7 +100,7 @@
 
                 if (IsActivityChanged(activityFromStrava, currentActivityInDb))
                 {
-                    UpdateActivity(currentActivityInDb);
+                    UpdateActivity(activityFromStrava, currentActivityInDb);
                 }
             }
 
@@ -115,22 +115,22 @@
                 || currentActivityInDb.IsDeleted;
         }
 
-        private static void UpdateActivity(Activity currentActivityInDb)
+        private static void UpdateActivity(Activity activityFromStrava, Activity currentActivityInDb)
         {
-            currentActivityInDb.Name = currentActivityInDb.Name;
-            currentActivityInDb.ActivityTypeId = currentActivityInDb.ActivityTypeId;
-            currentActivityInDb.Duration = currentActivityInDb.Duration;
-            currentActivityInDb.Distance = currentActivityInDb.Distance;
-            currentActivityInDb.Elevation = currentActivityInDb.Elevation;
-            currentActivityInDb.Pace = currentActivityInDb.Pace;
-            currentActivityInDb.StartDate = currentActivityInDb.StartDate;
-            currentActivityInDb.EndDate = currentActivityInDb.EndDate;
+            currentActivityInDb.Name = activityFromStrava.Name;
+            currentActivityInDb.ActivityTypeId = activityFromStrava.ActivityTypeId;
+            currentActivityInDb.Duration = activityFromStrava.Duration;
+            currentActivityInDb.Distance = activityFromStrava.Distance;
+            currentActivityInDb.Elevation = activityFromStrava.Elevation;
+            currentActivityInDb.Pace = activityFromStrava.Pace;
+            currentActivityInDb.StartDate = activityFromStrava.StartDate;
+            currentActivityInDb.EndDate = activityFromStrava.EndDate;
             currentActivityInDb.IsDeleted = false;
         }
 
-        private static void CheckRemovedActivities(List<Activity> activitesFromStrava, IQueryable<Activity> activitiesInDb)
+        private static void CheckRemovedActivities(IList<Activity> activitesFromStrava, IList<Activity> activitiesInDb)
         {
-            foreach (var currentActivityInDb in activitiesInDb.Where(p => !p.IsDeleted && !activitesFromStrava.Exists(a => a.Id == p.Id)))
+            foreach (var currentActivityInDb in activitiesInDb.Where(p => !p.IsDeleted && !activitesFromStrava.Any(a => a.Id == p.Id)))
             {
                 // TODO: test if works
                 currentActivityInDb.IsDeleted = true;

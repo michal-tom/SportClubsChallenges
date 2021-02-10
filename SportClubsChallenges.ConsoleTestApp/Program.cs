@@ -20,8 +20,9 @@
 
             var services = ConfigureServices();
 
-           // await GetActivities(services);
-           // await DeactivateChallenges(services);
+            await GetClubs(services);
+            await GetActivities(services);
+            await DeactivateChallenges(services);
             await UpdateClassifications(services);
 
             Console.ReadKey();
@@ -44,6 +45,17 @@
             services.AddScoped<ITokenService, TokenService>();
 
             return services.BuildServiceProvider();
+        }
+
+        private static async Task GetClubs(ServiceProvider services)
+        {
+            var dbContext = services.GetRequiredService<SportClubsChallengesDbContext>();
+            var stravaWrapper = services.GetRequiredService<IStravaApiWrapper>();
+            var tokenService = services.GetRequiredService<ITokenService>();
+            var mapper = services.GetRequiredService<IMapper>();
+
+            var job = new GetAthleteClubsJob(dbContext, stravaWrapper, tokenService, mapper);
+            await job.Run();
         }
 
         private static async Task GetActivities(ServiceProvider services)
