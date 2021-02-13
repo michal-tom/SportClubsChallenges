@@ -7,21 +7,21 @@ namespace SportClubsChallenges.Web.Pages
 
     public class LoginModel : PageModel
     {
-        public async Task OnGetAsync(string redirectUri)
+        public async Task OnGetAsync(string returnUrl)
         {
-            if (string.IsNullOrEmpty(redirectUri))
+            if (string.IsNullOrEmpty(returnUrl))
             {
-                redirectUri = Url.Content("~");
+                returnUrl = Url.Content("~");
             }
 
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                Response.Redirect(redirectUri);
+                Response.Redirect(returnUrl);
             }
 
             await HttpContext.ChallengeAsync(
                StravaAuthenticationDefaults.AuthenticationScheme,
-               new AuthenticationProperties { RedirectUri = "/" });
+               new AuthenticationProperties { RedirectUri = returnUrl });
         }
     }
 }

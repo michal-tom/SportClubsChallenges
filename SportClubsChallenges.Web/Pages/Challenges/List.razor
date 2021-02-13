@@ -2,6 +2,8 @@
 
 @inject IChallengeService challengeService
 
+@attribute [Authorize]
+
 <br />
 
 @if (challengesModel == null)
@@ -37,18 +39,18 @@ else
                     <tr>
                         <td>@challenge.Name</td>
                         <td>@challenge.Description</td>
-                        <td>@challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()</td>                      
+                        <td>@challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()</td>
                         <td>@challenge.ClubName</td>
                         <td>@challenge.ParticipantsCount</td>
                         <td>
                             <a class="btn btn-success" href="/challenges/rank/@challenge.Id">Rank</a>
                             @if (challenge.IsAthleteRegistred)
                             {
-                            <a class="btn btn-warning" @onclick="() => LeaveChallenge(challenge.Id)">Leave</a>
+                                <a class="btn btn-warning" @onclick="() => LeaveChallenge(challenge.Id)">Leave</a>
                             }
                             else
                             {
-                            <a class="btn btn-success" @onclick="() => JoinChallenge(challenge.Id)">Join</a>
+                                <a class="btn btn-success" @onclick="() => JoinChallenge(challenge.Id)">Join</a>
                             }
                         </td>
                     </tr>

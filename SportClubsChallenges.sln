@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.Jobs",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.ConsoleTestApp", "SportClubsChallenges.ConsoleTestApp\SportClubsChallenges.ConsoleTestApp.csproj", "{A803C10B-45BA-4D93-924F-E15115D7FB48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportClubsChallenges.Mappings", "SportClubsChallenges.Mappings\SportClubsChallenges.Mappings.csproj", "{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.Mappings", "SportClubsChallenges.Mappings\SportClubsChallenges.Mappings.csproj", "{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
