@@ -11,7 +11,7 @@ namespace SportClubsChallenges.Web.Pages
         {
             if (string.IsNullOrEmpty(returnUrl))
             {
-                returnUrl = Url.Content("~");
+                returnUrl = Url.Content("/");
             }
 
             if (HttpContext.User.Identity.IsAuthenticated)

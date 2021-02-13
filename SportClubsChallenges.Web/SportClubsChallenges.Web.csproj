@@ -29,4 +29,8 @@
     <ProjectReference Include="..\SportClubsChallenges.Strava\SportClubsChallenges.Strava.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>

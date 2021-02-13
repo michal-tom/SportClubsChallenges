@@ -1,11 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using System.Net
 
 @inject IHttpContextAccessor httpContextAccessor
 @inject NavigationManager navigationManager
 
 <AuthorizeView>
     <NotAuthorized>
-        <p>Please <a class="btn btn-primary" href="/login?returnUrl=@returnUrl">log in</a></p>
+        <p>Please log in using Strava</p>
+        <p><a href="@loginUrl" class="logstrava">LOG IN</a></p>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -25,17 +27,25 @@
 @code {
 
     private bool showNotAuthorizedMessage = false;
-    private string returnUrl;
+    private string loginUrl;
 
     protected override void OnInitialized()
     {
         var user = httpContextAccessor.HttpContext.User;
-        returnUrl = System.Net.WebUtility.UrlEncode(new Uri(navigationManager.Uri).PathAndQuery);
 
         if (user.Identity.IsAuthenticated)
         {
             // If the user is signed in, but authorization failed, display a message
             showNotAuthorizedMessage = true;
+        }
+        else
+        {
+            loginUrl = "/login";
+            var returnUrl = new Uri(navigationManager.Uri).PathAndQuery;
+            if (!string.IsNullOrEmpty(returnUrl) && returnUrl != "/")
+            {
+                loginUrl += "?returnUrl=" + WebUtility.UrlEncode(returnUrl);
+            }
         }
     }
 }
