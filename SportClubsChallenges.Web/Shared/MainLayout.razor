@@ -1,33 +1,15 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
+<body>
     <NavMenu />
-</div>
 
-<div class="main">
-    <div class="top-row px-4">
-        <AuthorizeView>
-            <Authorized>
-                <ul class="nav pull-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img style="width:30px;margin:-6px 5px -6px 0px;vertical-align:top" src="https://dgalywyr863hv.cloudfront.net/pictures/athletes/9603930/11758174/3/medium.jpg">
-                            @(context.User?.Identity?.Name)
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/logout">Logout</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <span class="poweredbywrapper"><a href="http://www.strava.com" target="_blank" class="poweredbystrava">STRAVA</a></span>
-                    </li>
-                </ul>
-            </Authorized>
-        </AuthorizeView>
-    </div>
-
-    <div class="content px-4">
+    <div class="container">
         @Body
     </div>
-</div>
+</body>
+
+<footer class="border-top footer text-muted fixed-bottom">
+    <div class="container mt-4 mb-4">
+        &copy; 2021 - Sport Clubs Challenges
+    </div>
+</footer>

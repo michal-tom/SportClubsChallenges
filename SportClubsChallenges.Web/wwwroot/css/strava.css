@@ -7,11 +7,11 @@
 
 .poweredbystrava {
     background-image: url('/images/api_logo_pwrdBy_strava_stack_light.png');
-    background-position: 0px 0px;
+    background-position: 0px 5px;
     background-repeat: no-repeat;
     background-color: transparent;
     width: 90px;
-    height: 34px !important;
+    height: 48px !important;
     background-size: 90px;
     margin: 0px -10px 0px 0px;
     text-indent: -10000px;
