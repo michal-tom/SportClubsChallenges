@@ -5,17 +5,26 @@
 
 <section class="section" id="not-authorized-message">
     <div class="container">
-        <div class="notification is-danger">
-            <p>Sorry, there's nothing at this address.</p>
+        <div class="notification">
+            <p>@message</p>
         </div>
     </div>
 </section>
 
 @code {
+
+    private string message = string.Empty;
+
     protected override void OnInitialized()
     {
-        // TODO: remove
-        var user = httpContextAccessor.HttpContext.User;
-        var returnUrl =  System.Net.WebUtility.UrlEncode(new Uri(navigationManager.Uri).PathAndQuery);
+        var currentPath = new Uri(navigationManager.Uri).PathAndQuery;
+        if (!string.IsNullOrEmpty(currentPath) && currentPath.StartsWith("/login"))
+        {
+            message = "Authentication in progress, please wait...";
+        }
+        else
+        {
+            message = "Sorry, there's nothing at this address.";
+        }
     }
 }
