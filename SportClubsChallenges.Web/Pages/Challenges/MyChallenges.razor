@@ -1,6 +1,11 @@
 ﻿@page "/challenges/my"
 
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
 @inject IChallengeService challengeService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
 
 @attribute [Authorize]
 
@@ -14,7 +19,7 @@ else
 {
     <h3>My challenges</h3>
 
-    @if (challengeParticipations == null || challengeParticipations.Count == 0)
+    @if (challengeParticipations.Count == 0)
     {
         <p>You are not registered to any challenge!</p>
         <br />
@@ -54,8 +59,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // TODO: pass correct athlete id
-        var athleteId = 1;
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
         challengeParticipations = await challengeService.GetChallengeParticipations(athleteId);
     }
 }

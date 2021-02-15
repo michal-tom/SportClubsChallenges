@@ -10,6 +10,11 @@
     {
         public long GetAthleteIdFromIdentity(ClaimsIdentity identity)
         {
+            if (identity == null)
+            {
+                return default(long);
+            }
+            
             var identifier = GetClaimValueFromIdentity(identity, ClaimTypes.NameIdentifier);
             if (!long.TryParse(identifier, out long athleteId))
             {
