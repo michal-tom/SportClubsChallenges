@@ -1,12 +1,5 @@
 ﻿@page "/"
 
-<div>
-    <AuthorizeView>
-        <Authorized>
-            <MyChallenges />
-        </Authorized>
-        <NotAuthorized>
-            <NotAuthorizedHandler />
-        </NotAuthorized>
-    </AuthorizeView>
-</div>
+@attribute [Authorize]
+
+<MyChallenges />

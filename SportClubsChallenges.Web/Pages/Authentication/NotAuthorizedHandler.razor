@@ -1,22 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Http
-@using System.Net
 
 @inject IHttpContextAccessor httpContextAccessor
-@inject NavigationManager navigationManager
-
-<AuthorizeView>
-    <NotAuthorized>
-        <p>Please log in using Strava</p>
-        <p><a href="@loginUrl" class="logstrava">LOG IN</a></p>
-    </NotAuthorized>
-</AuthorizeView>
 
 @if (showNotAuthorizedMessage)
 {
     <section class="section" id="not-authorized-message">
         <div class="container">
             <div class="notification is-danger">
-                <h3>Sorry</h3>
                 <p>You're not authorized to reach this page.</p>
                 <p>You may need to log in as a different user or contact with site administrator.</p>
             </div>
@@ -27,7 +17,6 @@
 @code {
 
     private bool showNotAuthorizedMessage = false;
-    private string loginUrl;
 
     protected override void OnInitialized()
     {
@@ -37,15 +26,6 @@
         {
             // If the user is signed in, but authorization failed, display a message
             showNotAuthorizedMessage = true;
-        }
-        else
-        {
-            loginUrl = "/login";
-            var returnUrl = new Uri(navigationManager.Uri).PathAndQuery;
-            if (!string.IsNullOrEmpty(returnUrl) && returnUrl != "/")
-            {
-                loginUrl += "?returnUrl=" + WebUtility.UrlEncode(returnUrl);
-            }
         }
     }
 }

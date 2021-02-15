@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Http
+@using System.Net
+
+@inject IHttpContextAccessor httpContextAccessor
+@inject NavigationManager navigationManager
+
+<AuthorizeView>
+    <NotAuthorized>
+        <p>Please log in using Strava</p>
+        <p><a href="@loginUrl" class="logstrava">LOG IN</a></p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+
+    private string loginUrl = "/login";
+
+    protected override void OnInitialized()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+
+        if (!user.Identity.IsAuthenticated)
+        {
+            loginUrl = "/login";
+            var returnUrl = new Uri(navigationManager.Uri).PathAndQuery;
+            if (!string.IsNullOrEmpty(returnUrl) && returnUrl != "/")
+            {
+                loginUrl += "?returnUrl=" + WebUtility.UrlEncode(returnUrl);
+            }
+        }
+    }
+}

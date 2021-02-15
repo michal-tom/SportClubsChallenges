@@ -14,7 +14,7 @@ namespace SportClubsChallenges.Web.Pages
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             //  await HttpContext.SignOutAsync(StravaAuthenticationDefaults.AuthenticationScheme);
 
-            return LocalRedirect(Url.Content("~/loggedout"));
+            return LocalRedirect(Url.Content("~/signout"));
         }
     }
 }
