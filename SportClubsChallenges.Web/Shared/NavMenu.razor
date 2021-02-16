@@ -11,40 +11,39 @@
                 <div class="@NavMenuCssClass navbar navbar-collapse d-sm-inline-flex flex-sm-row" @onclick="CollapseNavMenu">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
                                 <span class="oi oi-home" aria-hidden="true"></span> Home
                             </NavLink>
                         </li>
                         <li class="nav-item">
-                            <NavLink class="nav-link" href="clubs">
+                            <NavLink class="nav-link" href="/clubs/admin">
                                 <span class="oi oi-plus" aria-hidden="true"></span> Clubs (Admin)
                             </NavLink>
                         </li>
                         <li class="nav-item">
-                            <NavLink class="nav-link" href="challenges/list">
+                            <NavLink class="nav-link" href="/challenges/list">
                                 <span class="oi oi-plus" aria-hidden="true"></span> Challenges
                             </NavLink>
                         </li>
                         <li class="nav-item">
-                            <NavLink class="nav-link" href="profile">
-                                <span class="oi oi-plus" aria-hidden="true"></span> Profile
+                            <NavLink class="nav-link" href="/activities/list">
+                                <span class="oi oi-plus" aria-hidden="true"></span> Activities
                             </NavLink>
                         </li>
                         <li class="nav-item">
-                            <NavLink class="nav-link" href="logout">
+                            <NavLink class="nav-link" href="/logout">
                                 <span class="oi oi-plus" aria-hidden="true"></span> Log out
                             </NavLink>
                         </li>
                     </ul>
                     <ul class="navbar-nav nav pull-right">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <img style="width:30px;vertical-align:top" src="https://dgalywyr863hv.cloudfront.net/pictures/athletes/9603930/11758174/3/medium.jpg">
-                                @(context.User?.Identity?.Name)
-                            </a>
+                            <NavLink class="nav-link" href="/profile">
+                                <span>@(context.User?.Identity?.Name)</span>
+                            </NavLink>
                         </li>
                         <li class="nav-item">
-                            <span class="poweredbywrapper"><a href="http://www.strava.com" target="_blank" class="poweredbystrava">STRAVA</a></span>
+                            <span class="poweredbywrapper"><a href="https://www.strava.com" target="_blank" class="poweredbystrava">STRAVA</a></span>
                         </li>
                     </ul>
                 </div>

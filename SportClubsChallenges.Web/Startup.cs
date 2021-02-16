@@ -72,6 +72,7 @@ namespace SportClubsChallenges.Web
             services.AddScoped<IClubService, ClubService>();
             services.AddScoped<IChallengeService, ChallengeService>();
             services.AddScoped<IAthleteService, AthleteService>();
+            services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IStravaApiWrapper, StravaApiWrapper>();

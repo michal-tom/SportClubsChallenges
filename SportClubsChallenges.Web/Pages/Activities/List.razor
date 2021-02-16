@@ -1,0 +1,70 @@
+﻿@page "/activities/list"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IActivityService activityService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+@attribute [Authorize]
+
+<br />
+
+@if (activitiesModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Duration</th>
+                <th>Distance</th>
+                <th>Elevation</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (activitiesModel.Count == 0)
+            {
+                <tr>
+                    <td colspan="6">
+                        No loaded activities
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var activity in activitiesModel)
+                {
+                    <tr>
+                        <td><a href="@activity.Link" target="_blank">@activity.Name</a></td>
+                        <td>@activity.ActivityType</td>
+                        <td>@activity.StartDate.ToLongTimeString()</td>
+                        <td>@activity.Duration s</td>
+                        <td>@activity.Distance m</td>
+                        <td>@activity.Elevation m</td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+}
+
+@code {
+
+    List<ActivityDto> activitiesModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        activitiesModel = await activityService.GetAthleteActivities(athleteId);
+    }
+}
