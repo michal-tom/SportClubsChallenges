@@ -15,6 +15,7 @@ namespace SportClubsChallenges.Web
     using System.Security.Claims;
     using SportClubsChallenges.Strava;
     using SportClubsChallenges.Mappings;
+    using Radzen;
 
     public class Startup
     {
@@ -60,6 +61,10 @@ namespace SportClubsChallenges.Web
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddScoped<DialogService>();
+            services.AddScoped<NotificationService>();
+            services.AddScoped<TooltipService>();
 
             services.AddAutoMapper(typeof(DtoModelMappingsProfile));
             services.AddAutoMapper(typeof(StravaModelMappingsProfile));
