@@ -17,43 +17,41 @@
 }
 else
 {
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Date</th>
-                <th>Duration</th>
-                <th>Distance</th>
-                <th>Elevation</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (activitiesModel.Count == 0)
-            {
-                <tr>
-                    <td colspan="6">
-                        No loaded activities
-                    </td>
-                </tr>
-            }
-            else
-            {
-                foreach (var activity in activitiesModel)
-                {
-                    <tr>
-                        <td><a href="@activity.Link" target="_blank">@activity.Name</a></td>
-                        <td>@activity.ActivityType</td>
-                        <td>@activity.StartDate.ToLongTimeString()</td>
-                        <td>@activity.Duration s</td>
-                        <td>@activity.Distance m</td>
-                        <td>@activity.Elevation m</td>
-                    </tr>
-                }
-            }
-
-        </tbody>
-    </table>
+    <RadzenGrid Data="@activitiesModel" TItem="ActivityDto"
+                AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                AllowPaging="true" PageSize="10" AllowSorting="true"
+                AllowColumnResize="true">
+        <Columns>
+            <RadzenGridColumn TItem="ActivityDto" Property="Name" Title="Name" >
+                <Template Context="activity">
+                    <a href="@activity.Link" target="_blank" >
+                        <img src="/images/strava_icon.svg" style="height:16px;">
+                    </a> @activity.Name
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ActivityDto" Property="ActivityType" Title="Type" Width="100px" />
+            <RadzenGridColumn TItem="ActivityDto" Title="Date" Property="Date" Width="150px">
+                <Template Context="activity">
+                    @activity.StartDate.ToShortDateString() @activity.StartDate.ToShortTimeString()
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ActivityDto" Title="Time" Property="Duration" Width="100px">
+                <Template Context="activity">
+                    @activity.Duration s
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ActivityDto" Title="Distance" Property="Distance" Width="100px">
+                <Template Context="activity">
+                    @activity.Distance m
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ActivityDto" Title="Elevation" Property="Elevation" Width="100px">
+                <Template Context="activity">
+                    @activity.Elevation m
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
 }
 
 @code {
