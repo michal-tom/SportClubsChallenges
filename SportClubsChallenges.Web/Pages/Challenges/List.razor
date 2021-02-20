@@ -6,65 +6,40 @@
 @inject IChallengeService challengeService
 @inject IIdentityService identityService
 @inject IHttpContextAccessor httpContextAccessor
+@inject NavigationManager navigationManager
+@inject NotificationService NotificationService
 
 @attribute [Authorize]
 
 <br />
 
-@if (challengesModel == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Date Range</th>
-                <th>Club</th>
-                <th>Participants Count</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (challengesModel == null || challengesModel.Count == 0)
-            {
-                <tr>
-                    <td colspan="6">
-                        No active challenges
-                    </td>
-                </tr>
-            }
-            else
-            {
-                foreach (var challenge in challengesModel)
+<RadzenGrid Data="@challengesModel" TItem="ChallengeOverviewDto" 
+            AllowPaging="true" PageSize="10" AllowSorting="true"
+            AllowColumnResize="true">
+    <Columns>
+        <RadzenGridColumn TItem="ChallengeOverviewDto" Property="Name" Title="Name" />
+        <RadzenGridColumn TItem="ChallengeOverviewDto" Property="ClubName" Title="Club" />
+        <RadzenGridColumn TItem="ChallengeOverviewDto" Title="Date Range">
+            <Template Context="challenge">
+                @challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="ChallengeOverviewDto" Property="ParticipantsCount" Title="Participants" />
+        <RadzenGridColumn TItem="ChallengeOverviewDto" Title="Actions">
+            <Template Context="challenge">
+                <RadzenButton Text="Rank" Icon="list" Click=@(() => ShowRank(challenge.Id)) ButtonStyle="ButtonStyle.Secondary" Style="padding: 0px 10px;"></RadzenButton>
+                @if (challenge.IsAthleteRegistred)
                 {
-                    <tr>
-                        <td>@challenge.Name</td>
-                        <td>@challenge.Description</td>
-                        <td>@challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()</td>
-                        <td>@challenge.ClubName</td>
-                        <td>@challenge.ParticipantsCount</td>
-                        <td>
-                            <a class="btn btn-success" href="/challenges/rank/@challenge.Id">Rank</a>
-                            @if (challenge.IsAthleteRegistred)
-                            {
-                                <a class="btn btn-warning" @onclick="() => LeaveChallenge(challenge.Id)">Leave</a>
-                            }
-                            else
-                            {
-                                <a class="btn btn-success" @onclick="() => JoinChallenge(challenge.Id)">Join</a>
-                            }
-                        </td>
-                    </tr>
+                    <RadzenButton Text="Leave" Icon="logout" Click=@(() => LeaveChallenge(challenge.Id, challenge.Name)) ButtonStyle="ButtonStyle.Primary" Style="padding: 0px 10px;"></RadzenButton>
                 }
-            }
-
-        </tbody>
-    </table>
-}
+                else
+                {
+                    <RadzenButton Text="Join" Icon="login" Click=@(() => JoinChallenge(challenge.Id, challenge.Name)) ButtonStyle="ButtonStyle.Success" Style="padding: 0px 10px;"></RadzenButton>
+                }
+            </Template>
+        </RadzenGridColumn>
+    </Columns>
+</RadzenGrid>
 
 @code {
 
@@ -85,15 +60,34 @@ else
         challengesModel = await challengeService.GetAvailableChallenges(this.athleteId);
     }
 
-    protected async Task LeaveChallenge(long challengeId)
+    protected void ShowRank(long challengeId)
+    {
+        navigationManager.NavigateTo($"/challenges/rank/{challengeId}");
+    }
+
+    protected async Task LeaveChallenge(long challengeId, string challengeName)
     {
         await challengeService.LeaveChallenge(this.athleteId, challengeId);
+
+        var message = new NotificationMessage {
+            Severity = NotificationSeverity.Success,
+            Summary = $"You leave '{challengeName}' challenge!"
+        };
+        NotificationService.Notify(message);
+
         await LoadChallenges();
     }
 
-    protected async Task JoinChallenge(long challengeId)
+    protected async Task JoinChallenge(long challengeId, string challengeName)
     {
         await challengeService.JoinChallenge(this.athleteId, challengeId);
+
+        var message = new NotificationMessage {
+            Severity = NotificationSeverity.Success,
+            Summary = $"You successfully join to '{challengeName}' challenge!"
+        };
+        NotificationService.Notify(message);
+
         await LoadChallenges();
     }
 }
