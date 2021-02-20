@@ -8,6 +8,7 @@
 @inject IHttpContextAccessor httpContextAccessor
 @inject NavigationManager navigationManager
 @inject NotificationService NotificationService
+@inject TooltipService tooltipService
 
 @attribute [Authorize]
 
@@ -23,7 +24,13 @@ else
                 AllowPaging="true" PageSize="10" AllowSorting="true"
                 AllowColumnResize="true">
         <Columns>
-            <RadzenGridColumn TItem="ChallengeOverviewDto" Property="Name" Title="Name" />
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Property="Name" Title="Name">
+                <Template Context="challenge">
+                    <RadzenContentContainer MouseEnter="@(args => ShowDescription(args, challenge.Description))">
+                        @challenge.Name
+                    </RadzenContentContainer> 
+                </Template>
+            </RadzenGridColumn>
             <RadzenGridColumn TItem="ChallengeOverviewDto" Property="ClubName" Title="Club" />
             <RadzenGridColumn TItem="ChallengeOverviewDto" Title="Date Range">
                 <Template Context="challenge">
@@ -99,4 +106,13 @@ else
 
         await LoadChallenges();
     }
+
+    protected void ShowDescription(ElementReference elementReference, string description) {
+        if (string.IsNullOrEmpty(description))
+        {
+            return;
+        }
+
+        tooltipService.Open(elementReference, description, new TooltipOptions() { Position = TooltipPosition.Bottom });
     }
+}
