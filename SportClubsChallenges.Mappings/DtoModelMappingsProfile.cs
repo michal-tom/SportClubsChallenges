@@ -6,6 +6,7 @@
     using SportClubsChallenges.Model.Enums;
     using SportClubsChallenges.Strava.Model;
     using SportClubsChallenges.Utils.Helpers;
+    using System;
     using System.Linq;
 
     public class DtoModelMappingsProfile : Profile
