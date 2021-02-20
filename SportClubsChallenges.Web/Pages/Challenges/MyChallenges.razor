@@ -25,29 +25,29 @@ else
     }
     else
     {
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Challenge name</th>
-                    <th>Date range</th>
-                    <th>Club</th>
-                    <th>Rank</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var participation in challengeParticipations)
-                {
-                    <tr>
-                        <td>@participation.ChallengeName</td>
-                        <td>@participation.ChallengeStartDate.ToShortDateString() - @participation.ChallengeEndDate.ToShortDateString()</td>
-                        <td>@participation.ClubName</td>
-                        <td># @participation.Rank</td>
-                        <td>@participation.Score @participation.ScoreUnit</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <RadzenGrid Data="@challengeParticipations" TItem="ChallengeParticipationDto"
+                    AllowPaging="true" PageSize="10" AllowSorting="true"
+                    AllowColumnResize="true">
+            <Columns>
+                <RadzenGridColumn TItem="ChallengeParticipationDto" Property="ChallengeName" Title="Name" />
+                <RadzenGridColumn TItem="ChallengeParticipationDto" Property="ClubName" Title="Club" />
+                <RadzenGridColumn TItem="ChallengeParticipationDto" Title="Date Range">
+                    <Template Context="participation">
+                        @participation.ChallengeStartDate.ToShortDateString() - @participation.ChallengeEndDate.ToShortDateString()
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="ChallengeParticipationDto" Property="Rank" Title="Rank">
+                    <Template Context="participation">
+                        # @participation.Rank
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="ChallengeParticipationDto" Title="Score">
+                    <Template Context="participation">
+                        @participation.Score @participation.ScoreUnit
+                    </Template>
+                </RadzenGridColumn>
+            </Columns>
+        </RadzenGrid>
     }
 }
 

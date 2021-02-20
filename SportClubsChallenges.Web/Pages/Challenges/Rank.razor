@@ -14,25 +14,19 @@ else
 {
     <h3><b>@challengeDetails.Name</b> rank list</h3>
 
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Athlete</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var position in rankList)
-            {
-                <tr>
-                    <td>@position.Rank</td>
-                    <td>@position.AthleteName</td>
-                    <td>@position.Score @challengeDetails.ScoreUnit</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <RadzenGrid Data="@rankList" TItem="ChallengeRankPositionDto"
+                AllowPaging="true" PageSize="10" AllowSorting="true"
+                AllowColumnResize="true">
+        <Columns>
+            <RadzenGridColumn TItem="ChallengeRankPositionDto" Property="Rank" Title="Rank" />
+            <RadzenGridColumn TItem="ChallengeRankPositionDto" Property="AthleteName" Title="Athlete" />
+            <RadzenGridColumn TItem="ChallengeRankPositionDto" Title="Score">
+                <Template Context="position">
+                    @position.Score @challengeDetails.ScoreUnit
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
 }
 
 @code {

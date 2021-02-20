@@ -13,33 +13,40 @@
 
 <br />
 
-<RadzenGrid Data="@challengesModel" TItem="ChallengeOverviewDto" 
-            AllowPaging="true" PageSize="10" AllowSorting="true"
-            AllowColumnResize="true">
-    <Columns>
-        <RadzenGridColumn TItem="ChallengeOverviewDto" Property="Name" Title="Name" />
-        <RadzenGridColumn TItem="ChallengeOverviewDto" Property="ClubName" Title="Club" />
-        <RadzenGridColumn TItem="ChallengeOverviewDto" Title="Date Range">
-            <Template Context="challenge">
-                @challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()
-            </Template>
-        </RadzenGridColumn>
-        <RadzenGridColumn TItem="ChallengeOverviewDto" Property="ParticipantsCount" Title="Participants" />
-        <RadzenGridColumn TItem="ChallengeOverviewDto" Title="Actions">
-            <Template Context="challenge">
-                <RadzenButton Text="Rank" Icon="list" Click=@(() => ShowRank(challenge.Id)) ButtonStyle="ButtonStyle.Secondary" Style="padding: 0px 10px;"></RadzenButton>
-                @if (challenge.IsAthleteRegistred)
-                {
-                    <RadzenButton Text="Leave" Icon="logout" Click=@(() => LeaveChallenge(challenge.Id, challenge.Name)) ButtonStyle="ButtonStyle.Primary" Style="padding: 0px 10px;"></RadzenButton>
-                }
-                else
-                {
-                    <RadzenButton Text="Join" Icon="login" Click=@(() => JoinChallenge(challenge.Id, challenge.Name)) ButtonStyle="ButtonStyle.Success" Style="padding: 0px 10px;"></RadzenButton>
-                }
-            </Template>
-        </RadzenGridColumn>
-    </Columns>
-</RadzenGrid>
+@if (challengesModel == null)
+{
+    <p><em>Loading, please wait...</em></p>
+}
+else
+{
+    <RadzenGrid Data="@challengesModel" TItem="ChallengeOverviewDto"
+                AllowPaging="true" PageSize="10" AllowSorting="true"
+                AllowColumnResize="true">
+        <Columns>
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Property="Name" Title="Name" />
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Property="ClubName" Title="Club" />
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Title="Date Range">
+                <Template Context="challenge">
+                    @challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Property="ParticipantsCount" Title="Participants" />
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Title="Actions">
+                <Template Context="challenge">
+                    <RadzenButton Text="Rank" Icon="list" Click=@(() => ShowRank(challenge.Id)) ButtonStyle="ButtonStyle.Secondary" Style="padding: 0px 10px;"></RadzenButton>
+                    @if (challenge.IsAthleteRegistred)
+                    {
+                        <RadzenButton Text="Leave" Icon="logout" Click=@(() => LeaveChallenge(challenge.Id, challenge.Name)) ButtonStyle="ButtonStyle.Primary" Style="padding: 0px 10px;"></RadzenButton>
+                    }
+                    else
+                    {
+                        <RadzenButton Text="Join" Icon="login" Click=@(() => JoinChallenge(challenge.Id, challenge.Name)) ButtonStyle="ButtonStyle.Success" Style="padding: 0px 10px;"></RadzenButton>
+                    }
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+}
 
 @code {
 
@@ -69,7 +76,8 @@
     {
         await challengeService.LeaveChallenge(this.athleteId, challengeId);
 
-        var message = new NotificationMessage {
+        var message = new NotificationMessage
+        {
             Severity = NotificationSeverity.Success,
             Summary = $"You leave '{challengeName}' challenge!"
         };
@@ -82,7 +90,8 @@
     {
         await challengeService.JoinChallenge(this.athleteId, challengeId);
 
-        var message = new NotificationMessage {
+        var message = new NotificationMessage
+        {
             Severity = NotificationSeverity.Success,
             Summary = $"You successfully join to '{challengeName}' challenge!"
         };
@@ -90,4 +99,4 @@
 
         await LoadChallenges();
     }
-}
+    }
