@@ -19,6 +19,8 @@
 
         public ChallengeTypeEnum ChallengeType { get; set; }
 
+        public int ChallengeParticipantsCount { get; set; }
+
         public string ClubName { get; set; }
 
         public int Rank { get; set; }

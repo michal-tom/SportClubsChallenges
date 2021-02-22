@@ -25,29 +25,31 @@ else
     }
     else
     {
-        <RadzenGrid Data="@challengeParticipations" TItem="ChallengeParticipationDto"
-                    AllowPaging="true" PageSize="10" AllowSorting="true"
-                    AllowColumnResize="true">
-            <Columns>
-                <RadzenGridColumn TItem="ChallengeParticipationDto" Property="ChallengeName" Title="Name" />
-                <RadzenGridColumn TItem="ChallengeParticipationDto" Property="ClubName" Title="Club" />
-                <RadzenGridColumn TItem="ChallengeParticipationDto" Title="Date Range">
-                    <Template Context="participation">
-                        @participation.ChallengeStartDate.ToShortDateString() - @participation.ChallengeEndDate.ToShortDateString()
-                    </Template>
-                </RadzenGridColumn>
-                <RadzenGridColumn TItem="ChallengeParticipationDto" Property="Rank" Title="Rank">
-                    <Template Context="participation">
-                        # @participation.Rank
-                    </Template>
-                </RadzenGridColumn>
-                <RadzenGridColumn TItem="ChallengeParticipationDto" Title="Score">
-                    <Template Context="participation">
-                        @participation.Score @participation.ScoreUnit
-                    </Template>
-                </RadzenGridColumn>
-            </Columns>
-        </RadzenGrid>
+        // TODO: move all styles to css
+        <RadzenDataList WrapItems="true" AllowPaging="true" Data="@challengeParticipations" TItem="ChallengeParticipationDto">
+            <Template Context="participation">
+                <RadzenCard Style="width:100%; background-color: #f7f1ec6e;">
+                    <a href="/challenges/rank/@participation.ChallengeId" class="link-unstyled">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div>Name:</div>
+                                <b>@participation.ChallengeName</b>
+                                <div style="margin-top:10px">Club:</div>
+                                <b>@participation.ClubName</b>
+                                <div style="margin-top:10px">Date Range:</div>
+                                <b>@participation.ChallengeStartDate.ToShortDateString() - @participation.ChallengeEndDate.ToShortDateString()</b>
+                            </div>
+                            <div class="col-md-6">
+                                <div>Current Rank:</div>
+                                <b>@participation.Rank / @participation.ChallengeParticipantsCount</b>
+                                <div style="margin-top:10px">Score:</div>
+                                <b>@participation.Score @participation.ScoreUnit</b>
+                            </div>
+                        </div>
+                    </a>
+                </RadzenCard>
+            </Template>
+        </RadzenDataList>
     }
 }
 
