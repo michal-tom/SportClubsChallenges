@@ -12,21 +12,31 @@
 }
 else
 {
-    <h3><b>@challengeDetails.Name</b> rank list</h3>
-
-    <RadzenGrid Data="@rankList" TItem="ChallengeRankPositionDto"
-                AllowPaging="true" PageSize="10" AllowSorting="true"
-                AllowColumnResize="true">
-        <Columns>
-            <RadzenGridColumn TItem="ChallengeRankPositionDto" Property="Rank" Title="Rank" />
-            <RadzenGridColumn TItem="ChallengeRankPositionDto" Property="AthleteName" Title="Athlete" />
-            <RadzenGridColumn TItem="ChallengeRankPositionDto" Title="Score">
-                <Template Context="position">
-                    @position.Score @challengeDetails.ScoreUnit
-                </Template>
-            </RadzenGridColumn>
-        </Columns>
-    </RadzenGrid>
+    <RadzenFieldset>
+        <HeaderTemplate>
+            <span>
+                <RadzenIcon Icon="list" />
+                <span style="font-size:24px;">
+                    <b>@challengeDetails.Name</b> leaderboard
+                </span>
+            </span>
+        </HeaderTemplate>
+        <ChildContent>
+            <RadzenGrid Data="@rankList" TItem="ChallengeRankPositionDto"
+                        AllowPaging="true" PageSize="10" AllowSorting="true"
+                        AllowColumnResize="true">
+                <Columns>
+                    <RadzenGridColumn TItem="ChallengeRankPositionDto" Property="Rank" Title="Rank" />
+                    <RadzenGridColumn TItem="ChallengeRankPositionDto" Property="AthleteName" Title="Athlete" />
+                    <RadzenGridColumn TItem="ChallengeRankPositionDto" Title="Score">
+                        <Template Context="position">
+                            @position.Score @challengeDetails.ScoreUnit
+                        </Template>
+                    </RadzenGridColumn>
+                </Columns>
+            </RadzenGrid>
+        </ChildContent>
+    </RadzenFieldset>
 }
 
 @code {

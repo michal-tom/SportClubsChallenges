@@ -23,6 +23,8 @@
 
         public string ClubName { get; set; }
 
+        public string ClubIconUrl { get; set; }
+
         public int Rank { get; set; }
 
         public int Score { get; set; }
