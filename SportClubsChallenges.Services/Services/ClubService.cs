@@ -1,6 +1,7 @@
 ﻿namespace SportClubsChallenges.Domain.Services
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,21 @@
             var entity = await db.Clubs.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
             return mapper.Map<ClubDto>(entity);
         }
-   
+
+        public async Task<List<AthleteDto>> GetMembers(long id)
+        {
+            var clubMembers = this.db.ClubMembers.Where(p => p.ClubId == id).Select(p => p.Athlete);
+
+            return await mapper.ProjectTo<AthleteDto>(clubMembers).ToListAsync();
+        }
+
+        public async Task<List<ChallengeOverviewDto>> GetChallenges(long id)
+        {
+            var clubChallenges = this.db.Challenges.Where(p => p.ClubId == id);
+
+            return await mapper.ProjectTo<ChallengeOverviewDto>(clubChallenges).ToListAsync();
+        }
+
         public async Task AddClub(ClubDto dto)
         {
             var entity = mapper.Map<Club>(dto);

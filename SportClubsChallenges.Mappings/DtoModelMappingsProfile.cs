@@ -15,6 +15,10 @@
         {
             this.CreateMap<Club, ClubDto>();
 
+            this.CreateMap<Athlete, AthleteDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
+                .ForMember(dest => dest.IconUrl, opt => opt.MapFrom(src => src.IconUrlMedium));
+
             this.CreateMap<Challenge, ChallengeDetailsDto>()
                 .ForMember(dest => dest.ChallengeTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeTypeEnum) src.ChallengeType)))
                 .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Club.Name))

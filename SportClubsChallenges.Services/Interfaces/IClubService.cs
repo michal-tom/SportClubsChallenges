@@ -10,6 +10,10 @@
 
         Task<ClubDto> GetClub(long id);
 
+        Task<List<AthleteDto>> GetMembers(long id);
+
+        Task<List<ChallengeOverviewDto>> GetChallenges(long id);
+
         Task AddClub(ClubDto dto);
 
         Task UpdatClub(ClubDto dto);
