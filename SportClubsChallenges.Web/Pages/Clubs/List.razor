@@ -1,0 +1,70 @@
+﻿@page "/clubs/list"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IClubService clubService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+@attribute [Authorize]
+
+<br />
+
+@if (clubsModel == null)
+{
+    <p><em>Loading, please wait...</em></p>
+}
+else
+{
+    <RadzenPanel AllowCollapse="true">
+        <HeaderTemplate>
+            <span style="float:left;">
+                <RadzenIcon Icon="stars" /><b style="font-size:24px">My clubs</b>
+            </span>
+        </HeaderTemplate>
+        <ChildContent>
+
+            @if (clubsModel.Count == 0)
+            {
+                <p>You are not member of any Starava club!</p>
+                <br />
+                <p>Please go <a class="btn btn-primary" href="https://www.strava.com/" target="_blank">Strava</a> and join to club.</p>
+            }
+            else
+            {
+                // TODO: move all styles to css
+                <RadzenDataList WrapItems="true" Data="@clubsModel" TItem="ClubDto">
+                    <Template Context="club">
+                        <RadzenCard Style="width:200px; background-color: #f7f1ec6e;">
+                            <a href="/clubs/details/@club.Id" class="link-unstyled">
+                                <div>
+                                    <b>@club.Name</b>
+                                    <br />
+                                    @if (!string.IsNullOrEmpty(club.IconUrl))
+                                    {
+                                        <RadzenImage Path="@club.IconUrl" Style="width:75px;" />
+                                    }
+                                </div>
+                            </a>
+                        </RadzenCard>
+                    </Template>
+                </RadzenDataList>
+            }
+        </ChildContent>
+    </RadzenPanel>
+}
+
+@code {
+
+    List<ClubDto> clubsModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        clubsModel = await clubService.GetAthleteClubs(athleteId);
+    }
+}
+
