@@ -18,7 +18,7 @@ else
     <RadzenPanel AllowCollapse="true">
         <HeaderTemplate>
             <span style="float:left;">
-                <RadzenIcon Icon="stars" /><b style="font-size:24px">My challenges</b>
+                <RadzenIcon Icon="stars" /><b style="font-size:18px">My challenges</b>
             </span>
         </HeaderTemplate>
         <ChildContent>
@@ -34,7 +34,7 @@ else
                 // TODO: move all styles to css
                 <RadzenDataList WrapItems="true" AllowPaging="true" Data="@challengeParticipations" TItem="ChallengeParticipationDto">
                     <Template Context="participation">
-                        <RadzenCard Style="width:100%; background-color: #f7f1ec6e;">
+                        <RadzenCard Style="width: 350px; background-color: #f7f1ec6e;">
                             <a href="/challenges/rank/@participation.ChallengeId" class="link-unstyled">
                                 <div class="row">
                                     <div class="col-md-6">

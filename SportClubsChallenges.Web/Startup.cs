@@ -70,7 +70,7 @@ namespace SportClubsChallenges.Web
             services.AddAutoMapper(typeof(StravaModelMappingsProfile));
 
             services.AddDbContext<SportClubsChallengesDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
 
             services.AddHttpClient<StravaApiWrapper>();
 
