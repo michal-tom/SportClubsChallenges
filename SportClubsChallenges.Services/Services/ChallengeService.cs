@@ -142,8 +142,8 @@
 
             var challengeParticipation = new ChallengeParticipant { AthleteId = athleteId, ChallengeId = challengeId };
             challengeParticipation.Score = 0;
-            challengeParticipation.RegistrationDate = DateTime.Now;
-            challengeParticipation.LastUpdateDate = DateTime.Now;
+            challengeParticipation.RegistrationDate = DateTimeOffset.Now;
+            challengeParticipation.LastUpdateDate = DateTimeOffset.Now;
             challengeParticipation.Rank = await challengeParticipants.CountAsync(p => p.ChallengeId == challengeId) + 1;
 
             db.ChallengeParticipants.Add(challengeParticipation);
@@ -168,9 +168,9 @@
         private void AddChallenge(ChallengeDetailsDto dto)
         {
             var entity = mapper.Map<Challenge>(dto);
-            entity.CreationDate = DateTime.Now;
+            entity.CreationDate = DateTimeOffset.Now;
             entity.Club = db.Clubs.Find(dto.ClubId);
-            entity.Owner = db.Athletes.Find(dto.OwnerId);
+            entity.Author = db.Athletes.Find(dto.AuthorId);
             entity.ChallengeActivityTypes = new List<ChallengeActivityType>();
             foreach (var activityTypeId in dto.ActivityTypesIds)
             {
@@ -183,9 +183,9 @@
         {
             var entity = db.Challenges.Find(dto.Id);
             mapper.Map(dto, entity);
-            entity.EditionDate = DateTime.Now;
+            entity.EditionDate = DateTimeOffset.Now;
             entity.Club = db.Clubs.Find(dto.ClubId);
-            entity.Owner = db.Athletes.Find(dto.OwnerId);
+            entity.Author = db.Athletes.Find(dto.AuthorId);
             if (entity.ChallengeActivityTypes.Any())
             {
                 entity.ChallengeActivityTypes.Clear();

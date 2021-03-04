@@ -15,9 +15,9 @@
 
         public long ClubId { get; set; }
 
-        public DateTime StartDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
 
         public byte ChallengeType { get; set; }
 
@@ -25,11 +25,11 @@
 
         public bool IncludeOnlyGpsActivities { get; set; }
 
-        public long OwnerId { get; set; }
+        public long AuthorId { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
 
-        public DateTime EditionDate { get; set; }
+        public DateTimeOffset EditionDate { get; set; }
 
         #region References
 
@@ -39,7 +39,7 @@
 
         public virtual ICollection<ChallengeParticipant> ChallengeParticipants { get; set; }
 
-        public virtual Athlete Owner { get; set; }
+        public virtual Athlete Author { get; set; }
 
         #endregion
     }

@@ -19,8 +19,4 @@
     <ProjectReference Include="..\SportClubsChallenges.Model\SportClubsChallenges.Model.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

@@ -100,7 +100,11 @@
             var athlete = this.db.Athletes.Include(p => p.AthleteStravaToken).FirstOrDefault(p => p.Id == athleteId);
             if (athlete == null)
             {
-                athlete = new Athlete { Id = athleteId, CreationDate = DateTimeOffset.Now };
+                athlete = new Athlete { 
+                    Id = athleteId, 
+                    CreationDate = DateTimeOffset.Now, 
+                    AthleteStravaToken = new AthleteStravaToken()
+                };
                 this.db.Athletes.Add(athlete);
             }
 

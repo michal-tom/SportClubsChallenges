@@ -159,7 +159,7 @@ else
         var user = httpContextAccessor.HttpContext.User;
         var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
-        challenge.OwnerId = athleteId;
+        challenge.AuthorId = athleteId;
         challenge.ActivityTypesIds = selectedActivityTypes.Select(p => p.Key).ToList();
 
         await challengeService.AddOrEditChallenge(challenge);

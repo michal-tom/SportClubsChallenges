@@ -21,8 +21,10 @@
 
             this.CreateMap<Challenge, ChallengeDetailsDto>()
                 .ForMember(dest => dest.ChallengeTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeTypeEnum) src.ChallengeType)))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.LocalDateTime))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.LocalDateTime))
                 .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Club.Name))
-                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.FirstName + " " + src.Owner.LastName))
+                .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.FirstName + " " + src.Author.LastName))
                 .ForMember(dest => dest.ActivityTypes, opt => opt.MapFrom(src => string.Join(",", src.ChallengeActivityTypes.Select(p => p.ActivityType.Name))))
                 .ForMember(dest => dest.ActivityTypesIds, opt => opt.MapFrom(src => src.ChallengeActivityTypes.Select(p => p.ActivityTypeId)))
                 .ForMember(dest => dest.ParticipantsCount, opt => opt.MapFrom(src => src.ChallengeParticipants.Count))
@@ -30,14 +32,16 @@
 
             this.CreateMap<Challenge, ChallengeOverviewDto>()
                 .ForMember(dest => dest.ChallengeTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeTypeEnum) src.ChallengeType)))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.LocalDateTime))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.LocalDateTime))
                 .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Club.Name))
                 .ForMember(dest => dest.ParticipantsCount, opt => opt.MapFrom(src => src.ChallengeParticipants.Count));
 
             this.CreateMap<ChallengeParticipant, ChallengeParticipationDto>()
                 .ForMember(dest => dest.ChallengeId, opt => opt.MapFrom(src => src.ChallengeId))
                 .ForMember(dest => dest.ChallengeName, opt => opt.MapFrom(src => src.Challenge.Name))
-                .ForMember(dest => dest.ChallengeStartDate, opt => opt.MapFrom(src => src.Challenge.StartDate))
-                .ForMember(dest => dest.ChallengeEndDate, opt => opt.MapFrom(src => src.Challenge.EndDate))
+                .ForMember(dest => dest.ChallengeStartDate, opt => opt.MapFrom(src => src.Challenge.StartDate.LocalDateTime))
+                .ForMember(dest => dest.ChallengeEndDate, opt => opt.MapFrom(src => src.Challenge.EndDate.LocalDateTime))
                 .ForMember(dest => dest.ChallengeType, opt => opt.MapFrom(src => (ChallengeTypeEnum) src.Challenge.ChallengeType))
                 .ForMember(dest => dest.IsChallengeActive, opt => opt.MapFrom(src => src.Challenge.IsActive))
                 .ForMember(dest => dest.ChallengeParticipantsCount, opt => opt.MapFrom(src => src.Challenge.ChallengeParticipants.Count))

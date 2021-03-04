@@ -22,7 +22,7 @@
         {
             var activeChallenges = await this.db.Challenges
                 .Include(p => p.ChallengeActivityTypes)
-                .Where(p => p.IsActive && p.StartDate.Date <= DateTime.Now.Date)
+                .Where(p => p.IsActive && p.StartDate.Date <= DateTimeOffset.Now.Date)
                 .ToListAsync();
 
             foreach (var challenge in activeChallenges)
@@ -98,7 +98,7 @@
             foreach(var participant in participants.OrderByDescending(p => p.Score).ThenBy(p => p.RegistrationDate))
             {
                 participant.Rank = rank++;
-                participant.LastUpdateDate = DateTime.Now;
+                participant.LastUpdateDate = DateTimeOffset.Now;
             }
         }
     }

@@ -12,9 +12,9 @@
 
         public int Rank { get; set; }
 
-        public DateTime RegistrationDate { get; set; }
+        public DateTimeOffset RegistrationDate { get; set; }
 
-        public DateTime LastUpdateDate { get; set; }
+        public DateTimeOffset LastUpdateDate { get; set; }
 
         #region References
 

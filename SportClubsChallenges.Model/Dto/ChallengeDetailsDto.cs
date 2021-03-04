@@ -42,9 +42,9 @@
 
         public bool IncludeOnlyGpsActivities { get; set; }
 
-        public long OwnerId { get; set; }
+        public long AuthorId { get; set; }
 
-        public string OwnerName { get; set; }
+        public string AuthorName { get; set; }
 
         public DateTime CreationDate { get; set; }
 
