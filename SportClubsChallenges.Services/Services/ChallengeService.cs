@@ -73,27 +73,37 @@
             return mapper.Map<ChallengeDetailsDto>(entity);
         }
 
-        public async Task AddChallenge(ChallengeDetailsDto dto)
+        public async Task AddOrEditChallenge(ChallengeDetailsDto dto)
         {
-            var entity = mapper.Map<Challenge>(dto);
-            entity.CreationDate = DateTime.Now;
-            // TODO: pass creator id
-            entity.OwnerId = 1;
-            db.Challenges.Add(entity);
-            await db.SaveChangesAsync();
-        }
+            if (dto.Id == default(long))
+            {
+                this.AddChallenge(dto);
+            }
+            else
+            {
+                this.EditChallenge(dto);
+            }
 
-        public async Task UpdatChallenge(ChallengeDetailsDto dto)
-        {
-            var entity = db.Challenges.Find(dto.Id);
-            mapper.Map(dto, entity);
             await db.SaveChangesAsync();
         }
 
         public async Task DeleteChallenge(long challengeId)
         {
+            var challengeParticipations = db.ChallengeParticipants.Where(p => p.ChallengeId == challengeId);
+            foreach(var parcitipation in challengeParticipations)
+            {
+                db.ChallengeParticipants.Remove(parcitipation);
+            }
+
+            var challengeActivityTypes = db.ChallengeActivityTypes.Where(p => p.ChallengeId == challengeId);
+            foreach (var activityType in challengeActivityTypes)
+            {
+                db.ChallengeActivityTypes.Remove(activityType);
+            }
+
             var challenge = db.Challenges.Find(challengeId);
             db.Challenges.Remove(challenge);
+
             await db.SaveChangesAsync();
         }
 
@@ -153,6 +163,37 @@
         public async Task<Dictionary<byte, string>> GetAvailableActivityTypes()
         {
             return await db.ActivityTypes.AsNoTracking().ToDictionaryAsync(p => p.Id, p => p.Name);
+        }
+
+        private void AddChallenge(ChallengeDetailsDto dto)
+        {
+            var entity = mapper.Map<Challenge>(dto);
+            entity.CreationDate = DateTime.Now;
+            entity.Club = db.Clubs.Find(dto.ClubId);
+            entity.Owner = db.Athletes.Find(dto.OwnerId);
+            entity.ChallengeActivityTypes = new List<ChallengeActivityType>();
+            foreach (var activityTypeId in dto.ActivityTypesIds)
+            {
+                entity.ChallengeActivityTypes.Add(new ChallengeActivityType { ChallengeId = entity.Id, ActivityTypeId = activityTypeId });
+            }
+            db.Challenges.Add(entity);
+        }
+
+        private void EditChallenge(ChallengeDetailsDto dto)
+        {
+            var entity = db.Challenges.Find(dto.Id);
+            mapper.Map(dto, entity);
+            entity.EditionDate = DateTime.Now;
+            entity.Club = db.Clubs.Find(dto.ClubId);
+            entity.Owner = db.Athletes.Find(dto.OwnerId);
+            if (entity.ChallengeActivityTypes.Any())
+            {
+                entity.ChallengeActivityTypes.Clear();
+            }
+            foreach (var activityTypeId in dto.ActivityTypesIds)
+            {
+                entity.ChallengeActivityTypes.Add(new ChallengeActivityType { ChallengeId = entity.Id, ActivityTypeId = activityTypeId });
+            }
         }
     }
 }

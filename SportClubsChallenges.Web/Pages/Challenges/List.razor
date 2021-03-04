@@ -7,7 +7,7 @@
 @inject IIdentityService identityService
 @inject IHttpContextAccessor httpContextAccessor
 @inject NavigationManager navigationManager
-@inject NotificationService NotificationService
+@inject NotificationService notificationService
 @inject TooltipService tooltipService
 
 @attribute [Authorize]
@@ -88,7 +88,7 @@ else
             Severity = NotificationSeverity.Success,
             Summary = $"You leave '{challengeName}' challenge!"
         };
-        NotificationService.Notify(message);
+        notificationService.Notify(message);
 
         await LoadChallenges();
     }
@@ -102,12 +102,13 @@ else
             Severity = NotificationSeverity.Success,
             Summary = $"You successfully join to '{challengeName}' challenge!"
         };
-        NotificationService.Notify(message);
+        notificationService.Notify(message);
 
         await LoadChallenges();
     }
 
-    protected void ShowDescription(ElementReference elementReference, string description) {
+    protected void ShowDescription(ElementReference elementReference, string description)
+    {
         if (string.IsNullOrEmpty(description))
         {
             return;

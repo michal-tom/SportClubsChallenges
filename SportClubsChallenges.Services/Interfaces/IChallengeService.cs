@@ -16,9 +16,7 @@
 
         Task<ChallengeDetailsDto> GetChallenge(long challengeId);
 
-        Task AddChallenge(ChallengeDetailsDto dto);
-
-        Task UpdatChallenge(ChallengeDetailsDto dto);
+        Task AddOrEditChallenge(ChallengeDetailsDto dto);
 
         Task DeleteChallenge(long challengeId);
 

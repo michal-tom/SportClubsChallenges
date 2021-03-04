@@ -1,11 +1,14 @@
 ﻿@page "/challenges/admin"
 
 @inject IChallengeService challengeService
+@inject NavigationManager navigationManager
+@inject NotificationService notificationService
+@inject TooltipService tooltipService
 
 @attribute [Authorize(Roles = "Admin")]
 
 <div>
-    <a class="btn btn-primary" href='/challenges/add'>Add new challenge</a>
+    <a class="btn btn-primary" href='/challenges/edit'>Add new challenge</a>
 </div>
 <br />
 
@@ -15,44 +18,32 @@
 }
 else
 {
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th class="sort-th">
-                    Id
-                </th>
-                <th class="sort-th">
-                    Name
-                </th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (challengesModel == null || challengesModel.Count == 0)
-            {
-                <tr>
-                    <td colspan="3">
-                        No Records to display
-                    </td>
-                </tr>
-            }
-            else
-            {
-                foreach (var challenge in challengesModel)
-                {
-                    <tr>
-                        <td>@challenge.Id</td>
-                        <td>@challenge.Name</td>
-                        <td>
-                            <a class="btn btn-primary" href='/challenges/edit/@challenge.Id'>Edit</a>  |
-                            <a class="btn btn-danger" @onclick="() => DeleteChallenge(challenge.Id)">Delete</a>
-                        </td>
-                    </tr>
-                }
-            }
-
-        </tbody>
-    </table>
+    <RadzenGrid Data="@challengesModel" TItem="ChallengeOverviewDto"
+                AllowPaging="true" PageSize="10" AllowSorting="true"
+                AllowColumnResize="true">
+        <Columns>
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Property="Name" Title="Name">
+                <Template Context="challenge">
+                    <RadzenContentContainer MouseEnter="@(args => ShowDescription(args, challenge.Description))">
+                        @challenge.Name
+                    </RadzenContentContainer>
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Property="ClubName" Title="Club" />
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Title="Date Range">
+                <Template Context="challenge">
+                    @challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Property="ParticipantsCount" Title="Participants" />
+            <RadzenGridColumn TItem="ChallengeOverviewDto" Title="Actions">
+                <Template Context="challenge">
+                    <RadzenButton Text="Edit" Icon="list" Click=@(() => EditChallenge(challenge.Id)) ButtonStyle="ButtonStyle.Secondary" Style="padding: 0px 10px;"></RadzenButton>
+                    <RadzenButton Text="Delete" Icon="login" Click=@(() => DeleteChallenge(challenge.Id, challenge.Name)) ButtonStyle="ButtonStyle.Primary" Style="padding: 0px 10px;"></RadzenButton>
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
 }
 
 @code {
@@ -64,14 +55,37 @@ else
         await LoadChallenges();
     }
 
-    protected async Task DeleteChallenge(long id)
+    protected async Task DeleteChallenge(long id, string challengeName)
     {
         await challengeService.DeleteChallenge(id);
+
+        var message = new NotificationMessage
+        {
+            Severity = NotificationSeverity.Success,
+            Summary = $"Challenge '{challengeName}' was successfully removed!"
+        };
+        notificationService.Notify(message);
+
         await LoadChallenges();
+    }
+
+    protected void EditChallenge(long id)
+    {
+        navigationManager.NavigateTo($"/challenges/edit/{id}");
     }
 
     private async Task LoadChallenges()
     {
         challengesModel = await challengeService.GetAllChallenges();
+    }
+
+    protected void ShowDescription(ElementReference elementReference, string description)
+    {
+        if (string.IsNullOrEmpty(description))
+        {
+            return;
+        }
+
+        tooltipService.Open(elementReference, description, new TooltipOptions() { Position = TooltipPosition.Bottom });
     }
 }

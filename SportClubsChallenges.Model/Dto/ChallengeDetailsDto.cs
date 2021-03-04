@@ -15,6 +15,7 @@
             this.ParticipantsCount = 0;
             this.StartDate = DateTime.Now.Date;
             this.EndDate = DateTime.Now.Date;
+            this.ActivityTypesIds = new List<byte>();
         }
 
         public long Id { get; set; }
@@ -51,7 +52,7 @@
 
         public string ActivityTypes { get; set; }
 
-        public List<byte> ActivityTypesIds { get; set; }
+        public IEnumerable<byte> ActivityTypesIds { get; set; }
 
         public int ParticipantsCount { get; set; }
 
