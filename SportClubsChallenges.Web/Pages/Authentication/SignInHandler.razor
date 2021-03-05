@@ -17,9 +17,9 @@
 
     protected override void OnInitialized()
     {
-        var user = httpContextAccessor.HttpContext.User;
+        var user = httpContextAccessor?.HttpContext?.User;
 
-        if (!user.Identity.IsAuthenticated)
+        if (user != null && !user.Identity.IsAuthenticated)
         {
             loginUrl = "/login";
             var returnUrl = new Uri(navigationManager.Uri).PathAndQuery;
