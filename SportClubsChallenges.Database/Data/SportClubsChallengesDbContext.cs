@@ -80,12 +80,14 @@
 
             modelBuilder.Entity<AthleteStravaToken>().HasData(
                 new AthleteStravaToken { Id = 1, AccessToken = new Guid().ToString(), RefreshToken = new Guid().ToString(), ExpirationDate = DateTimeOffset.Now.AddDays(1) },
-                new AthleteStravaToken { Id = 2, AccessToken = new Guid().ToString(), RefreshToken = new Guid().ToString(), ExpirationDate = DateTimeOffset.Now.AddDays(1) }
+                new AthleteStravaToken { Id = 2, AccessToken = new Guid().ToString(), RefreshToken = new Guid().ToString(), ExpirationDate = DateTimeOffset.Now.AddDays(1) },
+                new AthleteStravaToken { Id = 3, AccessToken = new Guid().ToString(), RefreshToken = new Guid().ToString(), ExpirationDate = DateTimeOffset.Now.AddDays(1) }
             );
 
             modelBuilder.Entity<Athlete>().HasData(
                 new Athlete { Id = 1, FirstName = "John", LastName = "Smith", AthleteStravaTokenId = 1 },
-                new Athlete { Id = 2, FirstName = "Lucy", LastName = "White", AthleteStravaTokenId = 2 }
+                new Athlete { Id = 2, FirstName = "Lucy", LastName = "White", AthleteStravaTokenId = 2 },
+                new Athlete { Id = 9603930, FirstName = "Michał", LastName = "T.", AthleteStravaTokenId = 3, IsAdmin = true }
             );
 
             modelBuilder.Entity<Club>().HasData(
@@ -96,7 +98,9 @@
             modelBuilder.Entity<ClubMember>().HasData(
                 new ClubMember { ClubId = 1, AthleteId = 1 },
                 new ClubMember { ClubId = 1, AthleteId = 2 },
-                new ClubMember { ClubId = 2, AthleteId = 1 }
+                new ClubMember { ClubId = 2, AthleteId = 1 },
+                new ClubMember { ClubId = 1, AthleteId = 9603930 },
+                new ClubMember { ClubId = 2, AthleteId = 9603930 }
             );
 
             modelBuilder.Entity<Challenge>().HasData(
@@ -108,7 +112,8 @@
             modelBuilder.Entity<ChallengeParticipant>().HasData(
                 new ChallengeParticipant { AthleteId = 1, ChallengeId = 1, Rank = 1, Score = 100, RegistrationDate = DateTimeOffset.Now, LastUpdateDate = DateTimeOffset.Now },
                 new ChallengeParticipant { AthleteId = 1, ChallengeId = 2, Rank = 4, Score = 11, RegistrationDate = DateTimeOffset.Now, LastUpdateDate = DateTimeOffset.Now },
-                new ChallengeParticipant { AthleteId = 2, ChallengeId = 1, Rank = 5, Score = 14, RegistrationDate = DateTimeOffset.Now, LastUpdateDate = DateTimeOffset.Now }
+                new ChallengeParticipant { AthleteId = 2, ChallengeId = 1, Rank = 5, Score = 14, RegistrationDate = DateTimeOffset.Now, LastUpdateDate = DateTimeOffset.Now },
+                new ChallengeParticipant { AthleteId = 9603930, ChallengeId = 1, Rank = 2, Score = 18, RegistrationDate = DateTimeOffset.Now, LastUpdateDate = DateTimeOffset.Now }
             );
         }
     }
