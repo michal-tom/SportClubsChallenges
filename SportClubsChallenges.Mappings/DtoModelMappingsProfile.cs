@@ -23,6 +23,8 @@
                 .ForMember(dest => dest.ChallengeTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeTypeEnum) src.ChallengeType)))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.LocalDateTime))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.LocalDateTime))
+                .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.CreationDate.LocalDateTime))
+                .ForMember(dest => dest.EditionDate, opt => opt.MapFrom(src => src.EditionDate.LocalDateTime))
                 .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Club.Name))
                 .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.FirstName + " " + src.Author.LastName))
                 .ForMember(dest => dest.ActivityTypes, opt => opt.MapFrom(src => string.Join(",", src.ChallengeActivityTypes.Select(p => p.ActivityType.Name))))
