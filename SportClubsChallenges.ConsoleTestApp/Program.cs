@@ -11,6 +11,8 @@
     using SportClubsChallenges.Mappings;
     using System;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Configuration;
+    using System.IO;
 
     public class Program
     {
@@ -20,24 +22,45 @@
 
             var services = ConfigureServices();
 
+            Console.WriteLine("Configuring - DONE");
+
             await GetClubs(services);
+
+            Console.WriteLine("Get clubs - DONE");
+
             await GetActivities(services);
+
+            Console.WriteLine("Get activities - DONE");
+
             await DeactivateChallenges(services);
+
+            Console.WriteLine("Deactivate challenges - DONE");
+
             await UpdateClassifications(services);
+
+            Console.WriteLine("Update classifications - DONE");
+            Console.WriteLine();
+            Console.WriteLine("Wait for any key");
 
             Console.ReadKey();
         }
 
         private static ServiceProvider ConfigureServices()
         {
+            var builder = new ConfigurationBuilder()
+               .SetBasePath(Directory.GetCurrentDirectory())
+               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+
+            var connectionstring = configuration.GetConnectionString("SportClubsChallengesDbConnString");
+
             var services = new ServiceCollection();
 
             services.AddAutoMapper(typeof(DtoModelMappingsProfile));
             services.AddAutoMapper(typeof(StravaModelMappingsProfile));
 
-            // TODO: get connection string from config
-            services.AddDbContext<SportClubsChallengesDbContext>(options =>
-                options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SportClubsChallenges;Trusted_Connection=True;MultipleActiveResultSets=true"));
+            services.AddDbContext<SportClubsChallengesDbContext>(options => options.UseSqlServer(connectionstring));
 
             services.AddHttpClient<StravaApiWrapper>();
 
