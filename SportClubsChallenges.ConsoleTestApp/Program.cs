@@ -88,7 +88,7 @@
             var tokenService = services.GetRequiredService<ITokenService>();
             var mapper = services.GetRequiredService<IMapper>();
 
-            var job = new GetAthleteActivitiesJob(dbContext, stravaWrapper, tokenService, mapper);
+            var job = new GetActiveAthletesActivitiesJob(dbContext, stravaWrapper, tokenService, mapper);
             await job.Run();
         }
 

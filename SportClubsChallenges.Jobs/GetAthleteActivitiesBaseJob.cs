@@ -12,8 +12,11 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class GetAthleteActivitiesJob
+    public class GetAthleteActivitiesBaseJob
     {
+        // TODO: get from config
+        private readonly DateTimeOffset applicationStartDate = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
         private readonly SportClubsChallengesDbContext db;
 
         private readonly IStravaApiWrapper stravaWrapper;
@@ -22,7 +25,7 @@
 
         private readonly IMapper mapper;
 
-        public GetAthleteActivitiesJob(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
+        public GetAthleteActivitiesBaseJob(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
         {
             this.db = db;
             this.stravaWrapper = stravaWrapper;
@@ -30,40 +33,18 @@
             this.mapper = mapper;
         }
 
-        public async Task Run()
-        {
-            var athlethsInActiveChallenges = await this.db.Athletes
-                .Include(p => p.AthleteStravaToken)
-                .Where(p => p.ChallengeParticipants.Any(c => c.Challenge.IsActive))
-                .ToListAsync();
-
-            foreach(var athlete in athlethsInActiveChallenges)
-            {
-                var firstAthleteChallenge = athlete.ChallengeParticipants
-                    .Select(p => p.Challenge)
-                    .Where(p => p.IsActive)
-                    .OrderBy(p => p.StartDate)
-                    .FirstOrDefault();
-
-                if (firstAthleteChallenge?.StartDate != null)
-                {
-                    await this.GetAthleteActivities(athlete, firstAthleteChallenge.StartDate);
-                }
-            }
-        }
-
-        private async Task GetAthleteActivities(Athlete athlete, DateTimeOffset startTime)
+        protected async Task GetAthleteActivities(Athlete athlete)
         {
             var stravaToken = this.tokenService.GetStravaToken(athlete);
 
-            var activitesFromStrava = await this.GetActivitiesFromStrava(stravaToken, startTime);
+            var activitesFromStrava = await this.GetActivitiesFromStrava(stravaToken, this.applicationStartDate);
             if (activitesFromStrava == null || !activitesFromStrava.Any())
             {
                 return;
             }
 
-            var activitiesInDb = await this.GetActivitiesFromDatabase(athlete.Id, startTime);
-            
+            var activitiesInDb = await this.GetActivitiesFromDatabase(athlete.Id, this.applicationStartDate);
+
             this.UpdateActivitiesInDatabase(activitesFromStrava, activitiesInDb);
 
             await db.SaveChangesAsync();
