@@ -42,6 +42,17 @@
             }
         }
 
+        public async Task Run(long athleteId)
+        {
+            var athlete = this.db.Athletes.Find(athleteId);
+            if (athlete == null)
+            {
+                return;
+            }
+
+            await this.GetAthleteClubs(athlete);
+        }
+
         private async Task GetAthleteClubs(Athlete athlete)
         {
             var stravaToken = this.tokenService.GetStravaToken(athlete);

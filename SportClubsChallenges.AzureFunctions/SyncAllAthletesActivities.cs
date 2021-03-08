@@ -31,7 +31,7 @@ namespace SportClubsChallenges.AzureFunctions
         }
 
         // TODO: change authorization level
-        [FunctionName("ImportStravaActivities")]
+        [FunctionName("SyncAllAthletesActivities")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)

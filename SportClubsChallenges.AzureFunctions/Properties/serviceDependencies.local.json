@@ -6,6 +6,15 @@
     "storage1": {
       "type": "storage.emulator",
       "connectionId": "AzureWebJobsStorage"
+    },
+    "secrets1": {
+      "type": "secrets.user"
+    },
+    "storage2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/sportclubschallengestor",
+      "type": "storage.azure",
+      "connectionId": "AthletesClubsSyncQueue",
+      "secretStore": "LocalSecretsFile"
     }
   }
 }

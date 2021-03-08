@@ -16,10 +16,9 @@
             this.db = db;
         }
 
-        public async Task Run(long atheletId)
+        public async Task Run(long athleteId)
         {
-            // get all athletes from active challenges
-            var athlete = this.db.Athletes.Find(atheletId);
+            var athlete = this.db.Athletes.Find(athleteId);
             if (athlete == null)
             {
                 return;
