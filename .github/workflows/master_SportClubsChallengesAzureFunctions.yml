@@ -26,7 +26,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: 'Clean nuget cache'
-      run: dotnet clean ./ SportClubsChallenges/SportClubsChallenges.sln --configuration Release && dotnet nuget locals all --clear
+      run: dotnet clean ./SportClubsChallenges/SportClubsChallenges.sln --configuration Release && dotnet nuget locals all --clear
 
     - name: 'Resolve Project Dependencies Using Dotnet'
       shell: pwsh
