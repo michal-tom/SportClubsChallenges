@@ -1,20 +1,18 @@
 namespace SportClubsChallenges.AzureFunctions
 {
-    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.WebJobs;
     using Microsoft.Azure.WebJobs.Extensions.Http;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Strava;
     using SportClubsChallenges.Domain.Interfaces;
     using AutoMapper;
-    using SportClubsChallenges.Jobs;
+    using SportClubsChallenges.Jobs.Activities;
 
-    public class SyncStravaActivities
+    public class SyncAllAthletesActivities
     {
         private readonly SportClubsChallengesDbContext db;
 
@@ -24,7 +22,7 @@ namespace SportClubsChallenges.AzureFunctions
 
         private readonly IMapper mapper;
 
-        public SyncStravaActivities(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
+        public SyncAllAthletesActivities(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
         {
             this.db = db;
             this.stravaWrapper = stravaWrapper;
@@ -38,7 +36,7 @@ namespace SportClubsChallenges.AzureFunctions
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation($"C# HTTP trigger function {nameof(SyncStravaActivities)}");
+            log.LogInformation($"C# HTTP trigger function {nameof(SyncAllAthletesActivities)}");
 
             var job = new GetActiveAthletesActivitiesJob(this.db, this.stravaWrapper, this.tokenService, this.mapper);
             await job.Run();

@@ -6,7 +6,9 @@
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Domain.Services;
-    using SportClubsChallenges.Jobs;
+    using SportClubsChallenges.Jobs.Activities;
+    using SportClubsChallenges.Jobs.Challenges;
+    using SportClubsChallenges.Jobs.Clubs;
     using SportClubsChallenges.Strava;
     using SportClubsChallenges.Mappings;
     using System;

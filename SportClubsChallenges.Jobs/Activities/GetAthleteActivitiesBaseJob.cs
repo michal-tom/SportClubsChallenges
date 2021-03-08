@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Jobs
+﻿namespace SportClubsChallenges.Jobs.Activities
 {
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
@@ -37,17 +37,17 @@
         {
             var stravaToken = this.tokenService.GetStravaToken(athlete);
 
-            var activitesFromStrava = await this.GetActivitiesFromStrava(stravaToken, this.applicationStartDate);
+            var activitesFromStrava = await this.GetActivitiesFromStrava(stravaToken, applicationStartDate);
             if (activitesFromStrava == null || !activitesFromStrava.Any())
             {
                 return;
             }
 
-            var activitiesInDb = await this.GetActivitiesFromDatabase(athlete.Id, this.applicationStartDate);
+            var activitiesInDb = await this.GetActivitiesFromDatabase(athlete.Id, applicationStartDate);
 
             this.UpdateActivitiesInDatabase(activitesFromStrava, activitiesInDb);
 
-            await db.SaveChangesAsync();
+            await this.db.SaveChangesAsync();
         }
 
         private async Task<List<Activity>> GetActivitiesFromStrava(StravaToken stravaToken, DateTimeOffset startTime)

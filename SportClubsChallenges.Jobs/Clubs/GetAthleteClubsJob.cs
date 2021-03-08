@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Jobs
+﻿namespace SportClubsChallenges.Jobs.Clubs
 {
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
@@ -56,7 +56,7 @@
 
             this.UpdateClubsMambership(athlete.Id, athleteClubsInStrava, athleteClubMemebershipInDb);
 
-            await db.SaveChangesAsync();
+            await this.db.SaveChangesAsync();
         }
 
         private async Task<List<Club>> GetClubsFromStrava(StravaToken stravaToken)
@@ -86,7 +86,7 @@
                 var currentAthleteClubMemebershipInDb = athleteClubMemebershipInDb.FirstOrDefault(p => p.ClubId == clubInStrava.Id);
                 if (currentAthleteClubMemebershipInDb == null)
                 {
-                    this.db.ClubMembers.Add(new ClubMember { AthleteId = athleteId, ClubId = clubInStrava.Id });
+                    db.ClubMembers.Add(new ClubMember { AthleteId = athleteId, ClubId = clubInStrava.Id });
                 }
             }
         }

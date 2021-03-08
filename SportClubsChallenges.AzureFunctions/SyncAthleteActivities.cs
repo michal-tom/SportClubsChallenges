@@ -12,7 +12,7 @@ namespace SportClubsChallenges.AzureFunctions
     using SportClubsChallenges.Strava;
     using SportClubsChallenges.Domain.Interfaces;
     using AutoMapper;
-    using SportClubsChallenges.Jobs;
+    using SportClubsChallenges.Jobs.Activities;
 
     public class SyncAthleteActivities
     {

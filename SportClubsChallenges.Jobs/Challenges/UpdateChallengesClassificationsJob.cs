@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Jobs
+﻿namespace SportClubsChallenges.Jobs.Challenges
 {
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
@@ -27,7 +27,7 @@
 
             foreach (var challenge in activeChallenges)
             {
-                await this.UpdateClassification(challenge);
+                await UpdateClassification(challenge);
             }
         }
 
@@ -45,13 +45,13 @@
 
             foreach (var participant in participants)
             {
-                var activities = await this.GetAthleteActivitiesForChallenge(participant.Athlete, challenge);
+                var activities = await GetAthleteActivitiesForChallenge(participant.Athlete, challenge);
 
-                participant.Score = this.CalculateScore(activities, challenge);
+                participant.Score = CalculateScore(activities, challenge);
             }
 
-            this.UpdateRank(participants);
-            
+            UpdateRank(participants);
+
             await this.db.SaveChangesAsync();
         }
 
@@ -60,8 +60,8 @@
             var challengeActivityTypes = challenge.ChallengeActivityTypes.Select(p => p.ActivityType);
 
             return await this.db.Activities
-                .Where(p => p.AthleteId == athlete.Id 
-                    && !p.IsDeleted 
+                .Where(p => p.AthleteId == athlete.Id
+                    && !p.IsDeleted
                     && p.StartDate >= challenge.StartDate
                     && p.EndDate <= challenge.EndDate
                     && !(p.IsManual && challenge.PreventManualActivities)
@@ -72,7 +72,7 @@
 
         private int CalculateScore(List<Activity> activities, Challenge challenge)
         {
-            var challengeType = (ChallengeTypeEnum) challenge.ChallengeType;
+            var challengeType = (ChallengeTypeEnum)challenge.ChallengeType;
             var score = 0;
 
             switch (challengeType)
@@ -95,7 +95,7 @@
         {
             var rank = 1;
 
-            foreach(var participant in participants.OrderByDescending(p => p.Score).ThenBy(p => p.RegistrationDate))
+            foreach (var participant in participants.OrderByDescending(p => p.Score).ThenBy(p => p.RegistrationDate))
             {
                 participant.Rank = rank++;
                 participant.LastUpdateDate = DateTimeOffset.Now;

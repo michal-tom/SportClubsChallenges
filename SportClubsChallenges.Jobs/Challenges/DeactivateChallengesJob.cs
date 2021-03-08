@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Jobs
+﻿namespace SportClubsChallenges.Jobs.Challenges
 {
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
@@ -26,7 +26,7 @@
                 challenge.IsActive = false;
             }
 
-            await this.db.SaveChangesAsync();
+            await db.SaveChangesAsync();
         }
     }
 }

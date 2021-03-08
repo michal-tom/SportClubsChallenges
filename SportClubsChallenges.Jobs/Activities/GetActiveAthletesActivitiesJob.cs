@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Jobs
+﻿namespace SportClubsChallenges.Jobs.Activities
 {
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
@@ -26,7 +26,7 @@
                 .Where(p => p.ChallengeParticipants.Any(c => c.Challenge.IsActive))
                 .ToListAsync();
 
-            foreach(var athlete in athlethsInActiveChallenges)
+            foreach (var athlete in athlethsInActiveChallenges)
             {
                 await this.GetAthleteActivities(athlete);
             }

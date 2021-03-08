@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Jobs
+﻿namespace SportClubsChallenges.Jobs.Activities
 {
     using AutoMapper;
     using SportClubsChallenges.Database.Data;
@@ -25,7 +25,7 @@
                 return;
             }
 
-            await this.GetAthleteActivities(athlete);
+            await GetAthleteActivities(athlete);
         }
     }
 }
