@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Jobs.Challenges
+﻿namespace SportClubsChallenges.Jobs
 {
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
@@ -18,7 +18,29 @@
             this.db = db;
         }
 
-        public async Task Run()
+        public async Task Run(long? challengeId = null)
+        {
+            if (challengeId.HasValue)
+            {
+                await this.UpdateSpecifiedChallengeClassification(challengeId.Value);
+                return;
+            }
+
+            await this.UpdateAllChallengesClassifications();
+        }
+
+        private async Task UpdateSpecifiedChallengeClassification(long challengeId)
+        {
+            var athlete = this.db.Challenges.Find(challengeId);
+            if (athlete == null)
+            {
+                return;
+            }
+
+            await UpdateClassification(athlete);
+        }
+
+        private async Task UpdateAllChallengesClassifications()
         {
             var activeChallenges = await this.db.Challenges
                 .Include(p => p.ChallengeActivityTypes)

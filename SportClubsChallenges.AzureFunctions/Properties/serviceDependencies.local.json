@@ -13,7 +13,7 @@
     "storage2": {
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/sportclubschallengestor",
       "type": "storage.azure",
-      "connectionId": "AthletesClubsSyncQueue",
+      "connectionId": "SportClubsChallengeStorage",
       "secretStore": "LocalSecretsFile"
     }
   }

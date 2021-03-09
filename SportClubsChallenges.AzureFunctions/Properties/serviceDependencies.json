@@ -12,7 +12,7 @@
     },
     "storage2": {
       "type": "storage",
-      "connectionId": "AthletesClubsSyncQueue"
+      "connectionId": "SportClubsChallengeStorage"
     }
   }
 }

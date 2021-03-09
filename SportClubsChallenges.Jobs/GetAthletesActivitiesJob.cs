@@ -1,5 +1,9 @@
-﻿namespace SportClubsChallenges.Jobs.Activities
+﻿namespace SportClubsChallenges.Jobs
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
@@ -7,12 +11,8 @@
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Strava;
     using SportClubsChallenges.Strava.Model;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
-    public class GetAthleteActivitiesBaseJob
+    public class GetAthletesActivitiesJob
     {
         // TODO: get from config
         private readonly DateTimeOffset applicationStartDate = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
@@ -25,7 +25,7 @@
 
         private readonly IMapper mapper;
 
-        public GetAthleteActivitiesBaseJob(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
+        public GetAthletesActivitiesJob(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
         {
             this.db = db;
             this.stravaWrapper = stravaWrapper;
@@ -33,7 +33,43 @@
             this.mapper = mapper;
         }
 
-        protected async Task GetAthleteActivities(Athlete athlete)
+        public async Task Run(long? athleteId = null)
+        {
+            if (athleteId.HasValue)
+            {
+                await this.GetSpecifiedAthleteActivities(athleteId.Value);
+                return;
+            }
+
+            await this.GetAllAthletesActivities();
+        }
+
+        private async Task GetSpecifiedAthleteActivities(long athleteId)
+        {
+            var athlete = this.db.Athletes.Find(athleteId);
+            if (athlete == null)
+            {
+                return;
+            }
+
+            await GetAthleteActivities(athlete);
+        }
+
+        private async Task GetAllAthletesActivities()
+        {
+            // get all athletes from active challenges
+            var athlethsInActiveChallenges = await this.db.Athletes
+                .Include(p => p.AthleteStravaToken)
+                .Where(p => p.ChallengeParticipants.Any(c => c.Challenge.IsActive))
+                .ToListAsync();
+
+            foreach (var athlete in athlethsInActiveChallenges)
+            {
+                await this.GetAthleteActivities(athlete);
+            }
+        }
+
+        private async Task GetAthleteActivities(Athlete athlete)
         {
             var stravaToken = this.tokenService.GetStravaToken(athlete);
 

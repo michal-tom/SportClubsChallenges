@@ -1,11 +1,11 @@
-namespace SportClubsChallenges.AzureFunctions
+namespace SportClubsChallenges.AzureFunctions.Queue
 {
     using AutoMapper;
     using Microsoft.Azure.WebJobs;
     using Microsoft.Extensions.Logging;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Domain.Interfaces;
-    using SportClubsChallenges.Jobs.Clubs;
+    using SportClubsChallenges.Jobs;
     using SportClubsChallenges.Strava;
     using System.Threading.Tasks;
 
@@ -28,17 +28,19 @@ namespace SportClubsChallenges.AzureFunctions
         }
 
         [FunctionName("SyncAthleteClubs")]
-        public async Task Run([QueueTrigger("athletes-clubs-sync", Connection = "ConnectionStrings:AthletesClubsSyncQueue")]string myQueueItem, ILogger log)
+        public async Task Run(
+            [QueueTrigger("athletes-clubs-sync", Connection = "ConnectionStrings:SportClubsChallengeStorage")] string queueItem,
+            ILogger log)
         {
-            log.LogInformation($"Queue trigger function {nameof(SyncAthleteActivities)} processed with item: {myQueueItem}");
+            log.LogInformation($"Queue trigger function {nameof(SyncAthleteActivities)} processed with item: {queueItem}");
 
-            if (string.IsNullOrEmpty(myQueueItem) || !long.TryParse(myQueueItem, out long athleteId))
+            if (string.IsNullOrEmpty(queueItem) || !long.TryParse(queueItem, out long athleteId))
             {
-                log.LogError($"Cannot parse '{myQueueItem}' to athlete identifier");
+                log.LogError($"Cannot parse '{queueItem}' to athlete identifier");
                 return;
             }
 
-            var job = new GetAthleteClubsJob(this.db, this.stravaWrapper, this.tokenService, this.mapper);
+            var job = new GetAthletesClubsJob(this.db, this.stravaWrapper, this.tokenService, this.mapper);
             await job.Run(athleteId);
         }
     }

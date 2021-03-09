@@ -43,7 +43,7 @@
         public async Task OnAthleteLogin(ClaimsIdentity identity, AuthenticationProperties properties)
         {
             var athleteId = this.identityService.GetAthleteIdFromIdentity(identity);
-            if (athleteId == default(long))
+            if (athleteId == default)
             {
                 // TODO: log error
                 return;

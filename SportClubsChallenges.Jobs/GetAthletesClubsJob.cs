@@ -1,5 +1,9 @@
-﻿namespace SportClubsChallenges.Jobs.Clubs
+﻿namespace SportClubsChallenges.Jobs
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
@@ -7,12 +11,8 @@
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Strava;
     using SportClubsChallenges.Strava.Model;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
-    public class GetAthleteClubsJob
+    public class GetAthletesClubsJob
     {
         private readonly SportClubsChallengesDbContext db;
 
@@ -22,7 +22,7 @@
 
         private readonly IMapper mapper;
 
-        public GetAthleteClubsJob(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
+        public GetAthletesClubsJob(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
         {
             this.db = db;
             this.stravaWrapper = stravaWrapper;

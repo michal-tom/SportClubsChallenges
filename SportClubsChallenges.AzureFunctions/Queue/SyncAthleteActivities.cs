@@ -1,18 +1,13 @@
-namespace SportClubsChallenges.AzureFunctions
+namespace SportClubsChallenges.AzureFunctions.Queue
 {
-    using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.WebJobs;
-    using Microsoft.Azure.WebJobs.Extensions.Http;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json;
-    using SportClubsChallenges.Database.Data;
-    using SportClubsChallenges.Strava;
-    using SportClubsChallenges.Domain.Interfaces;
     using AutoMapper;
-    using SportClubsChallenges.Jobs.Activities;
+    using SportClubsChallenges.Database.Data;
+    using SportClubsChallenges.Domain.Interfaces;
+    using SportClubsChallenges.Jobs;
+    using SportClubsChallenges.Strava;
 
     public class SyncAthleteActivities
     {
@@ -33,27 +28,20 @@ namespace SportClubsChallenges.AzureFunctions
         }
 
         [FunctionName("SyncAthleteActivities")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+        public async Task Run(
+            [QueueTrigger("athletes-activities-sync", Connection = "ConnectionStrings:SportClubsChallengeStorage")] string queueItem,
             ILogger log)
         {
             log.LogInformation($"C# HTTP trigger function {nameof(SyncAthleteActivities)}");
 
-            string id = req.Query["id"];
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            id = id ?? data?.id;
-
-            if (string.IsNullOrEmpty(id) || !long.TryParse(id, out long athleteId))
+            if (string.IsNullOrEmpty(queueItem) || !long.TryParse(queueItem, out long athleteId))
             {
-                return new NotFoundResult();
+                log.LogError($"Cannot parse '{queueItem}' to athlete identifier");
+                return;
             }
 
-            var job = new GetSpecifiedAthleteActivitiesJob(this.db, this.stravaWrapper, this.tokenService, this.mapper);
+            var job = new GetAthletesActivitiesJob(this.db, this.stravaWrapper, this.tokenService, this.mapper);
             await job.Run(athleteId);
-
-            return new OkObjectResult("OK");
         }
     }
 }

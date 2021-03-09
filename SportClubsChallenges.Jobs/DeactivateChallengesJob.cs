@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Jobs.Challenges
+﻿namespace SportClubsChallenges.Jobs
 {
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;

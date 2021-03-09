@@ -1,24 +1,22 @@
 ﻿namespace SportClubsChallenges.ConsoleTestApp
 {
-    using AutoMapper;
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using AutoMapper;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Domain.Services;
-    using SportClubsChallenges.Jobs.Activities;
-    using SportClubsChallenges.Jobs.Challenges;
-    using SportClubsChallenges.Jobs.Clubs;
-    using SportClubsChallenges.Strava;
+    using SportClubsChallenges.Jobs;
     using SportClubsChallenges.Mappings;
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Configuration;
-    using System.IO;
+    using SportClubsChallenges.Strava;
 
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static async Task Main()
         {
             Console.WriteLine("SportClubsChallenges Console Test App");
 
@@ -79,7 +77,7 @@
             var tokenService = services.GetRequiredService<ITokenService>();
             var mapper = services.GetRequiredService<IMapper>();
 
-            var job = new GetAthleteClubsJob(dbContext, stravaWrapper, tokenService, mapper);
+            var job = new GetAthletesClubsJob(dbContext, stravaWrapper, tokenService, mapper);
             await job.Run();
         }
 
@@ -90,7 +88,7 @@
             var tokenService = services.GetRequiredService<ITokenService>();
             var mapper = services.GetRequiredService<IMapper>();
 
-            var job = new GetActiveAthletesActivitiesJob(dbContext, stravaWrapper, tokenService, mapper);
+            var job = new GetAthletesActivitiesJob(dbContext, stravaWrapper, tokenService, mapper);
             await job.Run();
         }
 
