@@ -32,7 +32,7 @@ namespace SportClubsChallenges.AzureFunctions.Queue
             [QueueTrigger("athletes-activities-sync", Connection = "ConnectionStrings:SportClubsChallengeStorage")] string queueItem,
             ILogger log)
         {
-            log.LogInformation($"C# HTTP trigger function {nameof(SyncAthleteActivities)}");
+            log.LogInformation($"Queue trigger function {nameof(SyncAthleteActivities)}");
 
             if (string.IsNullOrEmpty(queueItem) || !long.TryParse(queueItem, out long athleteId))
             {

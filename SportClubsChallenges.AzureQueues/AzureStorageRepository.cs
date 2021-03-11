@@ -21,7 +21,7 @@ namespace SportClubsChallenges.AzureQueues
                 return;
             }
             
-            QueueClient queue = new QueueClient(this.connectionString, queueName);
+            QueueClient queue = new QueueClient(this.connectionString, queueName, new QueueClientOptions { MessageEncoding = QueueMessageEncoding.Base64 });
             await queue.CreateIfNotExistsAsync();
 
             await queue.SendMessageAsync(message);
