@@ -1,15 +1,12 @@
 ﻿namespace SportClubsChallenges.Domain.Services
 {
-    using AutoMapper;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.EntityFrameworkCore;
+    using SportClubsChallenges.AzureQueues;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
-    using SportClubsChallenges.Strava;
-    using SportClubsChallenges.Strava.Model;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -18,26 +15,22 @@
     {
         private readonly SportClubsChallengesDbContext db;
 
-        private readonly IStravaApiWrapper stravaWrapper;
-
         private readonly ITokenService tokenService;
 
         private readonly IIdentityService identityService;
 
-        private readonly IMapper mapper;
+        private readonly IAzureStorageRepository storageRepository;
 
         public AthleteService(
             SportClubsChallengesDbContext db,
-            IStravaApiWrapper stravaWrapper,
             ITokenService tokenService,
             IIdentityService identityService,
-            IMapper mapper)
+            IAzureStorageRepository storageRepository)
         {
             this.db = db;
-            this.stravaWrapper = stravaWrapper;
             this.tokenService = tokenService;
             this.identityService = identityService;
-            this.mapper = mapper;
+            this.storageRepository = storageRepository;
         }
 
         public async Task OnAthleteLogin(ClaimsIdentity identity, AuthenticationProperties properties)
@@ -55,44 +48,7 @@
 
             this.identityService.UpdateIdentity(identity, athlete);
 
-            var stravaToken = this.mapper.Map<StravaToken>(athlete.AthleteStravaToken);
-
-            await this.UpdateAthleteClubs(athleteId, stravaToken);
-        }
-
-        // TODO: move to club service or add event
-        private async Task UpdateAthleteClubs(long athleteId, StravaToken stravaToken)
-        {
-            var stravaSummaryClubs = await this.stravaWrapper.GetAthleteClubs(stravaToken);
-            var clubsInStrava = this.mapper.Map<List<Club>>(stravaSummaryClubs);
-
-            var clubsInDb = await this.db.Clubs.ToListAsync();
-            var athleteClubMemebershipInDb = await this.db.ClubMembers.Where(p => p.AthleteId == athleteId).ToListAsync();
-
-            foreach (var clubInStrava in clubsInStrava)
-            {
-                var currentClubInDb = clubsInDb.FirstOrDefault(p => p.Id == clubInStrava.Id);
-                if (currentClubInDb == null)
-                {
-                    this.db.Clubs.Add(clubInStrava);
-                }
-                else if (currentClubInDb.Name != clubInStrava.Name
-                    || currentClubInDb.MembersCount != clubInStrava.MembersCount
-                    || currentClubInDb.IconUrl != clubInStrava.IconUrl)
-                {
-                    currentClubInDb.Name = clubInStrava.Name;
-                    currentClubInDb.MembersCount = clubInStrava.MembersCount;
-                    currentClubInDb.IconUrl = clubInStrava.IconUrl;
-                }
-
-                var currentAthleteClubMemebershipInDb = athleteClubMemebershipInDb.FirstOrDefault(p => p.ClubId == clubInStrava.Id);
-                if (currentAthleteClubMemebershipInDb == null)
-                {
-                    this.db.ClubMembers.Add(new ClubMember { AthleteId = athleteId, ClubId = clubInStrava.Id });
-                }
-            }
-
-            await db.SaveChangesAsync();
+            await this.UpdateAthleteClubs(athlete.Id);
         }
 
         private async Task<Athlete> UpdateAthleteData(ClaimsIdentity identity, long athleteId)
@@ -115,6 +71,12 @@
             await db.SaveChangesAsync();
 
             return athlete;
+        }
+
+        private async Task UpdateAthleteClubs(long athleteId)
+        {
+            var queuesClient = new AzureQueuesClient(this.storageRepository);
+            await queuesClient.SyncAthleteClubs(athleteId);
         }
     }
 }

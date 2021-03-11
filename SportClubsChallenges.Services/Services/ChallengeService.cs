@@ -12,6 +12,7 @@
     using SportClubsChallenges.Model.Dto;
     using SportClubsChallenges.Model.Enums;
     using System.Linq;
+    using SportClubsChallenges.AzureQueues;
 
     public class ChallengeService : IChallengeService
     {
@@ -19,10 +20,13 @@
 
         private readonly IMapper mapper;
 
-        public ChallengeService(IMapper mapper, SportClubsChallengesDbContext db)
+        private readonly IAzureStorageRepository storageRepository;
+
+        public ChallengeService(IMapper mapper, SportClubsChallengesDbContext db, IAzureStorageRepository storageRepository)
         {
             this.mapper = mapper;
             this.db = db;
+            this.storageRepository = storageRepository;
         }
 
         public async Task<List<ChallengeOverviewDto>> GetAllChallenges()
@@ -75,16 +79,21 @@
 
         public async Task AddOrEditChallenge(ChallengeDetailsDto dto)
         {
-            if (dto.Id == default(long))
-            {
-                this.AddChallenge(dto);
-            }
-            else
+            if (dto.Id != default(long))
             {
                 this.EditChallenge(dto);
             }
+            else
+            {
+                this.AddChallenge(dto);
+            }
 
             await db.SaveChangesAsync();
+
+            if (dto.Id != default(long))
+            {
+                await this.UpdateChallengeRank(dto.Id);
+            }
         }
 
         public async Task DeleteChallenge(long challengeId)
@@ -119,6 +128,8 @@
 
             db.ChallengeParticipants.Remove(challengeParticipation);
             await db.SaveChangesAsync();
+
+            await this.UpdateChallengeRank(challengeId);
         }
 
         public async Task JoinChallenge(long athleteId, long challengeId)
@@ -148,6 +159,8 @@
 
             db.ChallengeParticipants.Add(challengeParticipation);
             await db.SaveChangesAsync();
+
+            await this.UpdateChallengeRank(challengeId);
         }
 
         public async Task<Dictionary<long, string>> GetAvailableClubs()
@@ -194,6 +207,12 @@
             {
                 entity.ChallengeActivityTypes.Add(new ChallengeActivityType { ChallengeId = entity.Id, ActivityTypeId = activityTypeId });
             }
+        }
+
+        private async Task UpdateChallengeRank(long challengeId)
+        {
+            var queuesClient = new AzureQueuesClient(this.storageRepository);
+            await queuesClient.UpdateChallengeRank(challengeId);
         }
     }
 }

@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SportClubsChallenges.AzureQueues\SportClubsChallenges.AzureQueues.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Database\SportClubsChallenges.Database.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Mappings\SportClubsChallenges.Mappings.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Model\SportClubsChallenges.Model.csproj" />

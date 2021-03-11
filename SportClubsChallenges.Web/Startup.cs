@@ -16,6 +16,7 @@ namespace SportClubsChallenges.Web
     using SportClubsChallenges.Strava;
     using SportClubsChallenges.Mappings;
     using Radzen;
+    using SportClubsChallenges.AzureQueues;
 
     public class Startup
     {
@@ -81,6 +82,7 @@ namespace SportClubsChallenges.Web
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IStravaApiWrapper, StravaApiWrapper>();
+            services.AddScoped<IAzureStorageRepository, AzureStorageRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
