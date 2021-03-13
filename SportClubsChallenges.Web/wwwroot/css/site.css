@@ -25,6 +25,7 @@ body {
     display: flex;
     align-items: center;
     line-height: 3rem;
+    cursor: pointer;
 }
 
     .nav-item a.active {
