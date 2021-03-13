@@ -5,7 +5,7 @@
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
-    using SportClubsChallenges.Strava.Model;
+    using SportClubsChallenges.Model.Strava;
     using System;
     using System.Globalization;
     using System.Linq;
@@ -66,7 +66,12 @@
 
         public void OnStravaTokenRefresh(object sender, object args)
         {
-            var token = sender as StravaToken;
+          //  StravaToken token;
+            if (!(sender is StravaToken token) || string.IsNullOrEmpty(token.AccessToken) || string.IsNullOrEmpty(token.RefreshToken))
+            {
+                return;
+            }
+
             if (token == null || string.IsNullOrEmpty(token.AccessToken) || string.IsNullOrEmpty(token.RefreshToken))
             {
                 return;

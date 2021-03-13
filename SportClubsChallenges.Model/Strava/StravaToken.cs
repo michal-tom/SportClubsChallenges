@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Strava.Model
+﻿namespace SportClubsChallenges.Model.Strava
 {
     using System;
 
@@ -14,10 +14,7 @@
 
         public void TokenRefresh()
         {
-            if (OnTokenRefresh != null)
-            {
-                OnTokenRefresh(this, EventArgs.Empty);
-            }
+            OnTokenRefresh?.Invoke(this, EventArgs.Empty);
         }
     }
 }

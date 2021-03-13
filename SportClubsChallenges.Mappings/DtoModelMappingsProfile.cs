@@ -4,9 +4,8 @@
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Model.Dto;
     using SportClubsChallenges.Model.Enums;
-    using SportClubsChallenges.Strava.Model;
+    using SportClubsChallenges.Model.Strava;
     using SportClubsChallenges.Utils.Helpers;
-    using System;
     using System.Linq;
 
     public class DtoModelMappingsProfile : Profile

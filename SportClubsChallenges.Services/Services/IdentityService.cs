@@ -4,7 +4,7 @@
     using System.Security.Claims;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
-    using SportClubsChallenges.Strava;
+    using SportClubsChallenges.Model.Strava;
 
     public class IdentityService : IIdentityService
     {
@@ -12,13 +12,13 @@
         {
             if (identity == null)
             {
-                return default(long);
+                return default;
             }
             
             var identifier = GetClaimValueFromIdentity(identity, ClaimTypes.NameIdentifier);
             if (!long.TryParse(identifier, out long athleteId))
             {
-                return default(long);
+                return default;
             }
 
             return athleteId;

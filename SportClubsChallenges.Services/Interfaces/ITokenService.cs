@@ -2,8 +2,7 @@
 {
     using Microsoft.AspNetCore.Authentication;
     using SportClubsChallenges.Database.Entities;
-    using SportClubsChallenges.Strava.Model;
-    using System.Threading.Tasks;
+    using SportClubsChallenges.Model.Strava;
 
     public interface ITokenService
     {

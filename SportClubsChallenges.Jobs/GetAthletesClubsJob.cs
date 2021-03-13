@@ -9,8 +9,8 @@
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
+    using SportClubsChallenges.Model.Strava;
     using SportClubsChallenges.Strava;
-    using SportClubsChallenges.Strava.Model;
 
     public class GetAthletesClubsJob
     {

@@ -79,7 +79,7 @@
 
         public async Task AddOrEditChallenge(ChallengeDetailsDto dto)
         {
-            if (dto.Id != default(long))
+            if (dto.Id != default)
             {
                 this.EditChallenge(dto);
             }
@@ -90,7 +90,7 @@
 
             await db.SaveChangesAsync();
 
-            if (dto.Id != default(long))
+            if (dto.Id != default)
             {
                 await this.UpdateChallengeRank(dto.Id);
             }
