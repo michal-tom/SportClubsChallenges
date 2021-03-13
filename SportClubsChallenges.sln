@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.Mappin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.AzureFunctions", "SportClubsChallenges.AzureFunctions\SportClubsChallenges.AzureFunctions.csproj", "{B2F0E31A-F52D-45ED-9AA3-9094F0F26C9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportClubsChallenges.AzureQueues", "SportClubsChallenges.AzureQueues\SportClubsChallenges.AzureQueues.csproj", "{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.AzureQueues", "SportClubsChallenges.AzureQueues\SportClubsChallenges.AzureQueues.csproj", "{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

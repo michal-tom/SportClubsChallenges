@@ -4,7 +4,7 @@
 
 @if (clubData == null)
 {
-    <p><em>Loading...</em></p>
+    <Loading />
 }
 else
 {
@@ -35,7 +35,7 @@ else
             </RadzenTabsItem>
             <RadzenTabsItem Text="Members">
                 <RadzenDataList WrapItems="true" AllowPaging="true" Data="@clubMembers" TItem="AthleteDto">
-                    <Template Context="member" >
+                    <Template Context="member">
                         <RadzenCard Style="width:100%;">
                             <div class="row">
                                 <div class="col-md-1">

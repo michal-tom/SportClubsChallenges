@@ -11,7 +11,7 @@
 
 @if (activitiesModel == null)
 {
-    <p><em>Loading...</em></p>
+    <Loading />
 }
 else
 {
@@ -20,9 +20,9 @@ else
                 AllowPaging="true" PageSize="10" AllowSorting="true"
                 AllowColumnResize="true">
         <Columns>
-            <RadzenGridColumn TItem="ActivityDto" Property="Name" Title="Name" >
+            <RadzenGridColumn TItem="ActivityDto" Property="Name" Title="Name">
                 <Template Context="activity">
-                    <a href="@activity.Link" target="_blank" >
+                    <a href="@activity.Link" target="_blank">
                         <img src="/images/strava_icon.svg" style="height:16px;">
                     </a> @activity.Name
                 </Template>
