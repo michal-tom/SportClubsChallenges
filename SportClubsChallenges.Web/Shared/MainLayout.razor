@@ -1,15 +1,15 @@
 ﻿@inherits LayoutComponentBase
 
-<body>
-    <RadzenNotification />
-    <RadzenTooltip />
-
+<header>
     <NavMenu />
+</header>
 
-    <div class="container">
-        @Body
-    </div>
-</body>
+<RadzenNotification />
+<RadzenTooltip />
+
+<div class="container main-content">
+    @Body
+</div>
 
 <footer class="border-top footer text-muted fixed-bottom">
     <div class="container">

@@ -48,7 +48,7 @@
 
             this.identityService.UpdateIdentity(identity, athlete);
 
-            await this.UpdateAthleteClubs(athlete.Id);
+            await this.QueueUpdateAthleteClubs(athlete.Id);
         }
 
         private async Task<Athlete> UpdateAthleteData(ClaimsIdentity identity, long athleteId)
@@ -73,7 +73,7 @@
             return athlete;
         }
 
-        private async Task UpdateAthleteClubs(long athleteId)
+        private async Task QueueUpdateAthleteClubs(long athleteId)
         {
             var queuesClient = new AzureQueuesClient(this.storageRepository);
             await queuesClient.SyncAthleteClubs(athleteId);
