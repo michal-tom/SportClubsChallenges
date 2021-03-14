@@ -94,18 +94,18 @@
 
         private int CalculateScore(List<Activity> activities, Challenge challenge)
         {
-            var challengeType = (ChallengeTypeEnum)challenge.ChallengeType;
+            var rivalryType = (ChallengeRivalryTypeEnum)challenge.RivalryType;
             var score = 0;
 
-            switch (challengeType)
+            switch (rivalryType)
             {
-                case ChallengeTypeEnum.Distance:
+                case ChallengeRivalryTypeEnum.Distance:
                     score = activities.Sum(p => p.Distance);
                     break;
-                case ChallengeTypeEnum.Time:
+                case ChallengeRivalryTypeEnum.Time:
                     score = activities.Sum(p => p.Duration);
                     break;
-                case ChallengeTypeEnum.Elevation:
+                case ChallengeRivalryTypeEnum.Elevation:
                     score = activities.Sum(p => p.Elevation);
                     break;
             }

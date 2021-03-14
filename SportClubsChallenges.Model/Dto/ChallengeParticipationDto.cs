@@ -17,7 +17,7 @@
 
         public bool IsChallengeActive { get; set; }
 
-        public ChallengeTypeEnum ChallengeType { get; set; }
+        public ChallengeRivalryTypeEnum ChallengeRivalryType { get; set; }
 
         public int ChallengeParticipantsCount { get; set; }
 
@@ -29,6 +29,6 @@
 
         public int Score { get; set; }
 
-        public string ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeTypeEnum)this.ChallengeType)?.Unit ?? string.Empty;
+        public string ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeRivalryTypeEnum)this.ChallengeRivalryType)?.Unit ?? string.Empty;
     }
 }

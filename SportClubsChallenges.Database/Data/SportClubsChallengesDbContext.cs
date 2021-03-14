@@ -91,8 +91,8 @@
             );
 
             modelBuilder.Entity<Club>().HasData(
-                new Club { Id = 1, Name = "Bike Club", SportType = "Bike"  },
-                new Club { Id = 2, Name = "Club for runners", SportType = "Run" }
+                new Club { Id = 1, Name = "Bike Club", SportType = "cycling" },
+                new Club { Id = 2, Name = "Club for runners", SportType = "running" }
             );
 
             modelBuilder.Entity<ClubMember>().HasData(
@@ -104,9 +104,9 @@
             );
 
             modelBuilder.Entity<Challenge>().HasData(
-                new Challenge { Id = 1, Name = "Most km in 2021 (bike)", Description = "desc1", ChallengeType = (byte) ChallengeTypeEnum.Distance, ClubId = 1, CreationDate = DateTimeOffset.Now, StartDate = new DateTime(2021, 1, 1), EndDate = new DateTime(2022, 1, 1), IsActive = true, AuthorId = 1, EditionDate = DateTime.Now },
-                new Challenge { Id = 2, Name = "Most hours in 2021 (bike)", Description = "desc2", ChallengeType = (byte) ChallengeTypeEnum.Time, ClubId = 1, CreationDate = DateTimeOffset.Now, StartDate = new DateTime(2021, 1, 1), EndDate = new DateTime(2022, 1, 1), IsActive = true, AuthorId = 1, EditionDate = DateTime.Now },
-                new Challenge { Id = 3, Name = "Most hours in 2021 (run)", Description = "desc3", ChallengeType = (byte) ChallengeTypeEnum.Time, ClubId = 2, CreationDate = DateTimeOffset.Now, StartDate = new DateTime(2021, 1, 1), EndDate = new DateTime(2022, 1, 1), IsActive = true, AuthorId = 1, EditionDate = DateTime.Now }
+                new Challenge { Id = 1, Name = "Most km in 2021 (bike)", Description = "desc1", SportCategory = (byte) ChallengeSportCategoryEnum.Cycling, RivalryType = (byte) ChallengeRivalryTypeEnum.Distance, ClubId = 1, CreationDate = DateTimeOffset.Now, StartDate = new DateTime(2021, 1, 1), EndDate = new DateTime(2022, 1, 1), IsActive = true, AuthorId = 1, EditionDate = DateTime.Now },
+                new Challenge { Id = 2, Name = "Most hours in 2021 (bike)", Description = "desc2", SportCategory = (byte) ChallengeSportCategoryEnum.Cycling, RivalryType = (byte) ChallengeRivalryTypeEnum.Time, ClubId = 1, CreationDate = DateTimeOffset.Now, StartDate = new DateTime(2021, 1, 1), EndDate = new DateTime(2022, 1, 1), IsActive = true, AuthorId = 1, EditionDate = DateTime.Now },
+                new Challenge { Id = 3, Name = "Most hours in 2021 (run)", Description = "desc3", SportCategory = (byte) ChallengeSportCategoryEnum.Running, RivalryType = (byte) ChallengeRivalryTypeEnum.Time, ClubId = 2, CreationDate = DateTimeOffset.Now, StartDate = new DateTime(2021, 1, 1), EndDate = new DateTime(2022, 1, 1), IsActive = true, AuthorId = 1, EditionDate = DateTime.Now }
             );
 
             modelBuilder.Entity<ChallengeParticipant>().HasData(

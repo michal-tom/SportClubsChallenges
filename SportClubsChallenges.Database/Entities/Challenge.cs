@@ -19,7 +19,9 @@
 
         public DateTimeOffset EndDate { get; set; }
 
-        public byte ChallengeType { get; set; }
+        public byte SportCategory { get; set; }
+
+        public byte RivalryType { get; set; }
 
         public bool PreventManualActivities { get; set; }
 

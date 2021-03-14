@@ -18,9 +18,9 @@
 
         public DateTime EndDate { get; set; }
 
-        public byte ChallengeType { get; set; }
+        public byte RivalryType { get; set; }
 
-        public string ChallengeTypeDescription { get; set; }
+        public string RivalryTypeDescription { get; set; }
 
         public int ParticipantsCount { get; set; }
 

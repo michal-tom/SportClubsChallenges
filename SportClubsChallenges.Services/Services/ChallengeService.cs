@@ -168,9 +168,9 @@
             return await db.Clubs.AsNoTracking().ToDictionaryAsync(p => p.Id, p => p.Name);
         }
 
-        public Dictionary<byte, string> GetAvailableChallengeTypes()
+        public Dictionary<byte, string> GetAvailableChallengeRivalryTypes()
         {
-            return EnumsHelper.GetEnumWithDescriptions<ChallengeTypeEnum>();
+            return EnumsHelper.GetEnumWithDescriptions<ChallengeRivalryTypeEnum>();
         }
 
         public async Task<Dictionary<byte, string>> GetAvailableActivityTypes()

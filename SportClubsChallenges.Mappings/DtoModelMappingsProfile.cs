@@ -1,12 +1,13 @@
 ﻿namespace SportClubsChallenges.Mappings
 {
+    using System;
+    using System.Linq;
     using AutoMapper;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Model.Dto;
     using SportClubsChallenges.Model.Enums;
     using SportClubsChallenges.Model.Strava;
     using SportClubsChallenges.Utils.Helpers;
-    using System.Linq;
 
     public class DtoModelMappingsProfile : Profile
     {
@@ -19,7 +20,7 @@
                 .ForMember(dest => dest.IconUrl, opt => opt.MapFrom(src => src.IconUrlMedium));
 
             this.CreateMap<Challenge, ChallengeDetailsDto>()
-                .ForMember(dest => dest.ChallengeTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeTypeEnum) src.ChallengeType)))
+                .ForMember(dest => dest.RivalryTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeRivalryTypeEnum) src.RivalryType)))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.LocalDateTime))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.LocalDateTime))
                 .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.CreationDate.LocalDateTime))
@@ -29,10 +30,14 @@
                 .ForMember(dest => dest.ActivityTypes, opt => opt.MapFrom(src => string.Join(",", src.ChallengeActivityTypes.Select(p => p.ActivityType.Name))))
                 .ForMember(dest => dest.ActivityTypesIds, opt => opt.MapFrom(src => src.ChallengeActivityTypes.Select(p => p.ActivityTypeId)))
                 .ForMember(dest => dest.ParticipantsCount, opt => opt.MapFrom(src => src.ChallengeParticipants.Count))
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.StartDate, DateTimeKind.Local)))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.EndDate, DateTimeKind.Local)))
+                .ForMember(dest => dest.CreationDate, opt => opt.Ignore())
+                .ForMember(dest => dest.EditionDate, opt => opt.Ignore());
 
             this.CreateMap<Challenge, ChallengeOverviewDto>()
-                .ForMember(dest => dest.ChallengeTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeTypeEnum) src.ChallengeType)))
+                .ForMember(dest => dest.RivalryTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeRivalryTypeEnum) src.RivalryType)))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.LocalDateTime))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.LocalDateTime))
                 .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Club.Name))
@@ -43,7 +48,7 @@
                 .ForMember(dest => dest.ChallengeName, opt => opt.MapFrom(src => src.Challenge.Name))
                 .ForMember(dest => dest.ChallengeStartDate, opt => opt.MapFrom(src => src.Challenge.StartDate.LocalDateTime))
                 .ForMember(dest => dest.ChallengeEndDate, opt => opt.MapFrom(src => src.Challenge.EndDate.LocalDateTime))
-                .ForMember(dest => dest.ChallengeType, opt => opt.MapFrom(src => (ChallengeTypeEnum) src.Challenge.ChallengeType))
+                .ForMember(dest => dest.ChallengeRivalryType, opt => opt.MapFrom(src => (ChallengeRivalryTypeEnum) src.Challenge.RivalryType))
                 .ForMember(dest => dest.IsChallengeActive, opt => opt.MapFrom(src => src.Challenge.IsActive))
                 .ForMember(dest => dest.ChallengeParticipantsCount, opt => opt.MapFrom(src => src.Challenge.ChallengeParticipants.Count))
                 .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Challenge.Club.Name))

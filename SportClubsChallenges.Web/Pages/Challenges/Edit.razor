@@ -79,7 +79,7 @@ else
                             <RadzenLabel Text="Challenge type" />
                         </div>
                         <div class="col-md-7">
-                            <RadzenDropDown @bind-Value="challenge.ChallengeType" Data="@challengeTypes" style="width: 100%;" TextProperty="Value" ValueProperty="Key" Name="ChallengeType">
+                            <RadzenDropDown @bind-Value="challenge.RivalryType" Data="@challengeRivalryTypes" style="width: 100%;" TextProperty="Value" ValueProperty="Key" Name="RivalryType">
                             </RadzenDropDown>
                         </div>
                     </div>
@@ -131,7 +131,7 @@ else
 
     Dictionary<long, string> clubs = new Dictionary<long, string>();
     Dictionary<byte, string> activityTypes = new Dictionary<byte, string>();
-    Dictionary<byte, string> challengeTypes = new Dictionary<byte, string>();
+    Dictionary<byte, string> challengeRivalryTypes = new Dictionary<byte, string>();
 
     IEnumerable<KeyValuePair<byte, string>> selectedActivityTypes = new List<KeyValuePair<byte, string>>();
 
@@ -139,7 +139,7 @@ else
     {
         clubs = await challengeService.GetAvailableClubs();
         activityTypes = await challengeService.GetAvailableActivityTypes();
-        challengeTypes = challengeService.GetAvailableChallengeTypes();
+        challengeRivalryTypes = challengeService.GetAvailableChallengeRivalryTypes();
 
         if (!this.ChallengeId.HasValue)
         {

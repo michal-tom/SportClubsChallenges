@@ -11,7 +11,7 @@
         public ChallengeDetailsDto()
         {
             this.IsActive = true;
-            this.ChallengeType = (byte) ChallengeTypeEnum.Distance;
+            this.RivalryType = (byte) ChallengeRivalryTypeEnum.Distance;
             this.ParticipantsCount = 0;
             this.StartDate = DateTime.Now.Date;
             this.EndDate = DateTime.Now.Date;
@@ -34,9 +34,9 @@
 
         public DateTime EndDate { get; set; }
 
-        public byte ChallengeType { get; set; }
+        public byte RivalryType { get; set; }
 
-        public string ChallengeTypeDescription { get; set; }
+        public string RivalryTypeDescription { get; set; }
 
         public bool PreventManualActivities { get; set; }
 
@@ -56,6 +56,6 @@
 
         public int ParticipantsCount { get; set; }
 
-        public string ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeTypeEnum) this.ChallengeType)?.Unit ?? string.Empty;
+        public string ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeRivalryTypeEnum) this.RivalryType)?.Unit ?? string.Empty;
     }
 }
