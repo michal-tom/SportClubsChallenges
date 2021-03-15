@@ -44,11 +44,11 @@
 
             var athlete = await this.UpdateAthleteData(identity, athleteId);
 
-            this.tokenService.UpdateStravaToken(athlete, properties);
+            this.tokenService.UpdateStravaToken(athleteId, properties);
 
             this.identityService.UpdateIdentity(identity, athlete);
 
-            await this.QueueUpdateAthleteClubs(athlete.Id);
+            await this.QueueUpdateAthleteClubs(athleteId);
         }
 
         private async Task<Athlete> UpdateAthleteData(ClaimsIdentity identity, long athleteId)

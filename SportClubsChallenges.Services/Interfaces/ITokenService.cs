@@ -8,8 +8,6 @@
     {
         StravaToken GetStravaToken(Athlete athlete);
 
-        void UpdateStravaToken(Athlete athlete, AuthenticationProperties properties);
-
-        void UpdateStravaToken(Athlete athlete, StravaToken token);
+        void UpdateStravaToken(long athleteId, AuthenticationProperties properties);
     }
 }
