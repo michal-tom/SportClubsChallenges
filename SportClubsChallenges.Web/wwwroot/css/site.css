@@ -10,3 +10,8 @@ div.panel-centered {
 div.horizontal-centered-tabs > clr-tabs > ul {
     justify-content: center;
 }
+
+/* force proper checkbox spacing in compact datagrid inside editform */
+.clr-form-compact .clr-checkbox-wrapper .clr-control-label {
+    margin-top: 0 !important;
+}

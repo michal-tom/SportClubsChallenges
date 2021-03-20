@@ -20,10 +20,10 @@ else
 {
     <h4>@pageTitle</h4>
 
-    <Form Model="@challenge" TItem="ChallengeDetailsDto" Layout="FormLayout.Horizontal" OnValidSubmit="() => AddOrEditChallenge()">
+    <Form Model="@challenge" TItem="ChallengeDetailsDto" Layout="FormLayout.Compact" OnValidSubmit="() => AddOrEditChallenge()">
         <div class="clr-row">
             <div class="clr-col-md-12">
-                <Select Label="Club" @bind-Value="challenge.Club" Items="@clubs" HelpText="Pick a club from list" ValueFunc="@(p => p?.Id.ToString())" NameFunc="@(p => p?.Name)" />
+                <Select Label="Club" @bind-Value="challenge.Club" Items="@clubs" HelpText="Pick a club from list" ValueFunc="@(p => p?.Id.ToString())" NameFunc="@(p => p?.Name)" Disabled="@(challenge.Id > 0)" />
 
                 <Text @bind-Value="challenge.Name" Label="Name" HelpText="Enter challenge name" ValidationFor="() => challenge.Name" />
 
@@ -35,27 +35,26 @@ else
 
                 <Select Label="Challenge type" @bind-Value="challenge.CompetitionTypeDescription" Items="@challengeCompetitionTypes.Select(p => p.Value).ToList()" HelpText="Pick a challenge type from list" />
 
+                <clr-select-container class="clr-form-control clr-row " blazority="">
+                    <label class="clr-control-label clr-col-12 clr-col-md-2" for="clr-select-1">Activities types</label>
+                    <div class="clr-control-container clr-col-md-10 clr-col-12 ">
+                        <Datagrid Items="activityTypes" Selection="SelectionMode.Multi" SelectType="SelectionType.Control" @bind-SelectedItems="selectedActivityTypes" Fixed="FixedMode.All" style="height: 150px; width: 200px;" Compact="true">
+                            <DatagridColumn Title="Name" TRowData="KeyValuePair<byte, string>" Field="c => c.Value" />
+                        </Datagrid>
+                    </div>
+                </clr-select-container>
+
                 <CheckboxContainer Label="Additional parameters">
                     <Checkbox @bind-Value="@challenge.PreventManualActivities" Label="Prevent manual activities" />
                     <Checkbox @bind-Value="@challenge.IncludeOnlyGpsActivities" Label="Prevent non-GPS activities" />
                 </CheckboxContainer>
-                @*<div class="row">
-            <div class="col-md-5 align-items-center d-flex">
-                <RadzenLabel Text="Activities types" />
             </div>
-            <div class="col-md-7">
-                <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                               @bind-Value=@selectedActivityTypes Multiple="true" Data=@activityTypes
-                               TextProperty="Value" Style="height:250px; width: 100%;" />
-            </div>
-        </div>*@
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <Button Variant="Primary" type="submit">Submit</Button>
-            <Button Variant="Warning" OnClick="() => Cancel()">Cancel</Button>
-        </div>
-    </Form>
+                </div>
+                <div class="row justify-content-center">
+                    <Button Variant="Primary" type="submit">Submit</Button>
+                    <Button Variant="Warning" type="reset" OnClick="() => Cancel()">Cancel</Button>
+                </div>
+</Form>
 }
 @code {
 
@@ -66,13 +65,11 @@ else
 
     string pageTitle = "Challenge";
 
-    KeyValuePair<byte, string> selectedChallengeRivalryType;
-
     List<ClubDto> clubs = new List<ClubDto>();
     Dictionary<byte, string> activityTypes = new Dictionary<byte, string>();
     Dictionary<byte, string> challengeCompetitionTypes = new Dictionary<byte, string>();
 
-    IEnumerable<KeyValuePair<byte, string>> selectedActivityTypes = new List<KeyValuePair<byte, string>>();
+    HashSet<KeyValuePair<byte, string>> selectedActivityTypes = new HashSet<KeyValuePair<byte, string>>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -83,12 +80,13 @@ else
         if (!this.ChallengeId.HasValue)
         {
             challenge = new ChallengeDetailsDto();
+            challenge.Club = new ClubDto { Id = clubs.First().Id, Name = clubs.First().Name };
             pageTitle = "Create new challenge";
         }
         else
         {
             challenge = await challengeService.GetChallenge(this.ChallengeId.Value);
-            selectedActivityTypes = activityTypes.Where(p => challenge.ActivityTypesIds.Contains(p.Key));
+            selectedActivityTypes = activityTypes.Where(p => challenge.ActivityTypesIds.Contains(p.Key)).ToHashSet();
             pageTitle = $"Edit challenge {challenge.Name}";
         }
     }
