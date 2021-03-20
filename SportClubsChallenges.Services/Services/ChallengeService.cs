@@ -164,9 +164,9 @@
             await this.UpdateChallengeRank(challengeId);
         }
 
-        public Dictionary<byte, string> GetAvailableChallengeRivalryTypes()
+        public Dictionary<byte, string> GetAvailableChallengeCompetitionTypes()
         {
-            return EnumsHelper.GetEnumWithDescriptions<ChallengeRivalryTypeEnum>();
+            return EnumsHelper.GetEnumWithDescriptions<ChallengeCompetitionTypeEnum>();
         }
 
         public async Task<Dictionary<byte, string>> GetAvailableActivityTypes()

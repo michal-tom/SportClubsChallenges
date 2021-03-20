@@ -21,7 +21,7 @@
 
         public byte SportCategory { get; set; }
 
-        public byte RivalryType { get; set; }
+        public byte CompetitionType { get; set; }
 
         public bool PreventManualActivities { get; set; }
 

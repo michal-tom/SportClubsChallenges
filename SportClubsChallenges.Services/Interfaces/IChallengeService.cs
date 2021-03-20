@@ -26,6 +26,6 @@
 
         Task<Dictionary<byte, string>> GetAvailableActivityTypes();
 
-        Dictionary<byte, string> GetAvailableChallengeRivalryTypes();
+        Dictionary<byte, string> GetAvailableChallengeCompetitionTypes();
     }
 }

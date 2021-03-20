@@ -3,17 +3,17 @@
     using SportClubsChallenges.Model.Attributes;
     using System.ComponentModel;
 
-    public enum ChallengeRivalryTypeEnum : byte
+    public enum ChallengeCompetitionTypeEnum : byte
     {
-        [Description("Activity distance sum")]
+        [Description("Distance")]
         [Unit("m")]
         Distance = 0,
 
-        [Description("Activity time sum")]
+        [Description("Time")]
         [Unit("s")]
         Time = 1,
 
-        [Description("Activity elevation sum")]
+        [Description("Elevation")]
         [Unit("m")]
         Elevation = 2
     }

@@ -33,7 +33,7 @@ else
 
                 <Datepicker @bind-Value="challenge.EndDate" Label="Entry Date" HelpText="Pick a end date of challenge" ValidationFor="() => challenge.EndDate" />
 
-                <Select Label="Challenge type" @bind-Value="challenge.RivalryTypeDescription" Items="@challengeRivalryTypes.Select(p => p.Value).ToList()" HelpText="Pick a challenge type from list" />
+                <Select Label="Challenge type" @bind-Value="challenge.CompetitionTypeDescription" Items="@challengeCompetitionTypes.Select(p => p.Value).ToList()" HelpText="Pick a challenge type from list" />
 
                 <CheckboxContainer Label="Additional parameters">
                     <Checkbox @bind-Value="@challenge.PreventManualActivities" Label="Prevent manual activities" />
@@ -70,7 +70,7 @@ else
 
     List<ClubDto> clubs = new List<ClubDto>();
     Dictionary<byte, string> activityTypes = new Dictionary<byte, string>();
-    Dictionary<byte, string> challengeRivalryTypes = new Dictionary<byte, string>();
+    Dictionary<byte, string> challengeCompetitionTypes = new Dictionary<byte, string>();
 
     IEnumerable<KeyValuePair<byte, string>> selectedActivityTypes = new List<KeyValuePair<byte, string>>();
 
@@ -78,7 +78,7 @@ else
     {
         clubs = await clubService.GetAllClubs();
         activityTypes = await challengeService.GetAvailableActivityTypes();
-        challengeRivalryTypes = challengeService.GetAvailableChallengeRivalryTypes(); //.Select(p => p.Value).ToList();
+        challengeCompetitionTypes = challengeService.GetAvailableChallengeCompetitionTypes();
 
         if (!this.ChallengeId.HasValue)
         {
@@ -101,7 +101,7 @@ else
         challenge.AuthorId = athleteId;
 
         challenge.ClubId = challenge.Club?.Id ?? challenge.ClubId;
-        challenge.RivalryType = challengeRivalryTypes.First(x => x.Value.Contains(challenge.RivalryTypeDescription)).Key;
+        challenge.CompetitionType = challengeCompetitionTypes.First(x => x.Value.Contains(challenge.CompetitionTypeDescription)).Key;
         challenge.ActivityTypesIds = selectedActivityTypes.Select(p => p.Key).ToList();
 
         await challengeService.AddOrEditChallenge(challenge);

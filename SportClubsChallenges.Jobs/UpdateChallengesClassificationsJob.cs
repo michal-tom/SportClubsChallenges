@@ -1,13 +1,13 @@
 ﻿namespace SportClubsChallenges.Jobs
 {
-    using Microsoft.EntityFrameworkCore;
-    using SportClubsChallenges.Database.Data;
-    using SportClubsChallenges.Database.Entities;
-    using SportClubsChallenges.Model.Enums;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.EntityFrameworkCore;
+    using SportClubsChallenges.Database.Data;
+    using SportClubsChallenges.Database.Entities;
+    using SportClubsChallenges.Model.Enums;
 
     public class UpdateChallengesClassificationsJob
     {
@@ -94,18 +94,18 @@
 
         private int CalculateScore(List<Activity> activities, Challenge challenge)
         {
-            var rivalryType = (ChallengeRivalryTypeEnum)challenge.RivalryType;
+            var competitionType = (ChallengeCompetitionTypeEnum)challenge.CompetitionType;
             var score = 0;
 
-            switch (rivalryType)
+            switch (competitionType)
             {
-                case ChallengeRivalryTypeEnum.Distance:
+                case ChallengeCompetitionTypeEnum.Distance:
                     score = activities.Sum(p => p.Distance);
                     break;
-                case ChallengeRivalryTypeEnum.Time:
+                case ChallengeCompetitionTypeEnum.Time:
                     score = activities.Sum(p => p.Duration);
                     break;
-                case ChallengeRivalryTypeEnum.Elevation:
+                case ChallengeCompetitionTypeEnum.Elevation:
                     score = activities.Sum(p => p.Elevation);
                     break;
             }
