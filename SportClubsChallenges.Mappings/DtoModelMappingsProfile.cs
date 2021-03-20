@@ -26,6 +26,7 @@
                 .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.CreationDate.LocalDateTime))
                 .ForMember(dest => dest.EditionDate, opt => opt.MapFrom(src => src.EditionDate.LocalDateTime))
                 .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Club.Name))
+                .ForMember(dest => dest.Club, opt => opt.MapFrom(src => new ClubDto { Id = src.ClubId, Name = src.Club.Name }))
                 .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.FirstName + " " + src.Author.LastName))
                 .ForMember(dest => dest.ActivityTypes, opt => opt.MapFrom(src => string.Join(",", src.ChallengeActivityTypes.Select(p => p.ActivityType.Name))))
                 .ForMember(dest => dest.ActivityTypesIds, opt => opt.MapFrom(src => src.ChallengeActivityTypes.Select(p => p.ActivityTypeId)))
@@ -34,7 +35,8 @@
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.StartDate, DateTimeKind.Local)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.EndDate, DateTimeKind.Local)))
                 .ForMember(dest => dest.CreationDate, opt => opt.Ignore())
-                .ForMember(dest => dest.EditionDate, opt => opt.Ignore());
+                .ForMember(dest => dest.EditionDate, opt => opt.Ignore())
+                .ForMember(dest => dest.Club, opt => opt.Ignore());
 
             this.CreateMap<Challenge, ChallengeOverviewDto>()
                 .ForMember(dest => dest.RivalryTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeRivalryTypeEnum) src.RivalryType)))

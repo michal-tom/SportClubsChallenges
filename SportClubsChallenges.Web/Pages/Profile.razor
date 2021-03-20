@@ -7,25 +7,22 @@
 
 @attribute [Authorize]
 
-<div>
-    <AuthorizeView>
-        <Authorized>
-            <h2>Hello, @_userName!</h2>
+<AuthorizeView>
+    <Authorized>
+        <h3>Hello, @_userName!</h3>
 
-            @if (_claims.Count() > 0)
-            {
-                <br />
-                <h4>Your claims:</h4>
-                <ul>
-                    @foreach (var claim in _claims)
-                    {
-                        <li>@claim.Type: @claim.Value</li>
-                    }
-                </ul>
-            }
-        </Authorized>
-    </AuthorizeView>
-</div>
+        @if (_claims.Count() > 0)
+        {
+            <h4>Your claims:</h4>
+            <ul>
+                @foreach (var claim in _claims)
+                {
+                    <li>@claim.Type: @claim.Value</li>
+                }
+            </ul>
+        }
+    </Authorized>
+</AuthorizeView>
 
 @code {
     private string _userName;

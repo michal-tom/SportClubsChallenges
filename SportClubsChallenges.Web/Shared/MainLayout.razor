@@ -1,18 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
-<header>
+<div class="main-container">       
+    <Header />
+
     <NavMenu />
-</header>
 
-<RadzenNotification />
-<RadzenTooltip />
-
-<div class="container main-content">
-    @Body
-</div>
-
-<footer class="border-top footer text-muted fixed-bottom">
-    <div class="container">
-        &copy; @(DateTime.Now.Year) - Sport Clubs Challenges
+    <div class="content-container">
+        <div class="content-area">
+            @Body
+        </div>
     </div>
-</footer>
+</div>

@@ -1,0 +1,20 @@
+﻿@page "/admin"
+
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="horizontal-centered-tabs">
+    <Tabs>
+        <Tab>
+            <Header>Clubs</Header>
+            <ChildContent><ClubsAdmin /></ChildContent>
+        </Tab>
+        <Tab>
+            <Header>Challenges</Header>
+            <ChildContent><ChallengesAdmin /></ChildContent>
+        </Tab>
+        <Tab>
+            <Header>Activities</Header>
+            <ChildContent><ActivitiesAdmin /></ChildContent>
+        </Tab>
+    </Tabs>
+</div>

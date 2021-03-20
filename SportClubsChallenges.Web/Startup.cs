@@ -1,6 +1,9 @@
 namespace SportClubsChallenges.Web
 {
+    using System.Security.Claims;
+    using AspNet.Security.OAuth.Strava;
     using AutoMapper;
+    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -8,15 +11,11 @@ namespace SportClubsChallenges.Web
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using SportClubsChallenges.Database.Data;
-    using SportClubsChallenges.Domain.Services;
     using SportClubsChallenges.Domain.Interfaces;
-    using Microsoft.AspNetCore.Authentication.Cookies;
-    using AspNet.Security.OAuth.Strava;
-    using System.Security.Claims;
-    using SportClubsChallenges.Strava;
-    using SportClubsChallenges.Mappings;
-    using Radzen;
+    using SportClubsChallenges.Domain.Services;
     using SportClubsChallenges.AzureQueues;
+    using SportClubsChallenges.Mappings;
+    using SportClubsChallenges.Strava;
 
     public class Startup
     {
@@ -62,10 +61,6 @@ namespace SportClubsChallenges.Web
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-
-            services.AddScoped<DialogService>();
-            services.AddScoped<NotificationService>();
-            services.AddScoped<TooltipService>();
 
             services.AddAutoMapper(typeof(DtoModelMappingsProfile));
             services.AddAutoMapper(typeof(StravaModelMappingsProfile));

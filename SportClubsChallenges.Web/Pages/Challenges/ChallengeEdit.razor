@@ -1,0 +1,115 @@
+﻿@page "/challenges/add"
+@page "/challenges/edit/{challengeId:long}"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IChallengeService challengeService
+@inject IClubService clubService
+@inject NavigationManager navigationManager
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+@attribute [Authorize(Roles = "Admin")]
+
+@if (challenge == null)
+{
+    <Loading />
+}
+else
+{
+    <h4>@pageTitle</h4>
+
+    <Form Model="@challenge" TItem="ChallengeDetailsDto" Layout="FormLayout.Horizontal" OnValidSubmit="() => AddOrEditChallenge()">
+        <div class="clr-row">
+            <div class="clr-col-md-12">
+                <Select Label="Club" @bind-Value="challenge.Club" Items="@clubs" HelpText="Pick a club from list" ValueFunc="@(p => p?.Id.ToString())" NameFunc="@(p => p?.Name)" />
+
+                <Text @bind-Value="challenge.Name" Label="Name" HelpText="Enter challenge name" ValidationFor="() => challenge.Name" />
+
+                <Textarea @bind-Value="challenge.Description" Label="Description" HelpText="Enter challenge description" ValidationFor="() => challenge.Description" />
+
+                <Datepicker @bind-Value="challenge.StartDate" Label="Entry Date" HelpText="Pick a start date of challenge" ValidationFor="() => challenge.StartDate" />
+
+                <Datepicker @bind-Value="challenge.EndDate" Label="Entry Date" HelpText="Pick a end date of challenge" ValidationFor="() => challenge.EndDate" />
+
+                <Select Label="Challenge type" @bind-Value="challenge.RivalryTypeDescription" Items="@challengeRivalryTypes.Select(p => p.Value).ToList()" HelpText="Pick a challenge type from list" />
+
+                <CheckboxContainer Label="Additional parameters">
+                    <Checkbox @bind-Value="@challenge.PreventManualActivities" Label="Prevent manual activities" />
+                    <Checkbox @bind-Value="@challenge.IncludeOnlyGpsActivities" Label="Prevent non-GPS activities" />
+                </CheckboxContainer>
+                @*<div class="row">
+            <div class="col-md-5 align-items-center d-flex">
+                <RadzenLabel Text="Activities types" />
+            </div>
+            <div class="col-md-7">
+                <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                               @bind-Value=@selectedActivityTypes Multiple="true" Data=@activityTypes
+                               TextProperty="Value" Style="height:250px; width: 100%;" />
+            </div>
+        </div>*@
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <Button Variant="Primary" type="submit">Submit</Button>
+            <Button Variant="Warning" OnClick="() => Cancel()">Cancel</Button>
+        </div>
+    </Form>
+}
+@code {
+
+    [Parameter]
+    public long? ChallengeId { get; set; }
+
+    ChallengeDetailsDto challenge;
+
+    string pageTitle = "Challenge";
+
+    KeyValuePair<byte, string> selectedChallengeRivalryType;
+
+    List<ClubDto> clubs = new List<ClubDto>();
+    Dictionary<byte, string> activityTypes = new Dictionary<byte, string>();
+    Dictionary<byte, string> challengeRivalryTypes = new Dictionary<byte, string>();
+
+    IEnumerable<KeyValuePair<byte, string>> selectedActivityTypes = new List<KeyValuePair<byte, string>>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        clubs = await clubService.GetAllClubs();
+        activityTypes = await challengeService.GetAvailableActivityTypes();
+        challengeRivalryTypes = challengeService.GetAvailableChallengeRivalryTypes(); //.Select(p => p.Value).ToList();
+
+        if (!this.ChallengeId.HasValue)
+        {
+            challenge = new ChallengeDetailsDto();
+            pageTitle = "Create new challenge";
+        }
+        else
+        {
+            challenge = await challengeService.GetChallenge(this.ChallengeId.Value);
+            selectedActivityTypes = activityTypes.Where(p => challenge.ActivityTypesIds.Contains(p.Key));
+            pageTitle = $"Edit challenge {challenge.Name}";
+        }
+    }
+
+    protected async Task AddOrEditChallenge()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        challenge.AuthorId = athleteId;
+
+        challenge.ClubId = challenge.Club?.Id ?? challenge.ClubId;
+        challenge.RivalryType = challengeRivalryTypes.First(x => x.Value.Contains(challenge.RivalryTypeDescription)).Key;
+        challenge.ActivityTypesIds = selectedActivityTypes.Select(p => p.Key).ToList();
+
+        await challengeService.AddOrEditChallenge(challenge);
+        navigationManager.NavigateTo("/challenges/admin");
+    }
+
+    void Cancel()
+    {
+        navigationManager.NavigateTo("/challenges/admin");
+    }
+}

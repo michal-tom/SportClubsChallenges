@@ -1,22 +1,11 @@
-﻿.poweredbywrapper {
-    vertical-align: bottom;
-    margin-bottom: 2px;
-    margin-left: 5px;
-    color: #999999;
-}
-
-.poweredbystrava {
+﻿.poweredbystrava {
     background-image: url('/images/api_logo_pwrdBy_strava_stack_light.png');
-    background-position: 0px 5px;
+    background-position: 0px 10px;
     background-repeat: no-repeat;
     background-color: transparent;
     width: 90px;
-    height: 48px !important;
     background-size: 90px;
-    margin: 0px -10px 0px 0px;
-    text-indent: -10000px;
-    padding: 0px !important;
-    display: inline-block !important;
+    opacity: 0.9 !important;
 }
 
 .logstrava {

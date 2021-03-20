@@ -1,0 +1,56 @@
+﻿@page "/challenges/rank/{challengeId}"
+
+@inject IChallengeService challengeService
+
+@attribute [Authorize]
+
+@if (challengeDetails == null)
+{
+    <Loading />
+}
+else
+{
+    <Card>
+        <CardHeader>
+                <b>@challengeDetails.Name</b> leaderboard
+        </CardHeader>
+        <CardBody>
+            <Datagrid TRowData="ChallengeRankPositionDto" Items="rankList" Placeholder="We couldn't find leaderboard for this challenge!">
+                <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Rank" Field="c => c.Rank" CanSort="true" CanFilter="true" />
+                <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Athlete" Field="c => c.AthleteName" CanSort="true" CanFilter="true" />
+                <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Score" Field="c => c.Score" CanSort="true" CanFilter="true">
+                    @context.Score @challengeDetails.ScoreUnit
+                </DatagridColumn>
+                <DatagridFooter TRowData="ChallengeRankPositionDto">
+                    <DatagridFooterDescription TRowData="ChallengeRankPositionDto">@challengeDetails.ParticipantsCount participant(s)</DatagridFooterDescription>
+                </DatagridFooter>
+            </Datagrid>
+        </CardBody>
+    </Card>
+}
+
+@code {
+
+    [Parameter]
+    public string ChallengeId { get; set; }
+
+    ChallengeDetailsDto challengeDetails;
+
+    List<ChallengeRankPositionDto> rankList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ChallengeId == null || !long.TryParse(ChallengeId, out long challengeId))
+        {
+            return;
+        }
+
+        challengeDetails = await challengeService.GetChallenge(challengeId);
+        if (challengeDetails == null)
+        {
+            return;
+        }
+
+        rankList = await challengeService.GetChallengeRank(challengeId);
+    }
+}

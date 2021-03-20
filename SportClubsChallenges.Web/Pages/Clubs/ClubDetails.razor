@@ -1,0 +1,135 @@
+﻿@page "/clubs/details/{clubId}"
+
+@inject IClubService clubService
+@inject NavigationManager navigationManager
+
+@if (clubData == null)
+{
+    <Loading />
+}
+else
+{
+    <div class="horizontal-centered-tabs">
+        <Tabs>
+            <Tab>
+                <Header>Info</Header>
+                <ChildContent>
+                    <Card>
+                        <CardBody>
+                            <CardBlock>
+                                <div class="clr-row">
+                                    <div class="clr-col-md-6 clr-col-12">
+                                        <div>Name:</div>
+                                        <b>@clubData.Name</b>
+                                        <br />
+                                        <a href="@clubData.StravaUrl" target="_blank" class="link-unstyled">
+                                            <CardMediaBlock ImageSource="@clubData.IconUrl" />
+                                        </a>
+                                        <div style="margin-top:20px">Sport:</div>
+                                        <b>@clubData.SportType</b>
+                                        @if (!string.IsNullOrEmpty(clubData.Owner))
+                                        {
+                                            <div style="margin-top:20px">Owner:</div>
+                                            <b>@clubData.Owner</b>
+                                        }
+                                        <div style="margin-top:20px">Members count:</div>
+                                        <b>@(clubData.MembersCount)</b>
+                                    </div>
+                                </div>
+                            </CardBlock>
+                        </CardBody>
+                    </Card>
+                </ChildContent>
+            </Tab>
+            <Tab>
+                <Header>Members</Header>
+                <ChildContent>
+                    @foreach (var member in clubMembers)
+                    {
+                        <div class="clr-col-sm-12">
+                            <Card>
+                                <CardBody>
+                                    <CardBlock>
+                                        <div class="clr-row">
+                                            <div class="clr-col-sm-1 clr-col-12">
+                                                @{
+                                                    var index = @clubMembers.IndexOf(member) + 1;
+                                                }
+                                                @(index).
+                                            </div>
+                                            <div class="clr-col-sm-1 clr-col-12">
+                                                @if (!string.IsNullOrEmpty(member.IconUrl))
+                                                {
+                                                    <img src="@member.IconUrl" style="width: 40px; height: 40px;" />
+                                                }
+                                            </div>
+                                            <div class="clr-col-sm-10 clr-col-12">
+                                                <b>@member.Name</b>
+                                            </div>
+                                        </div>
+                                    </CardBlock>
+                                </CardBody>
+                            </Card>
+                        </div>
+                    }
+                </ChildContent>
+            </Tab>
+            <Tab>
+                <Header>Challenges</Header>
+                <ChildContent>
+                    @foreach (var challenge in clubChallenges)
+                    {
+                        <div class="clr-col-sm-12">
+                            <Card Clickable="true" OnClick="() => ShowRank(challenge.Id)">
+                                <CardBody>
+                                    <CardBlock>
+                                        <div class="clr-row">
+                                            <div class="clr-col-md-4">
+                                                <b>@challenge.Name</b>
+                                            </div>
+                                            <div class="clr-col-md-4">
+                                                <span>@challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()</span>
+                                            </div>
+                                            <div class="clr-col-md-4">
+                                                <span>@challenge.ParticipantsCount participant(s)</span>
+                                            </div>
+                                        </div>
+                                    </CardBlock>
+                                </CardBody>
+                            </Card>
+                        </div>
+                    }
+                </ChildContent>
+            </Tab>
+        </Tabs>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string ClubId { get; set; }
+
+    ClubDto clubData;
+
+    List<AthleteDto> clubMembers;
+
+    List<ChallengeOverviewDto> clubChallenges;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (this.ClubId == null || !long.TryParse(this.ClubId, out long clubId))
+        {
+            return;
+        }
+
+        clubData = await clubService.GetClub(clubId);
+        clubMembers = await clubService.GetMembers(clubId);
+        clubChallenges = await clubService.GetChallenges(clubId);
+    }
+
+    protected void ShowRank(long id)
+    {
+        navigationManager.NavigateTo($"/challenges/rank/{id}");
+    }
+}

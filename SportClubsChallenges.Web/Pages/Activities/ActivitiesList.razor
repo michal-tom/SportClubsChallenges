@@ -1,0 +1,52 @@
+﻿@page "/activities/list"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IActivityService activityService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+@attribute [Authorize]
+
+@if (activities == null)
+{
+    <Loading />
+}
+else
+{
+    <Datagrid TRowData="ActivityDto" Items="activities" Placeholder="We couldn't find any activities!">
+        <DatagridColumn TRowData="ActivityDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
+            <a href="@context.Link" target="_blank">
+                <img src="/images/strava_icon.svg" style="height:16px;">
+            </a> @context.Name
+        </DatagridColumn>
+        <DatagridColumn TRowData="ActivityDto" Title="Type" Field="c => c.ActivityType" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ActivityDto" Title="Date" Field="c => c.StartDate" CanSort="true" CanFilter="true">
+            @context.StartDate.ToShortDateString() @context.StartDate.ToShortTimeString()
+        </DatagridColumn>
+        <DatagridColumn TRowData="ActivityDto" Title="Time" Field="c => c.Time" CanSort="true" />
+        <DatagridColumn TRowData="ActivityDto" Title="Distance (km)" Field="c => c.DistanceKm" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ActivityDto" Title="Elevation (m)" Field="c => c.Elevation" CanSort="true" CanFilter="true" />
+        <DatagridFooter TRowData="ActivityDto">
+            <DatagridPagination @ref="Paginator" TRowData="ActivityDto" PageSize="10" PageSizes="new int[] { 5, 10, 25, 50 }" PageSizeLabel="Activities per page">
+                @(Paginator.Pager.StartIndex + 1) - @(Paginator.Pager.EndIndex + 1) of @(Paginator.Pager.ItemCount) activities
+            </DatagridPagination>
+        </DatagridFooter>
+    </Datagrid>
+}
+
+@code {
+
+    List<ActivityDto> activities;
+
+    public DatagridPagination<ActivityDto> Paginator;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        activities = await activityService.GetAthleteActivities(athleteId);
+    }
+}

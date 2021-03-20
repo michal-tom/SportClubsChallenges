@@ -13,6 +13,7 @@
     using SportClubsChallenges.Model.Enums;
     using System.Linq;
     using SportClubsChallenges.AzureQueues;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class ChallengeService : IChallengeService
     {
@@ -161,11 +162,6 @@
             await db.SaveChangesAsync();
 
             await this.UpdateChallengeRank(challengeId);
-        }
-
-        public async Task<Dictionary<long, string>> GetAvailableClubs()
-        {
-            return await db.Clubs.AsNoTracking().ToDictionaryAsync(p => p.Id, p => p.Name);
         }
 
         public Dictionary<byte, string> GetAvailableChallengeRivalryTypes()

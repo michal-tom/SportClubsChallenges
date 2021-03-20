@@ -1,0 +1,90 @@
+﻿@page "/challenges/list"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IChallengeService challengeService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+@inject NavigationManager navigationManager
+
+@attribute [Authorize]
+
+@if (challenges == null)
+{
+    <Loading />
+}
+else
+{
+    <Datagrid TRowData="ChallengeOverviewDto" Items="challenges" Placeholder="We couldn't find any challenges!">
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="ClubName" Field="c => c.ClubName" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Date Range">
+            @context.StartDate.ToShortDateString() - @context.EndDate.ToShortDateString()
+        </DatagridColumn>
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Participants" Field="c => c.ParticipantsCount" CanSort="true" />
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Actions">
+            <ButtonGroup Variant="Primary">
+                <Button OnClick="() => ShowRank(context.Id)">Rank</Button>
+                @if (context.IsAthleteRegistred)
+                {
+                    <Button Variant="Danger" OnClick="() => LeaveChallenge(context.Id, context.Name)">Leave</Button>
+                }
+                else
+                {
+                    <Button Variant="Success" OnClick="() => JoinChallenge(context.Id, context.Name)">Join</Button>
+                }
+            </ButtonGroup>
+        </DatagridColumn>
+        <DatagridFooter TRowData="ChallengeOverviewDto">
+            <DatagridFooterDescription TRowData="ChallengeOverviewDto">@challenges.Count challenge(s)</DatagridFooterDescription>
+        </DatagridFooter>
+    </Datagrid>
+}
+
+@code {
+
+    List<ChallengeOverviewDto> challenges;
+
+    long athleteId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        this.athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        await LoadChallenges();
+    }
+
+    private async Task LoadChallenges()
+    {
+        challenges = await challengeService.GetAvailableChallenges(this.athleteId);
+    }
+
+    protected void ShowRank(long challengeId)
+    {
+        navigationManager.NavigateTo($"/challenges/rank/{challengeId}");
+    }
+
+    protected async Task LeaveChallenge(long challengeId, string challengeName)
+    {
+        // TODO: check user confirmation
+
+        await challengeService.LeaveChallenge(this.athleteId, challengeId);
+
+        // TODO: show notification ("You leave '{challengeName}' challenge!")
+
+        await LoadChallenges();
+    }
+
+    protected async Task JoinChallenge(long challengeId, string challengeName)
+    {
+        // TODO: check user confirmation
+
+        await challengeService.JoinChallenge(this.athleteId, challengeId);
+
+        // TODO: show notification ("You successfully join to '{challengeName}' challenge!")
+
+        await LoadChallenges();
+    }
+}

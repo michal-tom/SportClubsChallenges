@@ -4,6 +4,7 @@
 @inject IChallengeService challengeService
 @inject IIdentityService identityService
 @inject IHttpContextAccessor httpContextAccessor
+@inject NavigationManager navigationManager
 
 @attribute [Authorize]
 
@@ -13,29 +14,30 @@
 }
 else
 {
-    <RadzenPanel AllowCollapse="true">
-        <HeaderTemplate>
-            <span style="float:left;">
-                <RadzenIcon Icon="stars" /><b style="font-size:18px">My challenges</b>
-            </span>
-        </HeaderTemplate>
-        <ChildContent>
-
-            @if (challengeParticipations.Count == 0)
+    <div class="text-center">
+        <h4>
+            <clr-icon shape="star"></clr-icon>
+            My challenges
+        </h4>
+    </div>
+    @if (challengeParticipations.Count == 0)
+    {
+        <div class="text-center">
+            <p>You are not registered to any challenge!</p>
+            <p>Please go <a href="/challenges/list">Challenges</a> page to join to any challenge from your Strava club.</p>
+        </div>
+    }
+    else
+    {
+        <div class="clr-row">
+            @foreach (var participation in challengeParticipations)
             {
-                <p>You are not registered to any challenge!</p>
-                <br />
-                <p>Please go <a class="btn btn-primary" href="/challenges/list">Challenges</a> page to join to any challenge from your Strava club.</p>
-            }
-            else
-            {
-                // TODO: move all styles to css
-                <RadzenDataList WrapItems="true" AllowPaging="true" Data="@challengeParticipations" TItem="ChallengeParticipationDto">
-                    <Template Context="participation">
-                        <RadzenCard Style="width: 350px; background-color: #f7f1ec6e;">
-                            <a href="/challenges/rank/@participation.ChallengeId" class="link-unstyled">
-                                <div class="row">
-                                    <div class="col-md-6">
+                <div class="clr-col-lg-6 clr-col-12">
+                    <Card Clickable="true" OnClick="() => ShowRank(participation.ChallengeId)">
+                        <CardBody>
+                            <CardBlock>
+                                <div class="clr-row">
+                                    <div class="clr-col-md-6 clr-col-12">
                                         <div>Name:</div>
                                         <b>@participation.ChallengeName</b>
                                         <div style="margin-top:10px">Club:</div>
@@ -43,10 +45,10 @@ else
                                         <br />
                                         @if (!string.IsNullOrEmpty(participation.ClubIconUrl))
                                         {
-                                            <RadzenImage Path="@participation.ClubIconUrl" Style="width:75px;" />
+                                            <CardMediaBlock ImageSource="@participation.ClubIconUrl" />
                                         }
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="clr-col-md-6 clr-col-12">
                                         <div>Current Rank:</div>
                                         <b>@participation.Rank / @participation.ChallengeParticipantsCount</b>
                                         <div style="margin-top:10px">Score:</div>
@@ -55,13 +57,13 @@ else
                                         <b>@participation.ChallengeStartDate.ToShortDateString() - @participation.ChallengeEndDate.ToShortDateString()</b>
                                     </div>
                                 </div>
-                            </a>
-                        </RadzenCard>
-                    </Template>
-                </RadzenDataList>
+                            </CardBlock>
+                        </CardBody>
+                    </Card>
+                </div>
             }
-        </ChildContent>
-    </RadzenPanel>
+        </div>
+    }
 }
 
 @code {
@@ -74,5 +76,10 @@ else
         var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
         challengeParticipations = await challengeService.GetChallengeParticipations(athleteId);
+    }
+
+    protected void ShowRank(long id)
+    {
+        navigationManager.NavigateTo($"/challenges/rank/{id}");
     }
 }

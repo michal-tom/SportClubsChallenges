@@ -1,0 +1,45 @@
+﻿@page "/clubs/admin"
+
+@inject IClubService clubService
+@inject NavigationManager navigationManager
+
+@attribute [Authorize(Roles = "Admin")]
+
+@if (clubs == null)
+{
+    <Loading />
+}
+else
+{
+    <div>
+        <a class="btn btn-primary" href='/addClub'>Add</a>
+    </div>
+    <br />
+
+    <Datagrid TRowData="ClubDto" Items="clubs" Placeholder="We couldn't find any clubs!">
+        <DatagridColumn TRowData="ClubDto" Title="Id" Field="c => c.Id" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ClubDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ClubDto" Title="Actions">
+            <ButtonGroup Variant="Primary">
+                <Button OnClick="() => EditClub(context.Id)">Edit</Button>
+            </ButtonGroup>
+        </DatagridColumn>
+        <DatagridFooter TRowData="ClubDto">
+            <DatagridFooterDescription TRowData="ClubDto">@clubs.Count club(s)</DatagridFooterDescription>
+        </DatagridFooter>
+    </Datagrid>
+}
+
+@code {
+    List<ClubDto> clubs;
+
+    protected override async Task OnInitializedAsync()
+    {
+        clubs = await clubService.GetAllClubs();
+    }
+
+    protected void EditClub(long clubId)
+    {
+        navigationManager.NavigateTo($"/clubs/edit/{clubId}");
+    }
+}

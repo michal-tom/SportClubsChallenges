@@ -24,8 +24,6 @@
 
         Task JoinChallenge(long athleteId, long challengeId);
 
-        Task<Dictionary<long, string>> GetAvailableClubs();
-
         Task<Dictionary<byte, string>> GetAvailableActivityTypes();
 
         Dictionary<byte, string> GetAvailableChallengeRivalryTypes();

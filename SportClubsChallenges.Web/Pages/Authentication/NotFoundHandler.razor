@@ -3,13 +3,9 @@
 @inject IHttpContextAccessor httpContextAccessor
 @inject NavigationManager navigationManager
 
-<section class="section" id="not-authorized-message">
-    <div class="container">
-        <div class="notification">
-            <p>@message</p>
-        </div>
-    </div>
-</section>
+<div class="panel-centered">
+    <p>@message</p>
+</div>
 
 @code {
 
