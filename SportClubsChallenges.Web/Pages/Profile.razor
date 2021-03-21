@@ -3,39 +3,115 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
 
+@inject IAthleteService athleteService
+@inject IClubService clubService
+@inject NavigationManager navigationManager
+@inject IIdentityService identityService
 @inject IHttpContextAccessor httpContextAccessor
 
 @attribute [Authorize]
 
 <AuthorizeView>
     <Authorized>
-        <h3>Hello, @_userName!</h3>
-
-        @if (_claims.Count() > 0)
+        @if (athlete == null)
         {
-            <h4>Your claims:</h4>
-            <ul>
-                @foreach (var claim in _claims)
-                {
-                    <li>@claim.Type: @claim.Value</li>
-                }
-            </ul>
+            <Loading />
+        }
+        else
+        {
+            <div class="clr-row">
+                <div class="clr-col-md-4 clr-col-12">
+                    <Card>
+                        <CardHeader>
+                            <clr-icon shape="info-standard"></clr-icon>
+                            <span>General info</span>
+                        </CardHeader>
+                        <CardBody>
+                            <CardBlock>
+                                <CardMediaBlock ImageSource="@athlete.AvatarUrl" AlternateText="Strava avatar">
+                                    <DescriptionTitle>@athlete.Name</DescriptionTitle>
+                                </CardMediaBlock>
+                                <CardText>City: @athlete.City</CardText>
+                                <CardText>Country: @athlete.Country</CardText>
+                                <CardText>Gender: @athlete.GenderDescription</CardText>
+                            </CardBlock>
+                        </CardBody>
+                        <CardFooter>
+                            <Button Flat="true" Small="true" OnClick="() => ShowActivities()">Activities</Button>
+                            <Button Flat="true" Small="true" OnClick="() => ShowChallenges()">Challenges</Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+                <div class="clr-col-md-4 clr-col-12">
+                    <Card>
+                        <CardHeader>
+                            <clr-icon shape="id-badge"></clr-icon>
+                            <span>Clubs</span>
+                        </CardHeader>
+                        <CardBody>
+                            <CardBlock>
+                                @foreach (var club in clubs)
+                                {
+                                    <Card Clickable="true" OnClick="() => ShowClubDetails(club.Id)">
+                                        <CardBody>
+                                            <CardBlock>
+                                                <CardMediaBlock ImageSource="@club.IconUrl" AlternateText="Club logo">
+                                                    <DescriptionTitle>@club.Name</DescriptionTitle>
+                                                </CardMediaBlock>
+                                                <CardText>Sport: @club.SportType</CardText>
+                                                <CardText>Members count: @club.MembersCount</CardText>
+                                            </CardBlock>
+                                        </CardBody>
+                                    </Card>
+                                }
+                            </CardBlock>
+                        </CardBody>
+                    </Card>
+                </div>
+                <div class="clr-col-md-4 clr-col-12">
+                    <Card>
+                        <CardHeader>
+                            <clr-icon shape="bar-chart"></clr-icon>
+                            <span>Stats</span>
+                        </CardHeader>
+                        <CardBody>
+                            <CardBlock>
+                                
+                            </CardBlock>
+                        </CardBody>
+                    </Card>
+                </div>
+            </div>
         }
     </Authorized>
 </AuthorizeView>
 
 @code {
-    private string _userName;
-    private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
+    private AthleteDto athlete;
 
-    protected override void OnInitialized()
+    List<ClubDto> clubs;
+
+    protected override async Task OnInitializedAsync()
     {
         var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
-        if (user.Identity.IsAuthenticated)
-        {
-            _claims = user.Claims;
-            _userName = user.Identity.Name;
-        }
+        athlete = await athleteService.GetAthlete(athleteId);
+        clubs = await clubService.GetAthleteClubs(athleteId);
+    }
+
+    void ShowActivities()
+    {
+        navigationManager.NavigateTo("/activities/list");
+    }
+
+    void ShowChallenges()
+    {
+        navigationManager.NavigateTo("/challenges/list");
+    }
+
+    protected void ShowClubDetails(long id)
+    {
+        navigationManager.NavigateTo($"/clubs/details/{id}");
     }
 }

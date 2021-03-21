@@ -1,15 +1,17 @@
 ﻿namespace SportClubsChallenges.Domain.Services
 {
+    using System;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using AutoMapper;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.AzureQueues;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
-    using System;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
+    using SportClubsChallenges.Model.Dto;
 
     public class AthleteService : IAthleteService
     {
@@ -21,16 +23,20 @@
 
         private readonly IAzureStorageRepository storageRepository;
 
+        private readonly IMapper mapper;
+
         public AthleteService(
             SportClubsChallengesDbContext db,
             ITokenService tokenService,
             IIdentityService identityService,
-            IAzureStorageRepository storageRepository)
+            IAzureStorageRepository storageRepository,
+            IMapper mapper)
         {
             this.db = db;
             this.tokenService = tokenService;
             this.identityService = identityService;
             this.storageRepository = storageRepository;
+            this.mapper = mapper;
         }
 
         public async Task OnAthleteLogin(ClaimsIdentity identity, AuthenticationProperties properties)
@@ -49,6 +55,12 @@
             this.identityService.UpdateIdentity(identity, athlete);
 
             await this.QueueUpdateAthleteClubs(athleteId);
+        }
+
+        public async Task<AthleteDto> GetAthlete(long id)
+        {
+            var entity = await db.Athletes.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            return mapper.Map<AthleteDto>(entity);
         }
 
         private async Task<Athlete> UpdateAthleteData(ClaimsIdentity identity, long athleteId)

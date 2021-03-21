@@ -20,7 +20,11 @@
 
             this.CreateMap<Athlete, AthleteDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
-                .ForMember(dest => dest.IconUrl, opt => opt.MapFrom(src => src.IconUrlMedium));
+                .ForMember(dest => dest.IconUrlMedium, opt => opt.MapFrom(src => src.IconUrlMedium))
+                .ForMember(dest => dest.IconUrlLarge, opt => opt.MapFrom(src => src.IconUrlLarge))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender));
 
             this.CreateMap<Challenge, ChallengeDetailsDto>()
                 .ForMember(dest => dest.CompetitionTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeCompetitionTypeEnum) src.CompetitionType)))

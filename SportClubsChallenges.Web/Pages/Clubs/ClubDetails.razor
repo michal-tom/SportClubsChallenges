@@ -1,6 +1,7 @@
 ﻿@page "/clubs/details/{clubId}"
 
 @inject IClubService clubService
+@inject IJSRuntime JSRuntime
 @inject NavigationManager navigationManager
 
 @if (clubData == null)
@@ -18,12 +19,9 @@ else
                 </CardHeader>
                 <CardBody>
                     <CardBlock>
-                        <div>Name:</div>
-                        <b>@clubData.Name</b>
-                        <br />
-                        <a href="@clubData.StravaUrl" target="_blank">
-                            <CardMediaBlock ImageSource="@clubData.IconUrl" />
-                        </a>
+                        <CardMediaBlock ImageSource="@clubData.IconUrl" AlternateText="Club icon" Wrap="true">
+                            <DescriptionTitle><b>@clubData.Name</b></DescriptionTitle>
+                        </CardMediaBlock>
                         <div style="margin-top:10px">Sport:</div>
                         <b>@clubData.SportType</b>
                         @if (!string.IsNullOrEmpty(clubData.Owner))
@@ -31,10 +29,13 @@ else
                             <div style="margin-top:10px">Owner:</div>
                             <b>@clubData.Owner</b>
                         }
-                        <div style="margin-top:10px">Members count:</div>
-                        <b>@(clubData.MembersCount)</b>
+                        <div style="margin-top:10px">Members count (in Strava):</div>
+                        <b>@clubData.MembersCount</b>
                     </CardBlock>
                 </CardBody>
+                <CardFooter>
+                    <Button Flat="true" Small="true" OnClick="() => ShowClubOnStrava()">Show on Strava</Button>
+                </CardFooter>
             </Card>
         </div>
         <div class="clr-col-md-4 clr-col-12">
@@ -62,7 +63,7 @@ else
             </Card>
         </div>
         <div class="clr-col-md-4 clr-col-12">
-            <Card >
+            <Card>
                 <CardHeader>
                     <clr-icon shape="crown"></clr-icon>
                     <span>Challenges</span>
@@ -120,5 +121,10 @@ else
     protected void ShowRank(long id)
     {
         navigationManager.NavigateTo($"/challenges/rank/{id}");
+    }
+
+    protected async Task ShowClubOnStrava()
+    {
+        await JSRuntime.InvokeAsync<object>("open", clubData.StravaUrl, "_blank");
     }
 }
