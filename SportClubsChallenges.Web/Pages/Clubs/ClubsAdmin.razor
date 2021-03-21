@@ -21,6 +21,7 @@ else
         <DatagridColumn TRowData="ClubDto" Title="Members in Strava" Field="c => c.MembersCount" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ClubDto" Title="Actions">
             <ButtonGroup Variant="Primary">
+                <Button Variant="Success" OnClick="() => ShowDetails(context.Id)">Details</Button>
                 <Button OnClick="() => EditClub(context.Id)">Edit</Button>
             </ButtonGroup>
         </DatagridColumn>
@@ -41,5 +42,10 @@ else
     protected void EditClub(long clubId)
     {
         navigationManager.NavigateTo($"/clubs/edit/{clubId}");
+    }
+
+    protected void ShowDetails(long clubId)
+    {
+        navigationManager.NavigateTo($"/clubs/details/{clubId}");
     }
 }

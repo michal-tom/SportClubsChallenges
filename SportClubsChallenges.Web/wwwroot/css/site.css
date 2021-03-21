@@ -15,3 +15,11 @@ div.horizontal-centered-tabs > clr-tabs > ul {
 .clr-form-compact .clr-checkbox-wrapper .clr-control-label {
     margin-top: 0 !important;
 }
+
+.card:first-child {
+    margin-top: 0 !important;
+}
+
+.datagrid-wrapper[blazority] {
+    margin-top: 0 !important;
+}
