@@ -17,11 +17,13 @@ else
     <br />
 
     <Datagrid TRowData="ChallengeOverviewDto" Items="challenges" Placeholder="We couldn't find any challenges!">
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Id" Field="c => c.Id" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="ClubName" Field="c => c.ClubName" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Date Range">
             @context.StartDate.ToShortDateString() - @context.EndDate.ToShortDateString()
         </DatagridColumn>
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Type" Field="c => c.CompetitionTypeDescription" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Participants" Field="c => c.ParticipantsCount" CanSort="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Actions">
             <ButtonGroup Variant="Primary">

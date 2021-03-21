@@ -1,8 +1,8 @@
 ﻿namespace SportClubsChallenges.Domain.Interfaces
 {
-    using SportClubsChallenges.Model.Dto;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using SportClubsChallenges.Model.Dto;
 
     public interface IClubService
     {
@@ -12,12 +12,10 @@
 
         Task<ClubDto> GetClub(long id);
 
+        Task EditClub(ClubDto dto);
+
         Task<List<AthleteDto>> GetMembers(long id);
 
         Task<List<ChallengeOverviewDto>> GetChallenges(long id);
-
-        Task AddClub(ClubDto dto);
-
-        Task UpdatClub(ClubDto dto);
     }
 }

@@ -20,6 +20,8 @@
 
         public int MembersCount { get; set; }
 
+        public string Owner { get; set; }
+
         #region References
 
         public virtual ICollection<ClubMember> ClubMembers { get; set; }

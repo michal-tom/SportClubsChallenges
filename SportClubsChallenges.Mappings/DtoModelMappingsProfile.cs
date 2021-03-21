@@ -13,7 +13,10 @@
     {
         public DtoModelMappingsProfile()
         {
-            this.CreateMap<Club, ClubDto>();
+            this.CreateMap<Club, ClubDto>().ReverseMap()
+                .ForMember(dest => dest.IconUrl, opt => opt.Ignore())
+                .ForMember(dest => dest.Name, opt => opt.Ignore())
+                .ForMember(dest => dest.SportType, opt => opt.Ignore());
 
             this.CreateMap<Athlete, AthleteDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))

@@ -16,30 +16,31 @@
 }
 else
 {
-    <Datagrid TRowData="ChallengeOverviewDto" Items="challenges" Placeholder="We couldn't find any challenges!">
-        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true" />
-        <DatagridColumn TRowData="ChallengeOverviewDto" Title="ClubName" Field="c => c.ClubName" CanSort="true" CanFilter="true" />
-        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Date Range">
-            @context.StartDate.ToShortDateString() - @context.EndDate.ToShortDateString()
-        </DatagridColumn>
-        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Participants" Field="c => c.ParticipantsCount" CanSort="true" />
-        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Actions">
-            <ButtonGroup Variant="Primary">
-                <Button OnClick="() => ShowRank(context.Id)">Rank</Button>
-                @if (context.IsAthleteRegistred)
-                {
-                    <Button Variant="Danger" OnClick="() => LeaveChallenge(context.Id, context.Name)">Leave</Button>
-                }
-                else
-                {
-                    <Button Variant="Success" OnClick="() => JoinChallenge(context.Id, context.Name)">Join</Button>
-                }
-            </ButtonGroup>
-        </DatagridColumn>
-        <DatagridFooter TRowData="ChallengeOverviewDto">
-            <DatagridFooterDescription TRowData="ChallengeOverviewDto">@challenges.Count challenge(s)</DatagridFooterDescription>
-        </DatagridFooter>
-    </Datagrid>
+<Datagrid TRowData="ChallengeOverviewDto" Items="challenges" Placeholder="We couldn't find any challenges!">
+    <DatagridColumn TRowData="ChallengeOverviewDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true" />
+    <DatagridColumn TRowData="ChallengeOverviewDto" Title="ClubName" Field="c => c.ClubName" CanSort="true" CanFilter="true" />
+    <DatagridColumn TRowData="ChallengeOverviewDto" Title="Date Range">
+        @context.StartDate.ToShortDateString() - @context.EndDate.ToShortDateString()
+    </DatagridColumn>
+    <DatagridColumn TRowData="ChallengeOverviewDto" Title="Type" Field="c => c.CompetitionTypeDescription" CanSort="true" CanFilter="true" />
+    <DatagridColumn TRowData="ChallengeOverviewDto" Title="Participants" Field="c => c.ParticipantsCount" CanSort="true" />
+    <DatagridColumn TRowData="ChallengeOverviewDto" Title="Actions">
+        <ButtonGroup Variant="Primary">
+            <Button OnClick="() => ShowRank(context.Id)">Rank</Button>
+            @if (context.IsAthleteRegistred)
+            {
+                <Button Variant="Danger" OnClick="() => LeaveChallenge(context.Id, context.Name)">Leave</Button>
+            }
+            else
+            {
+                <Button Variant="Success" OnClick="() => JoinChallenge(context.Id, context.Name)">Join</Button>
+            }
+        </ButtonGroup>
+    </DatagridColumn>
+    <DatagridFooter TRowData="ChallengeOverviewDto">
+        <DatagridFooterDescription TRowData="ChallengeOverviewDto">@challenges.Count challenge(s)</DatagridFooterDescription>
+    </DatagridFooter>
+</Datagrid>
 }
 
 @code {
