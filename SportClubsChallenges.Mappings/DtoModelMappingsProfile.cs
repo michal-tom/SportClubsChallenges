@@ -24,7 +24,10 @@
                 .ForMember(dest => dest.IconUrlLarge, opt => opt.MapFrom(src => src.IconUrlLarge))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
                 .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
-                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender));
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+                .ForMember(dest => dest.FirstLoginDate, opt => opt.MapFrom(src => src.FirstLoginDate.LocalDateTime))
+                .ForMember(dest => dest.LastLoginDate, opt => opt.MapFrom(src => src.LastLoginDate.LocalDateTime))
+                .ForMember(dest => dest.LastSyncDate, opt => opt.MapFrom(src => src.LastSyncDate.HasValue ? src.LastSyncDate.Value.LocalDateTime : (DateTime?) null));
 
             this.CreateMap<Challenge, ChallengeDetailsDto>()
                 .ForMember(dest => dest.CompetitionTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeCompetitionTypeEnum) src.CompetitionType)))

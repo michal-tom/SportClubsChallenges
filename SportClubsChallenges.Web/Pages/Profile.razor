@@ -34,6 +34,8 @@
                                 <CardText>City: @athlete.City</CardText>
                                 <CardText>Country: @athlete.Country</CardText>
                                 <CardText>Gender: @athlete.GenderDescription</CardText>
+                                <CardText>First login date: @athlete.FirstLoginDate.ToShortDateString() @athlete.FirstLoginDate.ToShortTimeString()</CardText>
+                                <CardText>Last login date: @athlete.LastLoginDate.ToShortDateString() @athlete.LastLoginDate.ToShortTimeString()</CardText>
                             </CardBlock>
                         </CardBody>
                         <CardFooter>
@@ -47,6 +49,7 @@
                         <CardHeader>
                             <clr-icon shape="id-badge"></clr-icon>
                             <span>Clubs</span>
+                            <Badge Status="Status.Info">@clubs?.Count</Badge>
                         </CardHeader>
                         <CardBody>
                             <CardBlock>
@@ -76,7 +79,51 @@
                         </CardHeader>
                         <CardBody>
                             <CardBlock>
-                                
+                                <CardText>First imported activity date: @(stats.FirstActivityDateTime?.Date.ToShortDateString() ?? "N/A")</CardText>
+                                <CardText>Last activities sync date: @(athlete.LastSyncDate?.ToShortDateString() ?? "N/A")</CardText>
+                                <CardText>Favorite  activity type: @(stats.PreferedActivityType?.ToString() ?? "N/A")</CardText>
+                                <Tabs>
+                                    <Tab>
+                                        <Header>Total</Header>
+                                        <ChildContent>
+                                            <br/>
+                                            <CardText>Activities count: @stats.TotalStats.Count</CardText>
+                                            <CardText>Total distance: @stats.TotalStats.Distance</CardText>
+                                            <CardText>Total time: @stats.TotalStats.Duration</CardText>
+                                            <CardText>Total elevation: @stats.TotalStats.Elevation</CardText>
+                                        </ChildContent>
+                                    </Tab>
+                                    <Tab>
+                                        <Header>Year</Header>
+                                        <ChildContent>
+                                            <br />
+                                            <CardText>Activities count: @stats.YearStats.Count</CardText>
+                                            <CardText>Total distance: @stats.YearStats.Distance</CardText>
+                                            <CardText>Total time: @stats.YearStats.Duration</CardText>
+                                            <CardText>Total elevation: @stats.YearStats.Elevation</CardText>
+                                        </ChildContent>
+                                    </Tab>
+                                    <Tab>
+                                        <Header>Month</Header>
+                                        <ChildContent>
+                                            <br />
+                                            <CardText>Activities count: @stats.MonthStats.Count</CardText>
+                                            <CardText>Total distance: @stats.MonthStats.Distance</CardText>
+                                            <CardText>Total time: @stats.MonthStats.Duration</CardText>
+                                            <CardText>Total elevation: @stats.MonthStats.Elevation</CardText>
+                                        </ChildContent>
+                                    </Tab>
+                                    <Tab>
+                                        <Header>Week</Header>
+                                        <ChildContent>
+                                            <br />
+                                            <CardText>Activities count: @stats.WeekStats.Count</CardText>
+                                            <CardText>Total distance: @stats.WeekStats.Distance</CardText>
+                                            <CardText>Total time: @stats.WeekStats.Duration</CardText>
+                                            <CardText>Total elevation: @stats.WeekStats.Elevation</CardText>
+                                        </ChildContent>
+                                    </Tab>
+                                </Tabs>
                             </CardBlock>
                         </CardBody>
                     </Card>
@@ -91,6 +138,8 @@
 
     List<ClubDto> clubs;
 
+    OverallStatsDto stats;
+
     protected override async Task OnInitializedAsync()
     {
         var user = httpContextAccessor.HttpContext.User;
@@ -98,6 +147,7 @@
 
         athlete = await athleteService.GetAthlete(athleteId);
         clubs = await clubService.GetAthleteClubs(athleteId);
+        stats = athleteService.GetAthleteActivitiesTotalStats(athleteId);
     }
 
     void ShowActivities()

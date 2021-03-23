@@ -1,6 +1,7 @@
 ﻿namespace SportClubsChallenges.Domain.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -12,6 +13,7 @@
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Model.Dto;
+    using SportClubsChallenges.Utils.Helpers;
 
     public class AthleteService : IAthleteService
     {
@@ -59,8 +61,23 @@
 
         public async Task<AthleteDto> GetAthlete(long id)
         {
-            var entity = await db.Athletes.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
-            return mapper.Map<AthleteDto>(entity);
+            var athlete = await db.Athletes.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            return mapper.Map<AthleteDto>(athlete);
+        }
+
+        public OverallStatsDto GetAthleteActivitiesTotalStats(long id)
+        {
+            var activities = db.Activities.AsNoTracking().Where(p => p.AthleteId == id && p.IsDeleted == false).AsEnumerable();
+
+            return new OverallStatsDto()
+            {
+                TotalStats = this.GetPeriodStats(activities, DateTimeOffset.MinValue),
+                YearStats = this.GetPeriodStats(activities, new DateTimeOffset(DateTimeOffset.Now.Year, 1, 1, 0, 0, 0, TimeSpan.Zero)),
+                MonthStats = this.GetPeriodStats(activities, new DateTimeOffset(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month, 1, 0, 0, 0, TimeSpan.Zero)),
+                WeekStats = this.GetPeriodStats(activities, new DateTimeOffset(TimeHelper.GetStartOfWeek())),
+                FirstActivityDateTime = activities.OrderBy(p => p.StartDate.Ticks).FirstOrDefault()?.StartDate,
+                PreferedActivityTypeId = activities.GroupBy(p => p.ActivityTypeId).OrderByDescending(group => group.Count()).FirstOrDefault()?.Key ?? null
+            };
         }
 
         private async Task<Athlete> UpdateAthleteData(ClaimsIdentity identity, long athleteId)
@@ -70,7 +87,7 @@
             {
                 athlete = new Athlete { 
                     Id = athleteId, 
-                    CreationDate = DateTimeOffset.Now, 
+                    FirstLoginDate = DateTimeOffset.Now, 
                     AthleteStravaToken = new AthleteStravaToken()
                 };
                 this.db.Athletes.Add(athlete);
@@ -89,6 +106,19 @@
         {
             var queuesClient = new AzureQueuesClient(this.storageRepository);
             await queuesClient.SyncAthleteClubs(athleteId);
+        }
+
+        private PeriodStatsDto GetPeriodStats(IEnumerable<Activity> activities, DateTimeOffset startDate)
+        {
+            var periodActivities = activities.Where(p => p.StartDate >= startDate);
+
+            return new PeriodStatsDto()
+            {
+                Count = periodActivities.Count(),
+                Distance = periodActivities.Sum(p => p.Distance),
+                Duration = periodActivities.Sum(p => p.Duration),
+                Elevation = periodActivities.Sum(p => p.Elevation)
+            };
         }
     }
 }

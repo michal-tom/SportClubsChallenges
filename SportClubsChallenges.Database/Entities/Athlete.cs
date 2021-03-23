@@ -27,9 +27,11 @@
 
         public bool IsAdmin { get; set; }
 
-        public DateTimeOffset CreationDate { get; set; }
+        public DateTimeOffset FirstLoginDate { get; set; }
 
         public DateTimeOffset LastLoginDate { get; set; }
+
+        public DateTimeOffset? LastSyncDate { get; set; }
 
         public long AthleteStravaTokenId { get; set; }
 

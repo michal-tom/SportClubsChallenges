@@ -43,6 +43,7 @@ else
                 <CardHeader>
                     <clr-icon shape="users"></clr-icon>
                     <span>Members</span>
+                    <Badge Status="Status.Info">@clubMembers?.Count</Badge>
                 </CardHeader>
                 <CardBody>
                     <CardBlock>
@@ -67,6 +68,7 @@ else
                 <CardHeader>
                     <clr-icon shape="crown"></clr-icon>
                     <span>Challenges</span>
+                    <Badge Status="Status.Info">@clubChallenges?.Count</Badge>
                 </CardHeader>
                 <CardBody>
                     <CardBlock>

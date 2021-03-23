@@ -1,5 +1,7 @@
 ﻿namespace SportClubsChallenges.Model.Dto
 {
+    using System;
+
     public class AthleteDto
     {
         public string Name { get; set; }
@@ -13,6 +15,12 @@
         public string Gender { get; set; }
 
         public string Country { get; set; }
+
+        public DateTime FirstLoginDate { get; set; }
+
+        public DateTime LastLoginDate { get; set; }
+
+        public DateTime? LastSyncDate { get; set; }
 
         public string IconUrl => !string.IsNullOrEmpty(this.IconUrlMedium) ? this.IconUrlMedium : "/images/strava_user.png";
 

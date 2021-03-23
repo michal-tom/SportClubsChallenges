@@ -10,5 +10,7 @@
         Task OnAthleteLogin(ClaimsIdentity identity, AuthenticationProperties properties);
 
         Task<AthleteDto> GetAthlete(long id);
+
+        OverallStatsDto GetAthleteActivitiesTotalStats(long id);
     }
 }
