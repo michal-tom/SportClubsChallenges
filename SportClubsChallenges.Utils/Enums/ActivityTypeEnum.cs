@@ -1,6 +1,6 @@
-﻿namespace SportClubsChallenges.Model.Enums
+﻿namespace SportClubsChallenges.Utils.Enums
 {
-    using SportClubsChallenges.Model.Attributes;
+    using SportClubsChallenges.Utils.Attributes;
 
     public enum ActivityTypeEnum : byte
     {

@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Model.Strava
+﻿namespace SportClubsChallenges.Utils.Consts
 {
     public static class StravaConsts
     {

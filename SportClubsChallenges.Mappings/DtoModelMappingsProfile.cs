@@ -5,8 +5,8 @@
     using AutoMapper;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Model.Dto;
-    using SportClubsChallenges.Model.Enums;
     using SportClubsChallenges.Model.Strava;
+    using SportClubsChallenges.Utils.Enums;
     using SportClubsChallenges.Utils.Helpers;
 
     public class DtoModelMappingsProfile : Profile

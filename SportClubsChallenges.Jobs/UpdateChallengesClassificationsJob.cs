@@ -7,7 +7,7 @@
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
-    using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Utils.Enums;
 
     public class UpdateChallengesClassificationsJob
     {

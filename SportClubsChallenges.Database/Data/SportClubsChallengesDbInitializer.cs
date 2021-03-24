@@ -2,7 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Entities;
-    using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Utils.Enums;
     using System;
     using System.Linq;
 

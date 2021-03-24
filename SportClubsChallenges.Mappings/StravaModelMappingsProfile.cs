@@ -4,7 +4,7 @@
     using AutoMapper;
     using global::Strava.NET.Model;
     using SportClubsChallenges.Database.Entities;
-    using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Utils.Enums;
     using SportClubsChallenges.Utils.Helpers;
 
     public class StravaModelMappingsProfile : Profile

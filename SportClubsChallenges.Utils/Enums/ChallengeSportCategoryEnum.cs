@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Model.Enums
+﻿namespace SportClubsChallenges.Utils.Enums
 {
     public enum ChallengeSportCategoryEnum : byte
     {

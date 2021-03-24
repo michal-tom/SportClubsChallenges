@@ -7,13 +7,12 @@
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
-    using SportClubsChallenges.Utils.Helpers;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Model.Dto;
-    using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Utils.Enums;
+    using SportClubsChallenges.Utils.Helpers;
     using System.Linq;
     using SportClubsChallenges.AzureQueues;
-    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class ChallengeService : IChallengeService
     {

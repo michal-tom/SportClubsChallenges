@@ -27,9 +27,5 @@
         public bool IsGps { get; set; }
 
         public string Link => $"https://www.strava.com/activities/{this.Id}";
-
-        public decimal DistanceKm => Decimal.Round(Decimal.Divide(this.Distance, 1000), 2);
-
-        public string Time => TimeSpan.FromSeconds(this.Duration).ToString(@"h\h\ mm\m");
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace SportClubsChallenges.Model.Dto
 {
     using System;
-    using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Utils.Enums;
 
     public class OverallStatsDto
     {

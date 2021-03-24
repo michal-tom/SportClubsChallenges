@@ -52,7 +52,7 @@ else
                                         <div>Current Rank:</div>
                                         <b>@participation.Rank / @participation.ChallengeParticipantsCount</b>
                                         <div style="margin-top:10px">Score:</div>
-                                        <b>@participation.Score @participation.ScoreUnit</b>
+                                        <b>@UnitHelper.GetScoreDescription(participation.Score, participation.ScoreUnit)</b>
                                         <div style="margin-top:10px">Date Range:</div>
                                         <b>@participation.ChallengeStartDate.ToShortDateString() - @participation.ChallengeEndDate.ToShortDateString()</b>
                                     </div>

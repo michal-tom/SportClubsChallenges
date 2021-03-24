@@ -19,7 +19,7 @@ else
                 <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Rank" Field="c => c.Rank" CanSort="true" CanFilter="true" />
                 <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Athlete" Field="c => c.AthleteName" CanSort="true" CanFilter="true" />
                 <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Score" Field="c => c.Score" CanSort="true" CanFilter="true">
-                    @context.Score @challengeDetails.ScoreUnit
+                    @UnitHelper.GetScoreDescription(context.Score, challengeDetails.ScoreUnit)
                 </DatagridColumn>
                 <DatagridFooter TRowData="ChallengeRankPositionDto">
                     <DatagridFooterDescription TRowData="ChallengeRankPositionDto">@challengeDetails.ParticipantsCount participant(s)</DatagridFooterDescription>

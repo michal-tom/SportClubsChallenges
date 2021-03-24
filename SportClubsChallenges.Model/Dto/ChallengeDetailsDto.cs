@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using SportClubsChallenges.Model.Attributes;
-    using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Utils.Attributes;
+    using SportClubsChallenges.Utils.Enums;
     using SportClubsChallenges.Utils.Helpers;
 
     public class ChallengeDetailsDto
@@ -59,6 +59,6 @@
 
         public int ParticipantsCount { get; set; }
 
-        public string ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeCompetitionTypeEnum) this.CompetitionType)?.Unit ?? string.Empty;
+        public ChallengeScoreUnit ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeCompetitionTypeEnum) this.CompetitionType).Unit;
     }
 }

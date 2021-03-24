@@ -81,48 +81,12 @@
                             <CardBlock>
                                 <CardText>First imported activity date: @(stats.FirstActivityDateTime?.Date.ToShortDateString() ?? "N/A")</CardText>
                                 <CardText>Last activities sync date: @(athlete.LastSyncDate?.ToShortDateString() ?? "N/A")</CardText>
-                                <CardText>Favorite  activity type: @(stats.PreferedActivityType?.ToString() ?? "N/A")</CardText>
+                                <CardText>Favorite activity type: @(stats.PreferedActivityType?.ToString() ?? "N/A")</CardText>
                                 <Tabs>
-                                    <Tab>
-                                        <Header>Total</Header>
-                                        <ChildContent>
-                                            <br/>
-                                            <CardText>Activities count: @stats.TotalStats.Count</CardText>
-                                            <CardText>Total distance: @stats.TotalStats.Distance</CardText>
-                                            <CardText>Total time: @stats.TotalStats.Duration</CardText>
-                                            <CardText>Total elevation: @stats.TotalStats.Elevation</CardText>
-                                        </ChildContent>
-                                    </Tab>
-                                    <Tab>
-                                        <Header>Year</Header>
-                                        <ChildContent>
-                                            <br />
-                                            <CardText>Activities count: @stats.YearStats.Count</CardText>
-                                            <CardText>Total distance: @stats.YearStats.Distance</CardText>
-                                            <CardText>Total time: @stats.YearStats.Duration</CardText>
-                                            <CardText>Total elevation: @stats.YearStats.Elevation</CardText>
-                                        </ChildContent>
-                                    </Tab>
-                                    <Tab>
-                                        <Header>Month</Header>
-                                        <ChildContent>
-                                            <br />
-                                            <CardText>Activities count: @stats.MonthStats.Count</CardText>
-                                            <CardText>Total distance: @stats.MonthStats.Distance</CardText>
-                                            <CardText>Total time: @stats.MonthStats.Duration</CardText>
-                                            <CardText>Total elevation: @stats.MonthStats.Elevation</CardText>
-                                        </ChildContent>
-                                    </Tab>
-                                    <Tab>
-                                        <Header>Week</Header>
-                                        <ChildContent>
-                                            <br />
-                                            <CardText>Activities count: @stats.WeekStats.Count</CardText>
-                                            <CardText>Total distance: @stats.WeekStats.Distance</CardText>
-                                            <CardText>Total time: @stats.WeekStats.Duration</CardText>
-                                            <CardText>Total elevation: @stats.WeekStats.Elevation</CardText>
-                                        </ChildContent>
-                                    </Tab>
+                                    <StatsTab Title="Total" Stats="@stats.TotalStats" />
+                                    <StatsTab Title="Year" Stats="@stats.YearStats" />
+                                    <StatsTab Title="Month" Stats="@stats.MonthStats" />
+                                    <StatsTab Title="Week" Stats="@stats.WeekStats" />
                                 </Tabs>
                             </CardBlock>
                         </CardBody>

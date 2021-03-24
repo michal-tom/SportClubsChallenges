@@ -1,20 +1,20 @@
-﻿namespace SportClubsChallenges.Model.Enums
+﻿namespace SportClubsChallenges.Utils.Enums
 {
-    using SportClubsChallenges.Model.Attributes;
     using System.ComponentModel;
+    using SportClubsChallenges.Utils.Attributes;
 
     public enum ChallengeCompetitionTypeEnum : byte
     {
         [Description("Distance")]
-        [Unit("m")]
+        [Unit(ChallengeScoreUnit.Meters)]
         Distance = 0,
 
         [Description("Time")]
-        [Unit("s")]
+        [Unit(ChallengeScoreUnit.Seconds)]
         Time = 1,
 
         [Description("Elevation")]
-        [Unit("m")]
+        [Unit(ChallengeScoreUnit.Meters)]
         Elevation = 2
     }
 }

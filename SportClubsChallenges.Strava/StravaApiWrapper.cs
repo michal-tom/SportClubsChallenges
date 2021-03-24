@@ -10,6 +10,7 @@
     using global::Strava.NET.Model;
     using IdentityModel.Client;
     using SportClubsChallenges.Model.Strava;
+    using SportClubsChallenges.Utils.Consts;
 
     public class StravaApiWrapper : IStravaApiWrapper
     {
