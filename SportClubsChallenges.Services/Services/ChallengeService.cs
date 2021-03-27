@@ -141,12 +141,12 @@
                 return;
             }
 
-            var atheleteMembershipInChallengeClub = await db.Challenges
+            var athleteMembershipInChallengeClub = await db.Challenges
                 .Where(p => p.Id == challengeId)
                 .SelectMany(p => p.Club.ClubMembers)
                 .FirstOrDefaultAsync(p => p.AthleteId == athleteId);
 
-            if (atheleteMembershipInChallengeClub == null)
+            if (athleteMembershipInChallengeClub == null)
             {
                 return;
             }

@@ -19,6 +19,7 @@
                 .ForMember(dest => dest.SportType, opt => opt.Ignore());
 
             this.CreateMap<Athlete, AthleteDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
                 .ForMember(dest => dest.IconUrlMedium, opt => opt.MapFrom(src => src.IconUrlMedium))
                 .ForMember(dest => dest.IconUrlLarge, opt => opt.MapFrom(src => src.IconUrlLarge))

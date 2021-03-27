@@ -59,6 +59,11 @@
             await this.QueueUpdateAthleteClubs(athleteId);
         }
 
+        public async Task<List<AthleteDto>> GetAllAthletes()
+        {
+            return await mapper.ProjectTo<AthleteDto>(this.db.Athletes).ToListAsync();
+        }
+
         public async Task<AthleteDto> GetAthlete(long id)
         {
             var athlete = await db.Athletes.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);

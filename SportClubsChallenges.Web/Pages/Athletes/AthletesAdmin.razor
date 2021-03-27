@@ -1,0 +1,63 @@
+﻿@page "/athletes/admin"
+
+@inject IAthleteService athleteService
+@inject NavigationManager navigationManager
+
+@attribute [Authorize(Roles = "Admin")]
+
+@if (athletes == null)
+{
+    <Loading />
+}
+else
+{
+<Datagrid TRowData="AthleteDto" Items="athletes" Placeholder="We couldn't find any athletes!">
+    <DatagridColumn TRowData="AthleteDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
+        <a href="@context.StravaUrl">
+            <img src="@context.IconUrl" class="strava-user-icon" />
+        </a>
+        <span>@context.Name</span>
+    </DatagridColumn>
+    <DatagridColumn TRowData="AthleteDto" Title="Location" Field="c => c.City" CanSort="true" CanFilter="true">
+        @context.City, @context.Country
+    </DatagridColumn>
+    <DatagridColumn TRowData="AthleteDto" Title="Gender" Field="c => c.GenderDescription" CanSort="true" CanFilter="true" />
+    <DatagridColumn TRowData="AthleteDto" Title="First login" Field="c => c.FirstLoginDate" CanSort="true" CanFilter="true">
+        @context.FirstLoginDate.ToShortDateString() @context.FirstLoginDate.ToShortTimeString()
+    </DatagridColumn>
+    <DatagridColumn TRowData="AthleteDto" Title="Last login" Field="c => c.LastLoginDate" CanSort="true" CanFilter="true">
+        @context.LastLoginDate.ToShortDateString() @context.LastLoginDate.ToShortTimeString()
+    </DatagridColumn>
+    <DatagridColumn TRowData="AthleteDto" Title="Last sync" Field="c => c.LastSyncDate" CanSort="true" CanFilter="true">
+        @context.LastSyncDate?.ToShortDateString() @context.LastSyncDate?.ToShortTimeString()
+    </DatagridColumn>
+    @*<DatagridColumn TRowData="ClubDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
+            <StravaIconLink Name="@context.Name" Url="@context.StravaUrl"></StravaIconLink>
+        </DatagridColumn>
+        <DatagridColumn TRowData="ClubDto" Title="SportType" Field="c => c.SportType" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ClubDto" Title="Owner" Field="c => c.Owner" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ClubDto" Title="Members in Strava" Field="c => c.MembersCount" CanSort="true" CanFilter="true" />*@
+    <DatagridColumn TRowData="AthleteDto" Title="Actions">
+        <ButtonGroup Variant="Primary">
+            <Button OnClick="() => EditAthlete(context.Id)">Edit</Button>
+        </ButtonGroup>
+    </DatagridColumn>
+    <DatagridFooter TRowData="AthleteDto">
+        <DatagridFooterDescription TRowData="AthleteDto">@athletes.Count athlete(s)</DatagridFooterDescription>
+    </DatagridFooter>
+</Datagrid>
+}
+
+@code {
+    List<AthleteDto> athletes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        athletes = await athleteService.GetAllAthletes();
+    }
+
+    protected void EditAthlete(long athleteId)
+    {
+        navigationManager.NavigateTo($"/athletes/edit/{athleteId}");
+    }
+}
