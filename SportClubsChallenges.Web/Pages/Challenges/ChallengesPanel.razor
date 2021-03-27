@@ -42,15 +42,26 @@ else
                             </div>
                             <div class="clr-col-md-6 clr-col-12">
                                 <div>Current place:</div>
-                                <b>@participation.Rank / @participation.ChallengeParticipantsCount</b>
-                                <div style="margin-top:10px">Score:</div>
-                                <b>@UnitHelper.GetScoreDescription(participation.Score, participation.ScoreUnit)</b>
-                                <div style="margin-top:10px">Date range:</div>
-                                <b>@participation.ChallengeStartDate.ToShortDateString() - @participation.ChallengeEndDate.ToShortDateString()</b>
+                                <b>
+                                    @participation.Rank / @participation.ChallengeParticipantsCount
+                                    (@UnitHelper.GetScoreDescription(participation.Score, participation.ScoreUnit))
+                                </b>
+                                <div style="margin-top:10px">Competition type:</div>
+                                <b>@participation.ChallengeCompetitionType</b>
                             </div>
                         </div>
                     </CardBlock>
                 </CardBody>
+                <CardFooter>
+                    <ProgressGroup>
+                        <ProgressBar Value="@TimeHelper.GetPercentageProgress(participation.ChallengeStartDate, participation.ChallengeEndDate)"></ProgressBar>
+                        <div class="clr-row" style="font-size: smaller !important;">
+                            <div class="clr-col-3">@participation.ChallengeStartDate.ToShortDateString()</div>
+                            <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(participation.ChallengeStartDate, participation.ChallengeEndDate)</div>
+                            <div class="clr-col-3 text-right">@participation.ChallengeEndDate.ToShortDateString()</div>
+                        </div>
+                    </ProgressGroup>
+                </CardFooter>
             </Card>
         }
     }
