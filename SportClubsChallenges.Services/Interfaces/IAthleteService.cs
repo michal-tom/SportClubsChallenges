@@ -12,5 +12,7 @@
         Task<AthleteDto> GetAthlete(long id);
 
         OverallStatsDto GetAthleteActivitiesTotalStats(long id);
+
+        PeriodStatsDto GetAthleteActivitiesLastSevenDaysStats(long id);
     }
 }

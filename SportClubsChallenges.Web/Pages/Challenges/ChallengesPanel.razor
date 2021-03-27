@@ -14,12 +14,6 @@
 }
 else
 {
-    <div class="text-center">
-        <h4>
-            <clr-icon shape="star"></clr-icon>
-            My challenges
-        </h4>
-    </div>
     @if (challengeParticipations.Count == 0)
     {
         <div class="text-center">
@@ -29,40 +23,36 @@ else
     }
     else
     {
-        <div class="clr-row">
-            @foreach (var participation in challengeParticipations)
-            {
-                <div class="clr-col-lg-6 clr-col-12">
-                    <Card Clickable="true" OnClick="() => ShowRank(participation.ChallengeId)">
-                        <CardBody>
-                            <CardBlock>
-                                <div class="clr-row">
-                                    <div class="clr-col-md-6 clr-col-12">
-                                        <div>Name:</div>
-                                        <b>@participation.ChallengeName</b>
-                                        <div style="margin-top:10px">Club:</div>
-                                        <b>@participation.ClubName</b>
-                                        <br />
-                                        @if (!string.IsNullOrEmpty(participation.ClubIconUrl))
-                                        {
-                                            <CardMediaBlock ImageSource="@participation.ClubIconUrl" />
-                                        }
-                                    </div>
-                                    <div class="clr-col-md-6 clr-col-12">
-                                        <div>Current Rank:</div>
-                                        <b>@participation.Rank / @participation.ChallengeParticipantsCount</b>
-                                        <div style="margin-top:10px">Score:</div>
-                                        <b>@UnitHelper.GetScoreDescription(participation.Score, participation.ScoreUnit)</b>
-                                        <div style="margin-top:10px">Date Range:</div>
-                                        <b>@participation.ChallengeStartDate.ToShortDateString() - @participation.ChallengeEndDate.ToShortDateString()</b>
-                                    </div>
-                                </div>
-                            </CardBlock>
-                        </CardBody>
-                    </Card>
-                </div>
-            }
-        </div>
+        @foreach (var participation in challengeParticipations)
+        {
+            <Card Clickable="true" OnClick="() => ShowRank(participation.ChallengeId)">
+                <CardBody>
+                    <CardBlock>
+                        <div class="clr-row">
+                            <div class="clr-col-md-6 clr-col-12">
+                                <div>Name:</div>
+                                <b>@participation.ChallengeName</b>
+                                <div style="margin-top:10px">Club:</div>
+                                <b>@participation.ClubName</b>
+                                <br />
+                                @if (!string.IsNullOrEmpty(participation.ClubIconUrl))
+                                {
+                                    <CardMediaBlock ImageSource="@participation.ClubIconUrl" />
+                                }
+                            </div>
+                            <div class="clr-col-md-6 clr-col-12">
+                                <div>Current place:</div>
+                                <b>@participation.Rank / @participation.ChallengeParticipantsCount</b>
+                                <div style="margin-top:10px">Score:</div>
+                                <b>@UnitHelper.GetScoreDescription(participation.Score, participation.ScoreUnit)</b>
+                                <div style="margin-top:10px">Date range:</div>
+                                <b>@participation.ChallengeStartDate.ToShortDateString() - @participation.ChallengeEndDate.ToShortDateString()</b>
+                            </div>
+                        </div>
+                    </CardBlock>
+                </CardBody>
+            </Card>
+        }
     }
 }
 

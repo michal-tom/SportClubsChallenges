@@ -7,6 +7,14 @@ div.panel-centered {
     flex-direction: column;
 }
 
+div.card-centered-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding-bottom: 10px;
+}
+
 div.horizontal-centered-tabs > clr-tabs > ul {
     justify-content: center;
 }
@@ -22,4 +30,8 @@ div.horizontal-centered-tabs > clr-tabs > ul {
 
 .datagrid-wrapper[blazority] {
     margin-top: 0 !important;
+}
+
+div.card-media-title h1,h2,h3,h4,h5,h6 {
+    margin-top: 0px;
 }

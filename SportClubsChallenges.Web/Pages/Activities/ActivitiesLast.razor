@@ -1,0 +1,35 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IActivityService activityService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+@attribute [Authorize]
+
+@if (activities == null)
+{
+    <Loading />
+}
+else
+{
+    <Datagrid TRowData="ActivityDto" Items="activities" Placeholder="We couldn't find any activities!">
+        <DatagridColumn TRowData="ActivityDto" Title="Name" Field="c => c.Name" />
+        <DatagridColumn TRowData="ActivityDto" Title="Distance" Field="c => c.Distance">
+            @UnitHelper.GetDistanceDescription(context.Distance)
+        </DatagridColumn>
+    </Datagrid>
+}
+
+@code {
+
+    List<ActivityDto> activities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        activities = await activityService.GetAthleteActivities(athleteId, 5);
+    }
+}

@@ -1,5 +1,4 @@
-﻿
-@using System.Security.Claims
+﻿@using System.Security.Claims
 @using Microsoft.AspNetCore.Http
 
 @inject IClubService clubService
@@ -15,12 +14,6 @@
 }
 else
 {
-    <div class="text-center">
-        <h4>
-            <clr-icon shape="users"></clr-icon>
-            My clubs
-        </h4>
-    </div>
     @if (clubs.Count == 0)
     {
         <div class="text-center">
@@ -30,21 +23,17 @@ else
     }
     else
     {
-        <div class="clr-row">
-            @foreach (var club in clubs)
-            {
-                <div class="clr-col-lg-2 clr-col-12">
-                    <Card Clickable="true" OnClick="() => ShowDetails(club.Id)">
-                        <CardBody>
-                            <CardBlock>
-                                <CardText>@club.Name</CardText>
-                                <CardMediaBlock ImageSource="@club.IconUrl" />
-                            </CardBlock>
-                        </CardBody>
-                    </Card>
-                </div>
-            }
-        </div>
+        @foreach (var club in clubs)
+        {
+            <Card Clickable="true" OnClick="() => ShowDetails(club.Id)">
+                <CardBody>
+                    <CardBlock>
+                        <CardText>@club.Name</CardText>
+                        <CardMediaBlock ImageSource="@club.IconUrl" />
+                    </CardBlock>
+                </CardBody>
+            </Card>
+        }
     }
 }
 
@@ -65,4 +54,3 @@ else
         navigationManager.NavigateTo($"/clubs/details/{id}");
     }
 }
-

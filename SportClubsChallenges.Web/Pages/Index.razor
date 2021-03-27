@@ -1,7 +1,58 @@
 ﻿@page "/"
 
+@inject NavigationManager navigationManager
+
 @attribute [Authorize]
 
-<ClubsPanel />
-<br />
-<ChallengesPanel />
+<div class="clr-row">
+    <div class="clr-col-md-4 clr-col-12">
+        <Card>
+            <CardHeader>
+                <clr-icon shape="crown"></clr-icon>
+                <span>Challenges</span>
+            </CardHeader>
+            <CardBody>
+                <CardBlock>
+                    <ChallengesPanel />
+                </CardBlock>
+            </CardBody>
+        </Card>
+    </div>
+    <div class="clr-col-md-4 clr-col-12">
+        <Card>
+            <CardHeader>
+                <clr-icon shape="accessibility-1"></clr-icon>
+                <span>Last activities</span>
+            </CardHeader>
+            <CardBody>
+                <CardBlock>
+                    <ActivitiesLast />
+                    <ActivitiesWeekStats />
+                </CardBlock>
+            </CardBody>
+            <CardFooter>
+                <Button Flat="true" Small="true" OnClick="() => ShowActivities()">Show all activities</Button>
+            </CardFooter>
+        </Card>
+    </div>
+    <div class="clr-col-md-4 clr-col-12">
+        <Card>
+            <CardHeader>
+                <clr-icon shape="bar-chart"></clr-icon>
+                <span>Clubs</span>
+            </CardHeader>
+            <CardBody>
+                <CardBlock>
+                    <ClubsPanel />
+                </CardBlock>
+            </CardBody>
+        </Card>
+    </div>
+</div>
+
+@code {
+    protected void ShowActivities()
+    {
+        navigationManager.NavigateTo("/activities/list");
+    }
+}

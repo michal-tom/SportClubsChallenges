@@ -80,6 +80,14 @@
             };
         }
 
+        public PeriodStatsDto GetAthleteActivitiesLastSevenDaysStats(long id)
+        {
+            var dayWeekAgo = new DateTimeOffset(DateTime.Today.AddDays(-7));
+            var activities = db.Activities.AsNoTracking().Where(p => p.AthleteId == id && p.IsDeleted == false && p.StartDate > dayWeekAgo).AsEnumerable();
+
+            return this.GetPeriodStats(activities, dayWeekAgo);
+        }
+
         private async Task<Athlete> UpdateAthleteData(ClaimsIdentity identity, long athleteId)
         {
             var athlete = this.db.Athletes.Include(p => p.AthleteStravaToken).FirstOrDefault(p => p.Id == athleteId);
