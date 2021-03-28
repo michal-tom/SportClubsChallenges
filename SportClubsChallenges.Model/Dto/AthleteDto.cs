@@ -37,5 +37,27 @@
         public string GenderDescription => this.Gender == "M" ? "Male" : this.Gender == "F" ? "Female" : "Other";
 
         public string StravaUrl => $"https://www.strava.com/athletes/{this.Id}";
+
+        public string Location
+        {
+            get {
+                if(string.IsNullOrEmpty(this.City) && string.IsNullOrEmpty(this.Country))
+                {
+                    return "-";
+                }
+                else if (string.IsNullOrEmpty(this.City))
+                {
+                    return this.Country;
+                }
+                else if (string.IsNullOrEmpty(this.Country))
+                {
+                    return this.City;
+                }
+                else
+                {
+                    return $"{this.City}, {this.Country}";
+                }
+            }
+        }
     }
 }

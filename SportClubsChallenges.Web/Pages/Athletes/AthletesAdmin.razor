@@ -11,51 +11,34 @@
 }
 else
 {
-<Datagrid TRowData="AthleteDto" Items="athletes" Placeholder="We couldn't find any athletes!">
-    <DatagridColumn TRowData="AthleteDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
-        <a href="@context.StravaUrl">
-            <img src="@context.IconUrl" class="strava-user-icon" />
-        </a>
-        <span>@context.Name</span>
-    </DatagridColumn>
-    <DatagridColumn TRowData="AthleteDto" Title="Location" Field="c => c.City" CanSort="true" CanFilter="true">
-        @if (string.IsNullOrEmpty(context.City) && string.IsNullOrEmpty(context.Country))
-        {
-            <span>-</span>
-        }
-        else if (string.IsNullOrEmpty(context.City))
-        {
-            <span>@context.Country</span>
-        }
-        else if (string.IsNullOrEmpty(context.Country))
-        {
-            <span>@context.City</span>
-        }
-        else
-        {
-            <span>@context.City, @context.Country</span>
-        }
-    </DatagridColumn>
-    <DatagridColumn TRowData="AthleteDto" Title="Gender" Field="c => c.GenderDescription" CanSort="true" CanFilter="true" />
-    <DatagridColumn TRowData="AthleteDto" Title="First login" Field="c => c.FirstLoginDate" CanSort="true" CanFilter="true">
-        @context.FirstLoginDate.ToShortDateString() @context.FirstLoginDate.ToShortTimeString()
-    </DatagridColumn>
-    <DatagridColumn TRowData="AthleteDto" Title="Last login" Field="c => c.LastLoginDate" CanSort="true" CanFilter="true">
-        @context.LastLoginDate.ToShortDateString() @context.LastLoginDate.ToShortTimeString()
-    </DatagridColumn>
-    <DatagridColumn TRowData="AthleteDto" Title="Last sync" Field="c => c.LastSyncDate" CanSort="true" CanFilter="true">
-        @context.LastSyncDate?.ToShortDateString() @context.LastSyncDate?.ToShortTimeString()
-    </DatagridColumn>
-    <DatagridColumn TRowData="AthleteDto" Title="Admin" Field="c => c.IsAdmin" CanSort="true" CanFilter="true" />
-    <DatagridColumn TRowData="AthleteDto" Title="Actions">
-        <ButtonGroup Variant="Primary">
-            <Button OnClick="() => EditAthlete(context.Id)">Edit</Button>
-        </ButtonGroup>
-    </DatagridColumn>
-    <DatagridFooter TRowData="AthleteDto">
-        <DatagridFooterDescription TRowData="AthleteDto">@athletes.Count athlete(s)</DatagridFooterDescription>
-    </DatagridFooter>
-</Datagrid>
+    <Datagrid TRowData="AthleteDto" Items="athletes" Placeholder="We couldn't find any athletes!">
+        <DatagridColumn TRowData="AthleteDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
+            <a href="@context.StravaUrl">
+                <img src="@context.IconUrl" class="strava-user-icon" />
+            </a>
+            <span>@context.Name</span>
+        </DatagridColumn>
+        <DatagridColumn TRowData="AthleteDto" Title="Location" Field="c => c.Location" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="AthleteDto" Title="Gender" Field="c => c.GenderDescription" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="AthleteDto" Title="First login" Field="c => c.FirstLoginDate" CanSort="true" CanFilter="true">
+            @context.FirstLoginDate.ToShortDateString() @context.FirstLoginDate.ToShortTimeString()
+        </DatagridColumn>
+        <DatagridColumn TRowData="AthleteDto" Title="Last login" Field="c => c.LastLoginDate" CanSort="true" CanFilter="true">
+            @context.LastLoginDate.ToShortDateString() @context.LastLoginDate.ToShortTimeString()
+        </DatagridColumn>
+        <DatagridColumn TRowData="AthleteDto" Title="Last sync" Field="c => c.LastSyncDate" CanSort="true" CanFilter="true">
+            @context.LastSyncDate?.ToShortDateString() @context.LastSyncDate?.ToShortTimeString()
+        </DatagridColumn>
+        <DatagridColumn TRowData="AthleteDto" Title="Admin" Field="c => c.IsAdmin" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="AthleteDto" Title="Actions">
+            <ButtonGroup Variant="Primary">
+                <Button OnClick="() => EditAthlete(context.Id)">Edit</Button>
+            </ButtonGroup>
+        </DatagridColumn>
+        <DatagridFooter TRowData="AthleteDto">
+            <DatagridFooterDescription TRowData="AthleteDto">@athletes.Count athlete(s)</DatagridFooterDescription>
+        </DatagridFooter>
+    </Datagrid>
 }
 
 @code {
