@@ -23,7 +23,7 @@ else
     <Form Model="@challenge" TItem="ChallengeDetailsDto" Layout="FormLayout.Compact" OnValidSubmit="() => AddOrEditChallenge()">
         <div class="clr-row">
             <div class="clr-col-md-12">
-                <Select Label="Club" @bind-Value="challenge.Club" Items="@clubs" HelpText="Pick a club from list" ValueFunc="@(p => p?.Id.ToString())" NameFunc="@(p => p?.Name)" Disabled="@(challenge.Id > 0)" />
+                <Select @bind-Value="challenge.Club" Items="@clubs" Label="Club" HelpText="Pick a club from list" ValueFunc="@(p => p?.Id.ToString())" NameFunc="@(p => p?.Name)" Disabled="@(challenge.Id > 0)" />
 
                 <Text @bind-Value="challenge.Name" Label="Name" HelpText="Enter challenge name" ValidationFor="() => challenge.Name" />
 
@@ -33,7 +33,7 @@ else
 
                 <Datepicker @bind-Value="challenge.EndDate" Label="Entry Date" HelpText="Pick a end date of challenge" ValidationFor="() => challenge.EndDate" />
 
-                <Select Label="Challenge type" @bind-Value="challenge.CompetitionTypeDescription" Items="@challengeCompetitionTypes.Select(p => p.Value).ToList()" HelpText="Pick a challenge type from list" />
+                <Select @bind-Value="challenge.CompetitionTypeDescription" Items="@challengeCompetitionTypes.Select(p => p.Value).ToList()" Label="Challenge type" HelpText="Pick a challenge type from list" />
 
                 <clr-select-container class="clr-form-control clr-row " blazority="">
                     <label class="clr-control-label clr-col-12 clr-col-md-2" for="clr-select-1">Activities types</label>

@@ -14,6 +14,8 @@
 
         Task<AthleteDto> GetAthlete(long id);
 
+        Task EditAthlete(AthleteDto dto);
+
         OverallStatsDto GetAthleteActivitiesTotalStats(long id);
 
         PeriodStatsDto GetAthleteActivitiesLastSevenDaysStats(long id);

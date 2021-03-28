@@ -20,12 +20,14 @@
 
             this.CreateMap<Athlete, AthleteDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(dest => dest.IconUrlMedium, opt => opt.MapFrom(src => src.IconUrlMedium))
                 .ForMember(dest => dest.IconUrlLarge, opt => opt.MapFrom(src => src.IconUrlLarge))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
                 .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+                .ForMember(dest => dest.IsAdmin, opt => opt.MapFrom(src => src.IsAdmin))
                 .ForMember(dest => dest.FirstLoginDate, opt => opt.MapFrom(src => src.FirstLoginDate.LocalDateTime))
                 .ForMember(dest => dest.LastLoginDate, opt => opt.MapFrom(src => src.LastLoginDate.LocalDateTime))
                 .ForMember(dest => dest.LastSyncDate, opt => opt.MapFrom(src => src.LastSyncDate.HasValue ? src.LastSyncDate.Value.LocalDateTime : (DateTime?) null));

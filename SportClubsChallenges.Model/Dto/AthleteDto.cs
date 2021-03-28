@@ -6,7 +6,9 @@
     {
         public long Id { get; set; }
 
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
 
         public string IconUrlLarge { get; set; }
 
@@ -23,6 +25,10 @@
         public DateTime LastLoginDate { get; set; }
 
         public DateTime? LastSyncDate { get; set; }
+
+        public bool IsAdmin { get; set; }
+
+        public string Name => this.FirstName + " " + this.LastName;
 
         public string IconUrl => !string.IsNullOrEmpty(this.IconUrlMedium) ? this.IconUrlMedium : "/images/strava_user.png";
 

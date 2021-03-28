@@ -70,6 +70,16 @@
             return mapper.Map<AthleteDto>(athlete);
         }
 
+        public async Task EditAthlete(AthleteDto dto)
+        {
+            var entity = db.Athletes.Find(dto.Id);
+            entity.FirstLoginDate = dto.FirstLoginDate;
+            entity.LastLoginDate = dto.LastLoginDate;
+            entity.LastSyncDate = dto.LastSyncDate;
+            entity.IsAdmin = dto.IsAdmin;
+            await db.SaveChangesAsync();
+        }
+
         public OverallStatsDto GetAthleteActivitiesTotalStats(long id)
         {
             var activities = db.Activities.AsNoTracking().Where(p => p.AthleteId == id && p.IsDeleted == false).AsEnumerable();

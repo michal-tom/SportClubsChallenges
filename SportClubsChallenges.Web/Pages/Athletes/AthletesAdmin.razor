@@ -19,7 +19,22 @@ else
         <span>@context.Name</span>
     </DatagridColumn>
     <DatagridColumn TRowData="AthleteDto" Title="Location" Field="c => c.City" CanSort="true" CanFilter="true">
-        @context.City, @context.Country
+        @if (string.IsNullOrEmpty(context.City) && string.IsNullOrEmpty(context.Country))
+        {
+            <span>-</span>
+        }
+        else if (string.IsNullOrEmpty(context.City))
+        {
+            <span>@context.Country</span>
+        }
+        else if (string.IsNullOrEmpty(context.Country))
+        {
+            <span>@context.City</span>
+        }
+        else
+        {
+            <span>@context.City, @context.Country</span>
+        }
     </DatagridColumn>
     <DatagridColumn TRowData="AthleteDto" Title="Gender" Field="c => c.GenderDescription" CanSort="true" CanFilter="true" />
     <DatagridColumn TRowData="AthleteDto" Title="First login" Field="c => c.FirstLoginDate" CanSort="true" CanFilter="true">
@@ -31,12 +46,7 @@ else
     <DatagridColumn TRowData="AthleteDto" Title="Last sync" Field="c => c.LastSyncDate" CanSort="true" CanFilter="true">
         @context.LastSyncDate?.ToShortDateString() @context.LastSyncDate?.ToShortTimeString()
     </DatagridColumn>
-    @*<DatagridColumn TRowData="ClubDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
-            <StravaIconLink Name="@context.Name" Url="@context.StravaUrl"></StravaIconLink>
-        </DatagridColumn>
-        <DatagridColumn TRowData="ClubDto" Title="SportType" Field="c => c.SportType" CanSort="true" CanFilter="true" />
-        <DatagridColumn TRowData="ClubDto" Title="Owner" Field="c => c.Owner" CanSort="true" CanFilter="true" />
-        <DatagridColumn TRowData="ClubDto" Title="Members in Strava" Field="c => c.MembersCount" CanSort="true" CanFilter="true" />*@
+    <DatagridColumn TRowData="AthleteDto" Title="Admin" Field="c => c.IsAdmin" CanSort="true" CanFilter="true" />
     <DatagridColumn TRowData="AthleteDto" Title="Actions">
         <ButtonGroup Variant="Primary">
             <Button OnClick="() => EditAthlete(context.Id)">Edit</Button>
