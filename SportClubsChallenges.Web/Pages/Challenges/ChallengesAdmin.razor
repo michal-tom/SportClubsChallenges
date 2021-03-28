@@ -1,0 +1,74 @@
+﻿@page "/challenges/admin"
+
+@inject IChallengeService challengeService
+@inject NavigationManager navigationManager
+
+@attribute [Authorize(Roles = "Admin")]
+
+@if (challenges == null)
+{
+    <Loading />
+}
+else
+{
+    <div>
+        <Button Variant="Success" OnClick="() => AddChallenge()">Add new challenge</Button>
+    </div>
+    <br />
+
+    <Datagrid TRowData="ChallengeOverviewDto" Items="challenges" Placeholder="We couldn't find any challenges!">
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Id" Field="c => c.Id" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="ClubName" Field="c => c.ClubName" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Date Range">
+            @context.StartDate.ToShortDateString() - @context.EndDate.ToShortDateString()
+        </DatagridColumn>
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Type" Field="c => c.CompetitionTypeDescription" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Participants" Field="c => c.ParticipantsCount" CanSort="true" />
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Actions">
+            <ButtonGroup Variant="Primary">
+                <Button OnClick="() => EditChallenge(context.Id)">Edit</Button>
+                <Button Variant="Danger" OnClick="() => DeleteChallenge(context.Id, context.Name)">Delete</Button>
+            </ButtonGroup>
+        </DatagridColumn>
+        <DatagridFooter TRowData="ChallengeOverviewDto">
+            <DatagridFooterDescription TRowData="ChallengeOverviewDto">@challenges.Count challenge(s)</DatagridFooterDescription>
+        </DatagridFooter>
+    </Datagrid>
+}
+
+@code {
+
+    List<ChallengeOverviewDto> challenges;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadChallenges();
+    }
+
+    protected async Task DeleteChallenge(long id, string challengeName)
+    {
+        // TODO: check user confirmation
+
+        await challengeService.DeleteChallenge(id);
+
+        // TODO: show notification ("Challenge '{challengeName}' was successfully removed!")
+
+        await LoadChallenges();
+    }
+
+    protected void AddChallenge()
+    {
+        navigationManager.NavigateTo($"/challenges/add");
+    }
+
+    protected void EditChallenge(long id)
+    {
+        navigationManager.NavigateTo($"/challenges/edit/{id}");
+    }
+
+    private async Task LoadChallenges()
+    {
+        challenges = await challengeService.GetAllChallenges();
+    }
+}

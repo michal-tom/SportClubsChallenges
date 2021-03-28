@@ -1,0 +1,56 @@
+﻿@page "/activities/list"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IActivityService activityService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+@attribute [Authorize]
+
+@if (activities == null)
+{
+    <Loading />
+}
+else
+{
+    <Datagrid TRowData="ActivityDto" Items="activities" Placeholder="We couldn't find any activities!">
+        <DatagridColumn TRowData="ActivityDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
+            <StravaIconLink Name="@context.Name" Url="@context.Link"></StravaIconLink>
+        </DatagridColumn>
+        <DatagridColumn TRowData="ActivityDto" Title="Type" Field="c => c.ActivityType" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ActivityDto" Title="Date" Field="c => c.StartDate" CanSort="true" CanFilter="true">
+            @context.StartDate.ToShortDateString() @context.StartDate.ToShortTimeString()
+        </DatagridColumn>
+        <DatagridColumn TRowData="ActivityDto" Title="Distance" Field="c => c.Distance" CanSort="true">
+            @UnitHelper.GetDistanceDescription(context.Distance)
+        </DatagridColumn>
+        <DatagridColumn TRowData="ActivityDto" Title="Time" Field="c => c.Duration" CanSort="true" CanFilter="true">
+            @UnitHelper.GetTimeDescription(context.Duration)
+        </DatagridColumn>
+        <DatagridColumn TRowData="ActivityDto" Title="Elevation" Field="c => c.Elevation" CanSort="true" CanFilter="true">
+            @UnitHelper.GetDistanceMetersDescription(context.Elevation)
+        </DatagridColumn>
+        <DatagridFooter TRowData="ActivityDto">
+            <DatagridPagination @ref="Paginator" TRowData="ActivityDto" PageSize="10" PageSizes="new int[] { 5, 10, 25, 50 }" PageSizeLabel="Activities per page">
+                @(Paginator.Pager.StartIndex + 1) - @(Paginator.Pager.EndIndex + 1) of @(Paginator.Pager.ItemCount) activities
+            </DatagridPagination>
+        </DatagridFooter>
+    </Datagrid>
+}
+
+@code {
+
+    List<ActivityDto> activities;
+
+    public DatagridPagination<ActivityDto> Paginator;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        activities = await activityService.GetAthleteActivities(athleteId);
+    }
+}

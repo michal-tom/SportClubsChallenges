@@ -6,7 +6,6 @@
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
-    using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Model.Dto;
 
@@ -51,14 +50,7 @@
             return await mapper.ProjectTo<ChallengeOverviewDto>(clubChallenges).ToListAsync();
         }
 
-        public async Task AddClub(ClubDto dto)
-        {
-            var entity = mapper.Map<Club>(dto);
-            db.Clubs.Add(entity);
-            await db.SaveChangesAsync();
-        }
- 
-        public async Task UpdatClub(ClubDto dto)
+        public async Task EditClub(ClubDto dto)
         {
             var entity = db.Clubs.Find(dto.Id);
             mapper.Map(dto, entity);

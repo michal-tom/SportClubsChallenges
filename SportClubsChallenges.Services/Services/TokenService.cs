@@ -1,14 +1,15 @@
 ﻿namespace SportClubsChallenges.Domain.Services
 {
+    using System;
+    using System.Globalization;
+    using System.Linq;
     using AutoMapper;
     using Microsoft.AspNetCore.Authentication;
+    using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Model.Strava;
-    using System;
-    using System.Globalization;
-    using System.Linq;
 
     public class TokenService : ITokenService
     {
@@ -29,7 +30,7 @@
             return token;
         }
 
-        public void UpdateStravaToken(Athlete athlete, AuthenticationProperties properties)
+        public void UpdateStravaToken(long athleteId, AuthenticationProperties properties)
         {
             var authenticationTokens = properties.GetTokens();
 
@@ -45,23 +46,7 @@
                 ? expiration
                 : DateTimeOffset.UtcNow;
 
-            this.UpdateStravaToken(athlete, stravaToken);
-        }
-
-        public void UpdateStravaToken(Athlete athlete, StravaToken token)
-        {
-            if (athlete.AthleteStravaToken == null)
-            {
-                athlete.AthleteStravaToken = new AthleteStravaToken();
-            }
-
-            athlete.AthleteStravaToken.LastUpdateDate = DateTimeOffset.UtcNow;
-            athlete.AthleteStravaToken.AccessToken = token.AccessToken;
-            athlete.AthleteStravaToken.RefreshToken = token.RefreshToken;
-            athlete.AthleteStravaToken.TokenType = token.TokenType;
-            athlete.AthleteStravaToken.ExpirationDate = token.ExpirationDate;
-
-            this.db.SaveChanges();
+            this.UpdateStravaToken(athleteId, stravaToken);
         }
 
         public void OnStravaTokenRefresh(object sender, object args)
@@ -88,6 +73,23 @@
             athleteStravaToken.RefreshToken = token.RefreshToken;
             athleteStravaToken.TokenType = token.TokenType;
             athleteStravaToken.ExpirationDate = token.ExpirationDate;
+
+            this.db.SaveChanges();
+        }
+
+        private void UpdateStravaToken(long athleteId, StravaToken token)
+        {
+            var athlete = this.db.Athletes.Include(p => p.AthleteStravaToken).FirstOrDefault(p => p.Id == athleteId);
+            if (athlete.AthleteStravaToken == null)
+            {
+                athlete.AthleteStravaToken = new AthleteStravaToken();
+            }
+
+            athlete.AthleteStravaToken.LastUpdateDate = DateTimeOffset.UtcNow;
+            athlete.AthleteStravaToken.AccessToken = token.AccessToken;
+            athlete.AthleteStravaToken.RefreshToken = token.RefreshToken;
+            athlete.AthleteStravaToken.TokenType = token.TokenType;
+            athlete.AthleteStravaToken.ExpirationDate = token.ExpirationDate;
 
             this.db.SaveChanges();
         }

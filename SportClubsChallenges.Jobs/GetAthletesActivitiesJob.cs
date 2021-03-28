@@ -76,6 +76,8 @@
             var activitesFromStrava = await this.GetActivitiesFromStrava(stravaToken, applicationStartDate);
             if (activitesFromStrava == null || !activitesFromStrava.Any())
             {
+                athlete.LastSyncDate = DateTimeOffset.Now;
+                await this.db.SaveChangesAsync();
                 return;
             }
 
@@ -83,6 +85,7 @@
 
             this.UpdateActivitiesInDatabase(activitesFromStrava, activitiesInDb);
 
+            athlete.LastSyncDate = DateTimeOffset.Now;
             await this.db.SaveChangesAsync();
         }
 

@@ -1,0 +1,86 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IChallengeService challengeService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+@inject NavigationManager navigationManager
+
+@attribute [Authorize]
+
+@if (challengeParticipations == null)
+{
+    <Loading />
+}
+else
+{
+    @if (challengeParticipations.Count == 0)
+    {
+        <div class="text-center">
+            <p>You are not registered to any challenge!</p>
+            <p>Please go <a href="/challenges/list">Challenges</a> page to join to any challenge from your Strava club.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var participation in challengeParticipations)
+        {
+            <Card Clickable="true" OnClick="() => ShowRank(participation.ChallengeId)">
+                <CardBody>
+                    <CardBlock>
+                        <div class="clr-row">
+                            <div class="clr-col-md-6 clr-col-12">
+                                <div>Name:</div>
+                                <b>@participation.ChallengeName</b>
+                                <div style="margin-top:10px">Club:</div>
+                                <b>@participation.ClubName</b>
+                                <br />
+                                @if (!string.IsNullOrEmpty(participation.ClubIconUrl))
+                                {
+                                    <CardMediaBlock ImageSource="@participation.ClubIconUrl" />
+                                }
+                            </div>
+                            <div class="clr-col-md-6 clr-col-12">
+                                <div>Current place:</div>
+                                <b>
+                                    @participation.Rank / @participation.ChallengeParticipantsCount
+                                    (@UnitHelper.GetScoreDescription(participation.Score, participation.ScoreUnit))
+                                </b>
+                                <div style="margin-top:10px">Competition type:</div>
+                                <b>@participation.ChallengeCompetitionType</b>
+                            </div>
+                        </div>
+                    </CardBlock>
+                </CardBody>
+                <CardFooter>
+                    <ProgressGroup>
+                        <ProgressBar Value="@TimeHelper.GetPercentageProgress(participation.ChallengeStartDate, participation.ChallengeEndDate)"></ProgressBar>
+                        <div class="clr-row" style="font-size: smaller !important;">
+                            <div class="clr-col-3">@participation.ChallengeStartDate.ToShortDateString()</div>
+                            <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(participation.ChallengeStartDate, participation.ChallengeEndDate)</div>
+                            <div class="clr-col-3 text-right">@participation.ChallengeEndDate.ToShortDateString()</div>
+                        </div>
+                    </ProgressGroup>
+                </CardFooter>
+            </Card>
+        }
+    }
+}
+
+@code {
+
+    List<ChallengeParticipationDto> challengeParticipations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        challengeParticipations = await challengeService.GetChallengeParticipations(athleteId);
+    }
+
+    protected void ShowRank(long id)
+    {
+        navigationManager.NavigateTo($"/challenges/rank/{id}");
+    }
+}

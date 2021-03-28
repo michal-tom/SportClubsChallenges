@@ -6,8 +6,6 @@
 
         public long AthleteId { get; set; }
 
-        public bool IsOwner { get; set; }
-
         public bool IsAdmin { get; set; }
 
         #region References

@@ -6,6 +6,6 @@
 
     public interface IActivityService
     {
-        Task<List<ActivityDto>> GetAthleteActivities(long athleteId);
+        Task<List<ActivityDto>> GetAthleteActivities(long athleteId, int? maxCount = null);
     }
 }

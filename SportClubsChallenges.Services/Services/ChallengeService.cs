@@ -7,10 +7,10 @@
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
-    using SportClubsChallenges.Utils.Helpers;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Model.Dto;
-    using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Utils.Enums;
+    using SportClubsChallenges.Utils.Helpers;
     using System.Linq;
     using SportClubsChallenges.AzureQueues;
 
@@ -141,12 +141,12 @@
                 return;
             }
 
-            var atheleteMembershipInChallengeClub = await db.Challenges
+            var athleteMembershipInChallengeClub = await db.Challenges
                 .Where(p => p.Id == challengeId)
                 .SelectMany(p => p.Club.ClubMembers)
                 .FirstOrDefaultAsync(p => p.AthleteId == athleteId);
 
-            if (atheleteMembershipInChallengeClub == null)
+            if (athleteMembershipInChallengeClub == null)
             {
                 return;
             }
@@ -163,14 +163,9 @@
             await this.UpdateChallengeRank(challengeId);
         }
 
-        public async Task<Dictionary<long, string>> GetAvailableClubs()
+        public Dictionary<byte, string> GetAvailableChallengeCompetitionTypes()
         {
-            return await db.Clubs.AsNoTracking().ToDictionaryAsync(p => p.Id, p => p.Name);
-        }
-
-        public Dictionary<byte, string> GetAvailableChallengeTypes()
-        {
-            return EnumsHelper.GetEnumWithDescriptions<ChallengeTypeEnum>();
+            return EnumsHelper.GetEnumWithDescriptions<ChallengeCompetitionTypeEnum>();
         }
 
         public async Task<Dictionary<byte, string>> GetAvailableActivityTypes()

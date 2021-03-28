@@ -4,7 +4,7 @@
     using System.Security.Claims;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
-    using SportClubsChallenges.Model.Strava;
+    using SportClubsChallenges.Utils.Consts;
 
     public class IdentityService : IIdentityService
     {

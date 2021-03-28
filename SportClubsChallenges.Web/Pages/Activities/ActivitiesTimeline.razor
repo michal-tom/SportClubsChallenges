@@ -1,0 +1,56 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IActivityService activityService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+@attribute [Authorize]
+
+@if (activities == null)
+{
+    <Loading />
+}
+else
+{
+    <ul class="clr-timeline clr-timeline-vertical">
+        @foreach (var activity in activities)
+        {
+        <li class="clr-timeline-step disabled">
+            <div class="clr-timeline-step-header">
+                <span>@activity.StartDate.ToShortDateString()</span>
+                <br />
+                <span class="clr-timeline-step-header-description">@activity.StartDate.ToShortTimeString()</span>
+            </div>
+            <clr-icon shape="circle">
+                <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18,34A16,16,0,1,1,34,18,16,16,0,0,1,18,34ZM18,4A14,14,0,1,0,32,18,14,14,0,0,0,18,4Z"></path>
+                </svg>
+            </clr-icon>
+            <div class="clr-timeline-step-body">
+                <span class="clr-timeline-step-title">
+                    @activity.Name
+                </span>
+                <span class="clr-timeline-step-description">
+                    <Label>@activity.ActivityType</Label> @UnitHelper.GetDistanceDescription(activities[0].Distance), @UnitHelper.GetTimeDescription(activity.Duration)
+                </span>
+            </div>
+        </li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public int Count { get; set; }
+
+    List<ActivityDto> activities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        activities = await activityService.GetAthleteActivities(athleteId, this.Count);
+    }
+}

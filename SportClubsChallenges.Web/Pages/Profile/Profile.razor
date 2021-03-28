@@ -1,0 +1,131 @@
+﻿@page "/profile"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IAthleteService athleteService
+@inject IClubService clubService
+@inject NavigationManager navigationManager
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+@attribute [Authorize]
+
+<AuthorizeView>
+    <Authorized>
+        @if (athlete == null)
+        {
+            <Loading />
+        }
+        else
+        {
+            <div class="clr-row">
+                <div class="clr-col-md-4 clr-col-12">
+                    <Card>
+                        <CardHeader>
+                            <clr-icon shape="info-standard"></clr-icon>
+                            <span>General info</span>
+                        </CardHeader>
+                        <CardBody>
+                            <CardBlock>
+                                <CardMediaBlock ImageSource="@athlete.AvatarUrl" AlternateText="Strava avatar">
+                                    <DescriptionTitle><h4>@athlete.Name</h4></DescriptionTitle>
+                                </CardMediaBlock>
+                                <CardText>City: @athlete.City</CardText>
+                                <CardText>Country: @athlete.Country</CardText>
+                                <CardText>Gender: @athlete.GenderDescription</CardText>
+                                <CardText>First login date: @athlete.FirstLoginDate.ToShortDateString() @athlete.FirstLoginDate.ToShortTimeString()</CardText>
+                                <CardText>Last login date: @athlete.LastLoginDate.ToShortDateString() @athlete.LastLoginDate.ToShortTimeString()</CardText>
+                            </CardBlock>
+                        </CardBody>
+                        <CardFooter>
+                            <Button Flat="true" Small="true" OnClick="() => ShowActivities()">Activities</Button>
+                            <Button Flat="true" Small="true" OnClick="() => ShowChallenges()">Challenges</Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+                <div class="clr-col-md-4 clr-col-12">
+                    <Card>
+                        <CardHeader>
+                            <clr-icon shape="id-badge"></clr-icon>
+                            <span>Clubs</span>
+                            <Badge Status="Status.Info">@clubs?.Count</Badge>
+                        </CardHeader>
+                        <CardBody>
+                            <CardBlock>
+                                @foreach (var club in clubs)
+                                {
+                                    <Card Clickable="true" OnClick="() => ShowClubDetails(club.Id)">
+                                        <CardBody>
+                                            <CardBlock>
+                                                <CardMediaBlock ImageSource="@club.IconUrl" AlternateText="Club logo">
+                                                    <DescriptionTitle><h4>@club.Name</h4></DescriptionTitle>
+                                                </CardMediaBlock>
+                                                <CardText>Sport: @club.SportType</CardText>
+                                                <CardText>Members count: @club.MembersCount</CardText>
+                                            </CardBlock>
+                                        </CardBody>
+                                    </Card>
+                                }
+                            </CardBlock>
+                        </CardBody>
+                    </Card>
+                </div>
+                <div class="clr-col-md-4 clr-col-12">
+                    <Card>
+                        <CardHeader>
+                            <clr-icon shape="bar-chart"></clr-icon>
+                            <span>Stats</span>
+                        </CardHeader>
+                        <CardBody>
+                            <CardBlock>
+                                <CardText>First imported activity date: @(stats.FirstActivityDateTime?.Date.ToShortDateString() ?? "N/A")</CardText>
+                                <CardText>Last activities sync date: @(athlete.LastSyncDate?.ToShortDateString() ?? "N/A")</CardText>
+                                <CardText>Favorite activity type: @(stats.PreferedActivityType?.ToString() ?? "N/A")</CardText>
+                                <Tabs>
+                                    <StatsTab Title="Total" Stats="@stats.TotalStats" />
+                                    <StatsTab Title="Year" Stats="@stats.YearStats" />
+                                    <StatsTab Title="Month" Stats="@stats.MonthStats" />
+                                    <StatsTab Title="Week" Stats="@stats.WeekStats" />
+                                </Tabs>
+                            </CardBlock>
+                        </CardBody>
+                    </Card>
+                </div>
+            </div>
+        }
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private AthleteDto athlete;
+
+    List<ClubDto> clubs;
+
+    OverallStatsDto stats;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        athlete = await athleteService.GetAthlete(athleteId);
+        clubs = await clubService.GetAthleteClubs(athleteId);
+        stats = athleteService.GetAthleteActivitiesTotalStats(athleteId);
+    }
+
+    void ShowActivities()
+    {
+        navigationManager.NavigateTo("/activities/list");
+    }
+
+    void ShowChallenges()
+    {
+        navigationManager.NavigateTo("/challenges/list");
+    }
+
+    protected void ShowClubDetails(long id)
+    {
+        navigationManager.NavigateTo($"/clubs/details/{id}");
+    }
+}

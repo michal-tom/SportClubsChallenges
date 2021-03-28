@@ -1,11 +1,23 @@
 ﻿namespace SportClubsChallenges.Domain.Interfaces
 {
-    using Microsoft.AspNetCore.Authentication;
+    using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authentication;
+    using SportClubsChallenges.Model.Dto;
 
     public interface IAthleteService
     {
         Task OnAthleteLogin(ClaimsIdentity identity, AuthenticationProperties properties);
+
+        Task<List<AthleteDto>> GetAllAthletes();
+
+        Task<AthleteDto> GetAthlete(long id);
+
+        Task EditAthlete(AthleteDto dto);
+
+        OverallStatsDto GetAthleteActivitiesTotalStats(long id);
+
+        PeriodStatsDto GetAthleteActivitiesLastSevenDaysStats(long id);
     }
 }

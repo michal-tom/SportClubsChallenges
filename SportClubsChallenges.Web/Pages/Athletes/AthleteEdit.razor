@@ -1,0 +1,72 @@
+﻿@page "/athletes/edit/{athleteId:long}"
+
+@using Microsoft.AspNetCore.Http
+
+@inject IAthleteService athleteService
+@inject NavigationManager navigationManager
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+@attribute [Authorize(Roles = "Admin")]
+
+@if (athlete == null)
+{
+    <Loading />
+}
+else
+{
+    <h4>Edit athlete @athlete?.Name</h4>
+
+    <Form Model="@athlete" TItem="AthleteDto" Layout="FormLayout.Compact" OnValidSubmit="() => EditAthlete()">
+        <div class="clr-row">
+            <div class="clr-col-md-12">
+                <Text @bind-Value="athlete.FirstName" Label="First name" HelpText="Enter athlete first name" ValidationFor="() => athlete.FirstName" Disabled="true" />
+
+                <Text @bind-Value="athlete.LastName" Label="Last name" HelpText="Enter athlete last name" ValidationFor="() => athlete.LastName" Disabled="true" />
+
+                <Text @bind-Value="athlete.City" Label="City" HelpText="Enter athlete city" ValidationFor="() => athlete.City" Disabled="true" />
+
+                <Text @bind-Value="athlete.Country" Label="Country" HelpText="Enter athlete country" ValidationFor="() => athlete.Country" Disabled="true" />
+
+                <Text @bind-Value="athlete.Gender" Label="Gender" HelpText="Enter athlete gender" ValidationFor="() => athlete.Gender" Disabled="true" />
+
+                <Datepicker @bind-Value="athlete.FirstLoginDate" Label="First login date" HelpText="Pick a first login date" ValidationFor="() => athlete.FirstLoginDate" />
+
+                <Datepicker @bind-Value="athlete.LastLoginDate" Label="Last login date" HelpText="Pick a last login date" ValidationFor="() => athlete.LastLoginDate" />
+
+                <Datepicker @bind-Value="athlete.LastSyncDate" Label="Last sync date" HelpText="Pick a last sync date" ValidationFor="() => athlete.LastSyncDate" />
+
+                <CheckboxContainer Label="Is Admin">
+                    <Checkbox @bind-Value="@athlete.IsAdmin" />
+                </CheckboxContainer>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <Button Variant="Primary" type="submit">Submit</Button>
+            <Button Variant="Warning" type="reset" OnClick="() => Cancel()">Cancel</Button>
+        </div>
+    </Form>
+}
+@code {
+
+    [Parameter]
+    public long AthleteId { get; set; }
+
+    AthleteDto athlete;
+
+    protected override async Task OnInitializedAsync()
+    {
+        athlete = await athleteService.GetAthlete(this.AthleteId);
+    }
+
+    protected async Task EditAthlete()
+    {
+        await athleteService.EditAthlete(athlete);
+        navigationManager.NavigateTo("/athletes/admin");
+    }
+
+    void Cancel()
+    {
+        navigationManager.NavigateTo("/athletes/admin");
+    }
+}

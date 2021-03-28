@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Model.Attributes
+﻿namespace SportClubsChallenges.Utils.Attributes
 {
     using System;
 

@@ -1,0 +1,114 @@
+﻿@page "/challenges/add"
+@page "/challenges/edit/{challengeId:long}"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IChallengeService challengeService
+@inject IClubService clubService
+@inject NavigationManager navigationManager
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+@attribute [Authorize(Roles = "Admin")]
+
+@if (challenge == null)
+{
+    <Loading />
+}
+else
+{
+    <h4>@pageTitle</h4>
+
+    <Form Model="@challenge" TItem="ChallengeDetailsDto" Layout="FormLayout.Compact" OnValidSubmit="() => AddOrEditChallenge()">
+        <div class="clr-row">
+            <div class="clr-col-md-12">
+                <Select @bind-Value="challenge.Club" Items="@clubs" Label="Club" HelpText="Pick a club from list" ValueFunc="@(p => p?.Id.ToString())" NameFunc="@(p => p?.Name)" Disabled="@(challenge.Id > 0)" />
+
+                <Text @bind-Value="challenge.Name" Label="Name" HelpText="Enter challenge name" ValidationFor="() => challenge.Name" />
+
+                <Textarea @bind-Value="challenge.Description" Label="Description" HelpText="Enter challenge description" ValidationFor="() => challenge.Description" />
+
+                <Datepicker @bind-Value="challenge.StartDate" Label="Entry Date" HelpText="Pick a start date of challenge" ValidationFor="() => challenge.StartDate" />
+
+                <Datepicker @bind-Value="challenge.EndDate" Label="Entry Date" HelpText="Pick a end date of challenge" ValidationFor="() => challenge.EndDate" />
+
+                <Select @bind-Value="challenge.CompetitionTypeDescription" Items="@challengeCompetitionTypes.Select(p => p.Value).ToList()" Label="Challenge type" HelpText="Pick a challenge type from list" />
+
+                <clr-select-container class="clr-form-control clr-row " blazority="">
+                    <label class="clr-control-label clr-col-12 clr-col-md-2" for="clr-select-1">Activities types</label>
+                    <div class="clr-control-container clr-col-md-10 clr-col-12 ">
+                        <Datagrid Items="activityTypes" Selection="SelectionMode.Multi" SelectType="SelectionType.Control" @bind-SelectedItems="selectedActivityTypes" Fixed="FixedMode.All" style="height: 150px; width: 200px;" Compact="true">
+                            <DatagridColumn Title="Name" TRowData="KeyValuePair<byte, string>" Field="c => c.Value" />
+                        </Datagrid>
+                    </div>
+                </clr-select-container>
+
+                <CheckboxContainer Label="Additional parameters">
+                    <Checkbox @bind-Value="@challenge.PreventManualActivities" Label="Prevent manual activities" />
+                    <Checkbox @bind-Value="@challenge.IncludeOnlyGpsActivities" Label="Prevent non-GPS activities" />
+                </CheckboxContainer>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <Button Variant="Primary" type="submit">Submit</Button>
+            <Button Variant="Warning" type="reset" OnClick="() => Cancel()">Cancel</Button>
+        </div>
+    </Form>
+}
+
+@code {
+
+    [Parameter]
+    public long? ChallengeId { get; set; }
+
+    ChallengeDetailsDto challenge;
+
+    string pageTitle = "Challenge";
+
+    List<ClubDto> clubs = new List<ClubDto>();
+    Dictionary<byte, string> activityTypes = new Dictionary<byte, string>();
+    Dictionary<byte, string> challengeCompetitionTypes = new Dictionary<byte, string>();
+
+    HashSet<KeyValuePair<byte, string>> selectedActivityTypes = new HashSet<KeyValuePair<byte, string>>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        clubs = await clubService.GetAllClubs();
+        activityTypes = await challengeService.GetAvailableActivityTypes();
+        challengeCompetitionTypes = challengeService.GetAvailableChallengeCompetitionTypes();
+
+        if (!this.ChallengeId.HasValue)
+        {
+            challenge = new ChallengeDetailsDto();
+            challenge.Club = new ClubDto { Id = clubs.First().Id, Name = clubs.First().Name };
+            pageTitle = "Create new challenge";
+        }
+        else
+        {
+            challenge = await challengeService.GetChallenge(this.ChallengeId.Value);
+            selectedActivityTypes = activityTypes.Where(p => challenge.ActivityTypesIds.Contains(p.Key)).ToHashSet();
+            pageTitle = $"Edit challenge {challenge.Name}";
+        }
+    }
+
+    protected async Task AddOrEditChallenge()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        challenge.AuthorId = athleteId;
+
+        challenge.ClubId = challenge.Club?.Id ?? challenge.ClubId;
+        challenge.CompetitionType = challengeCompetitionTypes.First(x => x.Value.Contains(challenge.CompetitionTypeDescription)).Key;
+        challenge.ActivityTypesIds = selectedActivityTypes.Select(p => p.Key).ToList();
+
+        await challengeService.AddOrEditChallenge(challenge);
+        navigationManager.NavigateTo("/challenges/admin");
+    }
+
+    void Cancel()
+    {
+        navigationManager.NavigateTo("/challenges/admin");
+    }
+}

@@ -1,96 +1,33 @@
-﻿
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-dark border-bottom box-shadow mb-3 fixed-top">
-    <div class="container">
-        <a class="navbar-brand text-light" href="">Sport Clubs Challenges</a>
-        <AuthorizeView>
-            <Authorized>
-                <button class="navbar-toggler" @onclick="ToggleNavMenu" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="@NavMenuCssClass navbar navbar-collapse d-sm-inline-flex flex-sm-row" @onclick="CollapseNavMenu">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                                <span class="oi oi-home" aria-hidden="true"></span> Home
-                            </NavLink>
-                        </li>
-                        <li class="nav-item">
-                            <NavLink class="nav-link" href="/challenges/list">
-                                <span class="oi oi-plus" aria-hidden="true"></span> Challenges
-                            </NavLink>
-                        </li>
-                        <li class="nav-item">
-                            <NavLink class="nav-link" href="/activities/list">
-                                <span class="oi oi-plus" aria-hidden="true"></span> Activities
-                            </NavLink>
-                        </li>
-                        <li class="nav-item dropdown show">
-                            <NavLink class="nav-link dropdown-toggle" tabindex="0" @onclick="() => collapseAdminSubNavMenu = !collapseAdminSubNavMenu" id="adminNavbarDropdown">
-                                <span class="oi oi-plus" aria-hidden="true"></span> Admin
-                            </NavLink>
-                            @if (!collapseAdminSubNavMenu)
-                            {
-                                <ul class="dropdown-menu show bg-dark" aria-labelledby="adminNavbarDropdown" @onclick="() => collapseAdminSubNavMenu = !collapseAdminSubNavMenu"  @onmouseleave="() => collapseAdminSubNavMenu = true">
-                                    <li class="nav-item">
-                                        <NavLink class="nav-link" href="/athletes/admin">
-                                            <span class="oi oi-plus" aria-hidden="true"></span> Athletes
-                                        </NavLink>
-                                    </li>
-                                    <li class="nav-item">
-                                        <NavLink class="nav-link" href="/challenges/admin">
-                                            <span class="oi oi-plus" aria-hidden="true"></span> Challenges
-                                        </NavLink>
-                                    </li>
-                                    <li class="nav-item">
-                                        <NavLink class="nav-link" href="/clubs/admin">
-                                            <span class="oi oi-plus" aria-hidden="true"></span> Clubs
-                                        </NavLink>
-                                    </li>
-                                </ul>
-                            }
-                        </li>
-                        <li class="nav-item">
-                            <NavLink class="nav-link" href="/logout">
-                                <span class="oi oi-plus" aria-hidden="true"></span> Log out
-                            </NavLink>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav nav pull-right">
-                        <li class="nav-item">
-                            <NavLink class="nav-link" href="/profile">
-                                <span>@(context.User?.Identity?.Name)</span>
-                            </NavLink>
-                        </li>
-                        <li class="nav-item">
-                            <span class="poweredbywrapper"><a href="https://www.strava.com" target="_blank" class="poweredbystrava">STRAVA</a></span>
-                        </li>
-                    </ul>
-                </div>
-            </Authorized>
-        </AuthorizeView>
-    </div>
-</nav>
-
-@code {
-    bool collapseNavMenu = true;
-
-    bool collapseAdminSubNavMenu = true;
-
-    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-
-        if (collapseAdminSubNavMenu)
-        {
-            collapseNavMenu = !collapseNavMenu;
-        }
-    }
-
-    void CollapseNavMenu()
-    {
-        collapseNavMenu = true;
-    }
-}
+﻿<AuthorizeView>
+    <Authorized>
+        <nav class="subnav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                        Home
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/challenges/list">
+                        Challenges
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/activities/list">
+                        Activities
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/admin">
+                        Admin
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/profile">
+                        Profile
+                    </NavLink>
+                </li>
+            </ul>
+        </nav>
+    </Authorized>
+</AuthorizeView>

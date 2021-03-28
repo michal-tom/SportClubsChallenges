@@ -1,0 +1,141 @@
+﻿@page "/clubs/details/{clubId}"
+
+@inject IClubService clubService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+
+@if (clubData == null)
+{
+    <Loading />
+}
+else
+{
+    <div class="clr-row">
+        <div class="clr-col-md-4 clr-col-12">
+            <Card>
+                <CardHeader>
+                    <clr-icon shape="info-standard"></clr-icon>
+                    <span>General info</span>
+                </CardHeader>
+                <CardBody>
+                    <CardBlock>
+                        <CardMediaBlock ImageSource="@clubData.IconUrl" AlternateText="Club icon">
+                            <DescriptionTitle><h4>@clubData.Name</h4></DescriptionTitle>
+                        </CardMediaBlock>
+                        <b>@clubData.SportType</b>
+                        @if (!string.IsNullOrEmpty(clubData.Owner))
+                        {
+                            <div style="margin-top:10px">Owner:</div>
+                            <b>@clubData.Owner</b>
+                        }
+                        <div style="margin-top:10px">Members count (in Strava):</div>
+                        <b>@clubData.MembersCount</b>
+                    </CardBlock>
+                </CardBody>
+                <CardFooter>
+                    <Button Flat="true" Small="true" OnClick="() => ShowClubOnStrava()">Show on Strava</Button>
+                </CardFooter>
+            </Card>
+        </div>
+        <div class="clr-col-md-4 clr-col-12">
+            <Card>
+                <CardHeader>
+                    <clr-icon shape="users"></clr-icon>
+                    <span>Members</span>
+                    <Badge Status="Status.Info">@clubMembers?.Count</Badge>
+                </CardHeader>
+                <CardBody>
+                    <CardBlock>
+                        <Datagrid Items="clubMembers" Fixed="FixedMode.All">
+                            <DatagridColumn Title="No" TRowData="AthleteDto">
+                                @{
+                                    var index = @clubMembers.IndexOf(context) + 1;
+                                }
+                                @(index).
+                            </DatagridColumn>
+                            <DatagridColumn Title="Name" TRowData="AthleteDto" Field="c => c.Name">
+                                <img src="@context.IconUrl" class="strava-user-icon" />
+                                <b>@context.Name</b>
+                            </DatagridColumn>
+                        </Datagrid>
+                    </CardBlock>
+                </CardBody>
+            </Card>
+        </div>
+        <div class="clr-col-md-4 clr-col-12">
+            <Card>
+                <CardHeader>
+                    <clr-icon shape="crown"></clr-icon>
+                    <span>Challenges</span>
+                    <Badge Status="Status.Info">@clubChallenges?.Count</Badge>
+                </CardHeader>
+                <CardBody>
+                    <CardBlock>
+                        @foreach (var challenge in clubChallenges)
+                        {
+                        <Card Clickable="true" OnClick="() => ShowRank(challenge.Id)">
+                            <CardHeader>
+                                @challenge.Name
+                            </CardHeader>
+                            <CardBody>
+                                <CardBlock>
+                                    <div>Date Range:</div>
+                                    <b>@challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()</b>
+                                    <div style="margin-top:10px">Competition type:</div>
+                                    <b>@challenge.CompetitionTypeDescription</b>
+                                    <div style="margin-top:10px">Participants:</div>
+                                    <b>@challenge.ParticipantsCount</b>
+                                </CardBlock>
+                            </CardBody>
+                            <CardFooter>
+                                <ProgressGroup>
+                                    <ProgressBar Value="@TimeHelper.GetPercentageProgress(challenge.StartDate, challenge.EndDate)"></ProgressBar>
+                                    <div class="clr-row" style="font-size: smaller !important;">
+                                        <div class="clr-col-3">@challenge.StartDate.ToShortDateString()</div>
+                                        <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(challenge.StartDate, challenge.EndDate)</div>
+                                        <div class="clr-col-3 text-right">@challenge.EndDate.ToShortDateString()</div>
+                                    </div>
+                                </ProgressGroup>
+                            </CardFooter>
+                        </Card>
+                        }
+                    </CardBlock>
+                </CardBody>
+            </Card>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string ClubId { get; set; }
+
+    ClubDto clubData;
+
+    List<AthleteDto> clubMembers;
+
+    List<ChallengeOverviewDto> clubChallenges;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (this.ClubId == null || !long.TryParse(this.ClubId, out long clubId))
+        {
+            return;
+        }
+
+        clubData = await clubService.GetClub(clubId);
+        clubMembers = await clubService.GetMembers(clubId);
+        clubChallenges = await clubService.GetChallenges(clubId);
+    }
+
+    protected void ShowRank(long id)
+    {
+        navigationManager.NavigateTo($"/challenges/rank/{id}");
+    }
+
+    protected async Task ShowClubOnStrava()
+    {
+        await JSRuntime.InvokeAsync<object>("open", clubData.StravaUrl, "_blank");
+    }
+}

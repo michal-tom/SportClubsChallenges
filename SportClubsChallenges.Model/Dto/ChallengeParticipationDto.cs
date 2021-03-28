@@ -1,7 +1,7 @@
 ﻿namespace SportClubsChallenges.Model.Dto
 {
-    using SportClubsChallenges.Model.Attributes;
-    using SportClubsChallenges.Model.Enums;
+    using SportClubsChallenges.Utils.Attributes;
+    using SportClubsChallenges.Utils.Enums;
     using SportClubsChallenges.Utils.Helpers;
     using System;
 
@@ -17,7 +17,7 @@
 
         public bool IsChallengeActive { get; set; }
 
-        public ChallengeTypeEnum ChallengeType { get; set; }
+        public ChallengeCompetitionTypeEnum ChallengeCompetitionType { get; set; }
 
         public int ChallengeParticipantsCount { get; set; }
 
@@ -29,6 +29,6 @@
 
         public int Score { get; set; }
 
-        public string ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeTypeEnum)this.ChallengeType)?.Unit ?? string.Empty;
+        public ChallengeScoreUnit ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeCompetitionTypeEnum) this.ChallengeCompetitionType).Unit;
     }
 }

@@ -1,0 +1,18 @@
+﻿<Tab>
+    <Header>@Title</Header>
+    <ChildContent>
+        <br />
+        <CardText>Activities count: @Stats.Count</CardText>
+        <CardText>Total distance: @UnitHelper.GetDistanceDescription(Stats.Distance)</CardText>
+        <CardText>Total time: @UnitHelper.GetTimeDescription(Stats.Duration)</CardText>
+        <CardText>Total elevation: @UnitHelper.GetDistanceDescription(Stats.Elevation)</CardText>
+    </ChildContent>
+</Tab>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public PeriodStatsDto Stats { get; set; }
+}

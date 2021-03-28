@@ -1,0 +1,13 @@
+﻿<div>
+    <a href="@Url" target="_blank">
+        <img src="/images/strava_icon.svg" style="height:16px;">
+    </a> @Name
+</div>
+
+@code {
+    [Parameter]
+    public string Url { get; set; }
+
+    [Parameter]
+    public string Name { get; set; }
+}

@@ -1,0 +1,56 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IClubService clubService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+@inject NavigationManager navigationManager
+
+@attribute [Authorize]
+
+@if (clubs == null)
+{
+    <Loading />
+}
+else
+{
+    @if (clubs.Count == 0)
+    {
+        <div class="text-center">
+            <p>You are not member of any Starava club!</p>
+            <p>Please go <a href="https://www.strava.com/" target="_blank">Strava</a> and join to club.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var club in clubs)
+        {
+            <Card Clickable="true" OnClick="() => ShowDetails(club.Id)">
+                <CardBody>
+                    <CardBlock>
+                        <CardText>@club.Name</CardText>
+                        <CardMediaBlock ImageSource="@club.IconUrl" />
+                    </CardBlock>
+                </CardBody>
+            </Card>
+        }
+    }
+}
+
+@code {
+
+    List<ClubDto> clubs;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        clubs = await clubService.GetAthleteClubs(athleteId);
+    }
+
+    protected void ShowDetails(long id)
+    {
+        navigationManager.NavigateTo($"/clubs/details/{id}");
+    }
+}

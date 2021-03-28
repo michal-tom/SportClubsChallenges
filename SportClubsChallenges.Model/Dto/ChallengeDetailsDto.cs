@@ -1,17 +1,18 @@
 ﻿namespace SportClubsChallenges.Model.Dto
 {
-    using SportClubsChallenges.Model.Attributes;
-    using SportClubsChallenges.Model.Enums;
-    using SportClubsChallenges.Utils.Helpers;
     using System;
     using System.Collections.Generic;
+    using SportClubsChallenges.Utils.Attributes;
+    using SportClubsChallenges.Utils.Enums;
+    using SportClubsChallenges.Utils.Helpers;
 
     public class ChallengeDetailsDto
     {
         public ChallengeDetailsDto()
         {
             this.IsActive = true;
-            this.ChallengeType = (byte) ChallengeTypeEnum.Distance;
+            this.CompetitionType = (byte) ChallengeCompetitionTypeEnum.Distance;
+            this.CompetitionTypeDescription = ChallengeCompetitionTypeEnum.Distance.ToString();
             this.ParticipantsCount = 0;
             this.StartDate = DateTime.Now.Date;
             this.EndDate = DateTime.Now.Date;
@@ -30,13 +31,15 @@
 
         public string ClubName { get; set; }
 
+        public ClubDto Club{ get; set; }
+
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
 
-        public byte ChallengeType { get; set; }
+        public byte CompetitionType { get; set; }
 
-        public string ChallengeTypeDescription { get; set; }
+        public string CompetitionTypeDescription { get; set; }
 
         public bool PreventManualActivities { get; set; }
 
@@ -56,6 +59,6 @@
 
         public int ParticipantsCount { get; set; }
 
-        public string ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeTypeEnum) this.ChallengeType)?.Unit ?? string.Empty;
+        public ChallengeScoreUnit ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeCompetitionTypeEnum) this.CompetitionType).Unit;
     }
 }
