@@ -26,7 +26,7 @@ else
     <DatagridColumn TRowData="ChallengeOverviewDto" Title="Participants" Field="c => c.ParticipantsCount" CanSort="true" />
     <DatagridColumn TRowData="ChallengeOverviewDto" Title="Actions">
         <ButtonGroup Variant="Primary">
-            <Button OnClick="() => ShowRank(context.Id)">Rank</Button>
+            <Button OnClick="() => ShowDetails(context.Id)">Details</Button>
             @if (context.IsAthleteRegistred)
             {
                 <Button Variant="Danger" OnClick="() => LeaveChallenge(context.Id, context.Name)">Leave</Button>
@@ -62,9 +62,9 @@ else
         challenges = await challengeService.GetAvailableChallenges(this.athleteId);
     }
 
-    protected void ShowRank(long challengeId)
+    protected void ShowDetails(long challengeId)
     {
-        navigationManager.NavigateTo($"/challenges/rank/{challengeId}");
+        navigationManager.NavigateTo($"/challenges/details/{challengeId}");
     }
 
     protected async Task LeaveChallenge(long challengeId, string challengeName)

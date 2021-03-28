@@ -22,6 +22,7 @@ else
                         <CardMediaBlock ImageSource="@clubData.IconUrl" AlternateText="Club icon">
                             <DescriptionTitle><h4>@clubData.Name</h4></DescriptionTitle>
                         </CardMediaBlock>
+                        <div>Sport type:</div>
                         <b>@clubData.SportType</b>
                         @if (!string.IsNullOrEmpty(clubData.Owner))
                         {
@@ -73,7 +74,7 @@ else
                     <CardBlock>
                         @foreach (var challenge in clubChallenges)
                         {
-                        <Card Clickable="true" OnClick="() => ShowRank(challenge.Id)">
+                        <Card Clickable="true" OnClick="() => ShowChallengeDetails(challenge.Id)">
                             <CardHeader>
                                 @challenge.Name
                             </CardHeader>
@@ -129,9 +130,9 @@ else
         clubChallenges = await clubService.GetChallenges(clubId);
     }
 
-    protected void ShowRank(long id)
+    protected void ShowChallengeDetails(long id)
     {
-        navigationManager.NavigateTo($"/challenges/rank/{id}");
+        navigationManager.NavigateTo($"/challenges/details/{id}");
     }
 
     protected async Task ShowClubOnStrava()

@@ -89,7 +89,7 @@
                 TotalStats = this.GetPeriodStats(activities, DateTimeOffset.MinValue),
                 YearStats = this.GetPeriodStats(activities, new DateTimeOffset(DateTimeOffset.Now.Year, 1, 1, 0, 0, 0, TimeSpan.Zero)),
                 MonthStats = this.GetPeriodStats(activities, new DateTimeOffset(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month, 1, 0, 0, 0, TimeSpan.Zero)),
-                WeekStats = this.GetPeriodStats(activities, new DateTimeOffset(TimeHelper.GetStartOfWeek())),
+                WeekStats = this.GetPeriodStats(activities, new DateTimeOffset(TimeHelper.GetStartOfCurrentWeek())),
                 FirstActivityDateTime = activities.OrderBy(p => p.StartDate.Ticks).FirstOrDefault()?.StartDate,
                 PreferedActivityTypeId = activities.GroupBy(p => p.ActivityTypeId).OrderByDescending(group => group.Count()).FirstOrDefault()?.Key ?? null
             };
