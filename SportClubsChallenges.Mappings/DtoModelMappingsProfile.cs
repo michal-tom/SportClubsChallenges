@@ -38,10 +38,12 @@
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.LocalDateTime))
                 .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.CreationDate.LocalDateTime))
                 .ForMember(dest => dest.EditionDate, opt => opt.MapFrom(src => src.EditionDate.LocalDateTime))
+                .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => src.UpdateDate.HasValue ? src.UpdateDate.Value.LocalDateTime : (DateTime?) null))
                 .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Club.Name))
+                .ForMember(dest => dest.ClubIconUrl, opt => opt.MapFrom(src => src.Club.IconUrl))
                 .ForMember(dest => dest.Club, opt => opt.MapFrom(src => new ClubDto { Id = src.ClubId, Name = src.Club.Name }))
                 .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.FirstName + " " + src.Author.LastName))
-                .ForMember(dest => dest.ActivityTypes, opt => opt.MapFrom(src => string.Join(",", src.ChallengeActivityTypes.Select(p => p.ActivityType.Name))))
+                .ForMember(dest => dest.ActivityTypes, opt => opt.MapFrom(src => src.ChallengeActivityTypes.Select(p => p.ActivityType.Name)))
                 .ForMember(dest => dest.ActivityTypesIds, opt => opt.MapFrom(src => src.ChallengeActivityTypes.Select(p => p.ActivityTypeId)))
                 .ForMember(dest => dest.ParticipantsCount, opt => opt.MapFrom(src => src.ChallengeParticipants.Count))
                 .ReverseMap()
@@ -49,6 +51,7 @@
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.EndDate, DateTimeKind.Local)))
                 .ForMember(dest => dest.CreationDate, opt => opt.Ignore())
                 .ForMember(dest => dest.EditionDate, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdateDate, opt => opt.Ignore())
                 .ForMember(dest => dest.Club, opt => opt.Ignore());
 
             this.CreateMap<Challenge, ChallengeOverviewDto>()
@@ -74,6 +77,7 @@
             this.CreateMap<ChallengeParticipant, ChallengeRankPositionDto>()
                 .ForMember(dest => dest.AthleteId, opt => opt.MapFrom(src => src.AthleteId))
                 .ForMember(dest => dest.AthleteName, opt => opt.MapFrom(src => src.Athlete.FirstName + " " + src.Athlete.LastName))
+                .ForMember(dest => dest.AthleteIconUrlMedium, opt => opt.MapFrom(src => src.Athlete.IconUrlMedium))
                 .ForMember(dest => dest.Rank, opt => opt.MapFrom(src => src.Rank))
                 .ForMember(dest => dest.Score, opt => opt.MapFrom(src => src.Score));
 

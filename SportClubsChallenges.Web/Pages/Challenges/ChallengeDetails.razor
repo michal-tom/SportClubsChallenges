@@ -4,29 +4,91 @@
 
 @attribute [Authorize]
 
-@if (challengeDetails == null)
+@if (challengeDetails == null  && rankList == null)
 {
     <Loading />
 }
 else
 {
-    <Card>
-        <CardHeader>
-                <b>@challengeDetails.Name</b> leaderboard
-        </CardHeader>
-        <CardBody>
-            <Datagrid TRowData="ChallengeRankPositionDto" Items="rankList" Placeholder="We couldn't find leaderboard for this challenge!">
-                <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Rank" Field="c => c.Rank" CanSort="true" CanFilter="true" />
-                <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Athlete" Field="c => c.AthleteName" CanSort="true" CanFilter="true" />
-                <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Score" Field="c => c.Score" CanSort="true" CanFilter="true">
-                    @UnitHelper.GetScoreDescription(context.Score, challengeDetails.ScoreUnit)
-                </DatagridColumn>
-                <DatagridFooter TRowData="ChallengeRankPositionDto">
-                    <DatagridFooterDescription TRowData="ChallengeRankPositionDto">@challengeDetails.ParticipantsCount participant(s)</DatagridFooterDescription>
-                </DatagridFooter>
-            </Datagrid>
-        </CardBody>
-    </Card>
+    <div class="clr-row">
+        <div class="clr-col-md-6 clr-col-12">
+            <Card>
+                <CardHeader>
+                    <clr-icon shape="info-standard"></clr-icon>
+                    <span>Details</span>
+                </CardHeader>
+                <CardBody>
+                    <CardBlock>
+                        <div>Name:</div>
+                        <b>@challengeDetails.Name</b>
+                        @if (!string.IsNullOrEmpty(challengeDetails.Description))
+                        {
+                            <div style="margin-top:10px">Description:</div>
+                            <b>@challengeDetails.Description</b>
+                        }
+                        <div style="margin-top:10px">Author:</div>
+                        <b>@challengeDetails.AuthorName</b>
+                        <div style="margin-top:10px">Club:</div>
+                        <b>@challengeDetails.ClubName</b>
+                        <br />
+                        @if (!string.IsNullOrEmpty(challengeDetails.ClubIconUrl))
+                        {
+                            <CardMediaBlock ImageSource="@challengeDetails.ClubIconUrl" />
+                        }
+                        <div style="margin-top:10px">Date range:</div>
+                        <b>@challengeDetails.StartDate.ToShortDateString() - @challengeDetails.EndDate.ToShortDateString()</b>
+                        <div style="margin-top:10px">Competition type:</div>
+                        <b>@challengeDetails.CompetitionTypeDescription</b>
+                        <div style="margin-top:10px">Activity types:</div>
+                        <b>
+                            @if (challengeDetails.ActivityTypes == null || !challengeDetails.ActivityTypes.Any())
+                            {
+                                <span>All types</span>
+                            }
+                            else
+                            {
+                                @foreach (var acivityType in challengeDetails.ActivityTypes)
+                                {
+                                    <Label>@acivityType</Label>
+                                }
+                            }
+                        </b>
+                    </CardBlock>
+                </CardBody>
+            </Card>
+        </div>
+        <div class="clr-col-md-6 clr-col-12">
+            <Card>
+                <CardHeader>
+                    <clr-icon shape="bar-chart"></clr-icon>
+                    <span>Classification</span>
+                </CardHeader>
+                <CardBody>
+                    <CardBlock>
+                        <Datagrid TRowData="ChallengeRankPositionDto" Items="rankList" Placeholder="We couldn't find any participant in this challenge!">
+                            <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Rank" Field="c => c.Rank" CanSort="true" CanFilter="true" />
+                            <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Athlete" Field="c => c.AthleteName" CanSort="true" CanFilter="true">
+                                <img src="@context.AthleteIconUrl" class="strava-user-icon" />
+                                <span>@context.AthleteName</span>
+                            </DatagridColumn>
+                            <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Score" Field="c => c.Score" CanSort="true" CanFilter="true">
+                                @UnitHelper.GetScoreDescription(context.Score, challengeDetails.ScoreUnit)
+                            </DatagridColumn>
+                            <DatagridFooter TRowData="ChallengeRankPositionDto">
+                                <DatagridFooterDescription TRowData="ChallengeRankPositionDto">@challengeDetails.ParticipantsCount participant(s)</DatagridFooterDescription>
+                            </DatagridFooter>
+                        </Datagrid>
+                        @if (challengeDetails.UpdateDate.HasValue)
+                        {
+                            <div class="clr-row">
+                                <div class="clr-col-12 text-right" style="font-size: 0.55rem">Last update: @challengeDetails?.UpdateDate.Value.ToShortDateString() @challengeDetails?.UpdateDate.Value.ToShortTimeString()</div>
+                            </div>
+                        }
+                    </CardBlock>
+                </CardBody>
+            </Card>
+        </div>
+    </div>
 }
 
 @code {
@@ -46,11 +108,11 @@ else
         }
 
         challengeDetails = await challengeService.GetChallenge(challengeId);
+        rankList = await challengeService.GetChallengeRank(challengeId);
+
         if (challengeDetails == null)
         {
             return;
         }
-
-        rankList = await challengeService.GetChallengeRank(challengeId);
     }
 }

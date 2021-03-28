@@ -72,7 +72,9 @@
                 participant.Score = CalculateScore(activities, challenge);
             }
 
-            UpdateRank(participants);
+            this.UpdateRank(participants);
+
+            challenge.UpdateDate = DateTimeOffset.Now;
 
             await this.db.SaveChangesAsync();
         }
