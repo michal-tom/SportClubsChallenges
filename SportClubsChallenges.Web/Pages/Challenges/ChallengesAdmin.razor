@@ -16,7 +16,7 @@ else
     </div>
     <br />
 
-    <Datagrid TRowData="ChallengeOverviewDto" Items="challenges" Placeholder="We couldn't find any challenges!">
+    <Datagrid TRowData="ChallengeOverviewDto" Items="challenges" Placeholder="We couldn't find any challenges!" Fixed="FixedMode.All" style="max-height: 100%">
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Id" Field="c => c.Id" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="ClubName" Field="c => c.ClubName" CanSort="true" CanFilter="true" />

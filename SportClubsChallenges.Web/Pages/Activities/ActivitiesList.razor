@@ -15,7 +15,7 @@
 }
 else
 {
-    <Datagrid TRowData="ActivityDto" Items="activities" Placeholder="We couldn't find any activities!">
+    <Datagrid TRowData="ActivityDto" Items="activities" Placeholder="We couldn't find any activities!" Fixed="FixedMode.All" style="max-height: 100%">
         <DatagridColumn TRowData="ActivityDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
             <StravaIconLink Name="@context.Name" Url="@context.Link"></StravaIconLink>
         </DatagridColumn>
@@ -33,7 +33,7 @@ else
             @UnitHelper.GetDistanceMetersDescription(context.Elevation)
         </DatagridColumn>
         <DatagridFooter TRowData="ActivityDto">
-            <DatagridPagination @ref="Paginator" TRowData="ActivityDto" PageSize="10" PageSizes="new int[] { 5, 10, 25, 50 }" PageSizeLabel="Activities per page">
+            <DatagridPagination @ref="Paginator" TRowData="ActivityDto" PageSize="25" PageSizes="new int[] { 5, 10, 25, 50 }" PageSizeLabel="Activities per page">
                 @(Paginator.Pager.StartIndex + 1) - @(Paginator.Pager.EndIndex + 1) of @(Paginator.Pager.ItemCount) activities
             </DatagridPagination>
         </DatagridFooter>
