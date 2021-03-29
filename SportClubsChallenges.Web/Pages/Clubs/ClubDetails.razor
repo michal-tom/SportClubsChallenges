@@ -137,6 +137,6 @@ else
 
     protected async Task ShowClubOnStrava()
     {
-        await JSRuntime.InvokeAsync<object>("open", clubData.StravaUrl, "_blank");
+        await JSRuntime.InvokeAsync<object>("open", StravaHelper.GetClubUrl(clubData.Url), "_blank");
     }
 }

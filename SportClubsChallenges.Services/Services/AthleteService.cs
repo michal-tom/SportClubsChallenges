@@ -56,7 +56,13 @@
 
             this.identityService.UpdateIdentity(identity, athlete);
 
-            await this.QueueUpdateAthleteClubs(athleteId);
+            if (athlete.LastLoginDate != athlete.FirstLoginDate)
+            {
+                return;
+            }
+
+            // get clubs and activities from Strava during first login to app
+            await this.QueueUpdateInitialAthleteData(athleteId);
         }
 
         public async Task<List<AthleteDto>> GetAllAthletes()
@@ -105,12 +111,14 @@
 
         private async Task<Athlete> UpdateAthleteData(ClaimsIdentity identity, long athleteId)
         {
+            var currentDateTime = DateTimeOffset.Now;
+
             var athlete = this.db.Athletes.Include(p => p.AthleteStravaToken).FirstOrDefault(p => p.Id == athleteId);
             if (athlete == null)
             {
                 athlete = new Athlete { 
                     Id = athleteId, 
-                    FirstLoginDate = DateTimeOffset.Now, 
+                    FirstLoginDate = currentDateTime, 
                     AthleteStravaToken = new AthleteStravaToken()
                 };
                 this.db.Athletes.Add(athlete);
@@ -118,17 +126,18 @@
 
             this.identityService.UpdateAthleteDataFromIdentity(identity, athlete);
 
-            athlete.LastLoginDate = DateTimeOffset.Now;
+            athlete.LastLoginDate = currentDateTime;
 
             await db.SaveChangesAsync();
 
             return athlete;
         }
 
-        private async Task QueueUpdateAthleteClubs(long athleteId)
+        private async Task QueueUpdateInitialAthleteData(long athleteId)
         {
             var queuesClient = new AzureQueuesClient(this.storageRepository);
             await queuesClient.SyncAthleteClubs(athleteId);
+            await queuesClient.SyncAthleteActivities(athleteId);
         }
 
         private PeriodStatsDto GetPeriodStats(IEnumerable<Activity> activities, DateTimeOffset startDate)

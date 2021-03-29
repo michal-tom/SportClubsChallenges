@@ -17,7 +17,7 @@ else
 {
     <Datagrid TRowData="ActivityDto" Items="activities" Placeholder="We couldn't find any activities!" Fixed="FixedMode.All" style="max-height: 100%">
         <DatagridColumn TRowData="ActivityDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
-            <StravaIconLink Name="@context.Name" Url="@context.Link"></StravaIconLink>
+            <StravaIconLink Name="@context.Name" Url="@StravaHelper.GetActivityUrl(context.Id)"></StravaIconLink>
         </DatagridColumn>
         <DatagridColumn TRowData="ActivityDto" Title="Type" Field="c => c.ActivityType" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ActivityDto" Title="Date" Field="c => c.StartDate" CanSort="true" CanFilter="true">

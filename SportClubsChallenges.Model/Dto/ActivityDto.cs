@@ -25,7 +25,5 @@
         public bool IsManual { get; set; }
 
         public bool IsGps { get; set; }
-
-        public string Link => $"https://www.strava.com/activities/{this.Id}";
     }
 }

@@ -29,8 +29,8 @@
             );
 
             modelBuilder.Entity<Club>().HasData(
-                new Club { Id = 1, Name = "Bike Club", SportType = "cycling" },
-                new Club { Id = 2, Name = "Club for runners", SportType = "running" }
+                new Club { Id = 1, Name = "Bike Club", SportType = "Cycling" },
+                new Club { Id = 2, Name = "Club for runners", SportType = "Running" }
             );
 
             modelBuilder.Entity<ClubMember>().HasData(

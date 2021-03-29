@@ -14,7 +14,7 @@
                 <a href="/profile" class="nav-link" style="padding-left: 0rem;">
                     <span>@(context.User?.Identity?.Name)</span>
                 </a>
-                <a href="https://www.strava.com" class="nav-link strava-poweredby" />
+                <a href="@StravaHelper.GetMainPageUrl()" class="nav-link strava-poweredby" />
                 <a href="/logout" class="nav-link nav-icon">
                     <clr-icon shape="logout"></clr-icon>
                 </a>
