@@ -11,6 +11,8 @@
 }
 else
 {
+    <Confirmation @ref="confirmationWindow"></Confirmation>
+
     <div>
         <Button Variant="Success" OnClick="() => AddChallenge()">Add new challenge</Button>
     </div>
@@ -28,7 +30,7 @@ else
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Actions">
             <ButtonGroup Variant="Primary">
                 <Button OnClick="() => EditChallenge(context.Id)">Edit</Button>
-                <Button Variant="Danger" OnClick="() => DeleteChallenge(context.Id, context.Name)">Delete</Button>
+                <Button Variant="Danger" OnClick="() => ConfirmDeleteChallenge(context.Id, context.Name)">Delete</Button>
             </ButtonGroup>
         </DatagridColumn>
         <DatagridFooter TRowData="ChallengeOverviewDto">
@@ -41,20 +43,29 @@ else
 
     List<ChallengeOverviewDto> challenges;
 
+    protected Confirmation confirmationWindow;
+
+    [CascadingParameter]
+    public MainLayout Layout { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await LoadChallenges();
     }
 
+    protected void ConfirmDeleteChallenge(long id, string challengeName)
+    {
+        this.confirmationWindow.Show(
+            $"Do you really want to remove challenge '{challengeName}'?",
+            () => DeleteChallenge(id, challengeName));
+    }
+
     protected async Task DeleteChallenge(long id, string challengeName)
     {
-        // TODO: check user confirmation
-
         await challengeService.DeleteChallenge(id);
-
-        // TODO: show notification ("Challenge '{challengeName}' was successfully removed!")
-
         await LoadChallenges();
+        StateHasChanged();
+        this.Layout.alertWrapper.AddAlert($"Challenge '{challengeName}' was successfully removed!");
     }
 
     protected void AddChallenge()

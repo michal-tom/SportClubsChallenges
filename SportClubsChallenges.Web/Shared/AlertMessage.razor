@@ -1,0 +1,13 @@
+﻿<Alert Type="@Type">
+    <AlertItem>
+        <AlertText>@Text</AlertText>
+    </AlertItem>
+</Alert>
+
+@code{
+    [Parameter]
+    public string Text { get; set; }
+
+    [Parameter]
+    public AlertType Type { get; set; }
+}
