@@ -17,8 +17,8 @@
     private RenderFragment RenderAlert(Alert alert) => builder =>
     {
         builder.OpenComponent(0, typeof(AlertMessage));
-        builder.AddAttribute(1, "Text", alert.Text);
-        builder.AddAttribute(2, "Type", alert.Type);
+        builder.AddAttribute(1, nameof(AlertMessage.Text), alert.Text);
+        builder.AddAttribute(2, nameof(AlertMessage.Type), alert.Type);
         builder.CloseComponent();
     };
 

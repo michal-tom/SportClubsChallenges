@@ -29,11 +29,11 @@ else
             <Button OnClick="() => ShowDetails(context.Id)">Details</Button>
             @if (context.IsAthleteRegistred)
             {
-                <Button Variant="Danger" OnClick="() => LeaveChallenge(context.Id, context.Name)">Leave</Button>
+                <Button Variant="Danger" OnClick="() => ConfirmLeaveChallenge(context.Id, context.Name)">Leave</Button>
             }
             else
             {
-                <Button Variant="Success" OnClick="() => JoinChallenge(context.Id, context.Name)">Join</Button>
+                <Button Variant="Success" OnClick="() => ConfirmJoinChallenge(context.Id, context.Name)">Join</Button>
             }
         </ButtonGroup>
     </DatagridColumn>
@@ -48,6 +48,9 @@ else
     List<ChallengeOverviewDto> challenges;
 
     long athleteId;
+
+    [CascadingParameter]
+    public MainLayout Layout { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,25 +70,37 @@ else
         navigationManager.NavigateTo($"/challenges/details/{challengeId}");
     }
 
+    protected void ConfirmLeaveChallenge(long challengeId, string challengeName)
+    {
+        this.Layout.popupWrapper.ShowConfirmation(
+            $"Do you really want to leave challenge '{challengeName}'?",
+            () => LeaveChallenge(challengeId, challengeName));
+    }
+
     protected async Task LeaveChallenge(long challengeId, string challengeName)
     {
-        // TODO: check user confirmation
-
         await challengeService.LeaveChallenge(this.athleteId, challengeId);
 
-        // TODO: show notification ("You leave '{challengeName}' challenge!")
+        this.Layout.alertWrapper.AddAlert($"You leave '{challengeName}' challenge!");
 
         await LoadChallenges();
+        this.StateHasChanged();
+    }
+
+    protected void ConfirmJoinChallenge(long challengeId, string challengeName)
+    {
+        this.Layout.popupWrapper.ShowConfirmation(
+            $"Do you really want to join to challenge '{challengeName}'?",
+            () => JoinChallenge(challengeId, challengeName));
     }
 
     protected async Task JoinChallenge(long challengeId, string challengeName)
     {
-        // TODO: check user confirmation
-
         await challengeService.JoinChallenge(this.athleteId, challengeId);
 
-        // TODO: show notification ("You successfully join to '{challengeName}' challenge!")
+        this.Layout.alertWrapper.AddAlert($"You successfully join to '{challengeName}' challenge!");
 
         await LoadChallenges();
+        this.StateHasChanged();
     }
 }

@@ -11,8 +11,6 @@
 }
 else
 {
-    <Confirmation @ref="confirmationWindow"></Confirmation>
-
     <div>
         <Button Variant="Success" OnClick="() => AddChallenge()">Add new challenge</Button>
     </div>
@@ -43,8 +41,6 @@ else
 
     List<ChallengeOverviewDto> challenges;
 
-    protected Confirmation confirmationWindow;
-
     [CascadingParameter]
     public MainLayout Layout { get; set; }
 
@@ -55,7 +51,7 @@ else
 
     protected void ConfirmDeleteChallenge(long id, string challengeName)
     {
-        this.confirmationWindow.Show(
+        this.Layout.popupWrapper.ShowConfirmation(
             $"Do you really want to remove challenge '{challengeName}'?",
             () => DeleteChallenge(id, challengeName));
     }
@@ -63,9 +59,11 @@ else
     protected async Task DeleteChallenge(long id, string challengeName)
     {
         await challengeService.DeleteChallenge(id);
-        await LoadChallenges();
-        StateHasChanged();
+
         this.Layout.alertWrapper.AddAlert($"Challenge '{challengeName}' was successfully removed!");
+
+        await LoadChallenges();
+        this.StateHasChanged();
     }
 
     protected void AddChallenge()

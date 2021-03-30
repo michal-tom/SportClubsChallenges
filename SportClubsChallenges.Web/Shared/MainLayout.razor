@@ -10,6 +10,7 @@
         <div class="content-container">
             <div class="content-area">
                 <AlertWrapper @ref="alertWrapper" />
+                <PopupWrapper @ref="popupWrapper" />
                 @Body
             </div>
         </div>
@@ -19,4 +20,5 @@
 
 @code {
     public AlertWrapper alertWrapper;
+    public PopupWrapper popupWrapper;
 }

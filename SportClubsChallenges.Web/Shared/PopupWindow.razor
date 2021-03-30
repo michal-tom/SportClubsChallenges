@@ -1,0 +1,47 @@
+﻿<Modal Open="@WindowOpened">
+    <ModalTitle>@Title</ModalTitle>
+    <ModalBody><p>@Body</p></ModalBody>
+    <ModalFooter>
+        <Button Variant="Outline" OnClick="OnCancelClick">Cancel</Button>
+        <Button Variant="Primary" OnClick="OnOkClick">OK</Button>
+    </ModalFooter>
+</Modal>
+
+@code{
+    [Parameter]
+    public bool WindowOpened { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string Body { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnOkEvent { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCancelEvent { get; set; }
+
+    private async Task OnCancelClick(MouseEventArgs e)
+    {
+        if (this.OnCancelEvent.HasDelegate)
+        {
+            await this.OnCancelEvent.InvokeAsync(e);
+        }
+
+        this.WindowOpened = false;
+        StateHasChanged();
+    }
+
+    private async Task OnOkClick(MouseEventArgs e)
+    {
+        if (this.OnOkEvent.HasDelegate)
+        {
+            await this.OnOkEvent.InvokeAsync(e);
+        }
+
+        this.WindowOpened = false;
+        StateHasChanged();
+    }
+}
