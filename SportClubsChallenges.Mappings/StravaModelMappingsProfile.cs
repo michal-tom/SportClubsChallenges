@@ -1,6 +1,7 @@
 ﻿namespace SportClubsChallenges.Mappings
 {
     using System;
+    using System.Globalization;
     using AutoMapper;
     using global::Strava.NET.Model;
     using SportClubsChallenges.Database.Entities;
@@ -28,7 +29,7 @@
             this.CreateMap<SummaryClub, Club>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.SportType, opt => opt.MapFrom(src => src.SportType))
+                .ForMember(dest => dest.SportType, opt => opt.MapFrom(src => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(src.SportType)))
                 .ForMember(dest => dest.IconUrl, opt => opt.MapFrom(src => src.ProfileMedium))
                 .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Url))
                 .ForMember(dest => dest.MembersCount, opt => opt.MapFrom(src => src.MemberCount ?? 0));

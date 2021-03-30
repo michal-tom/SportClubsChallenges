@@ -11,9 +11,9 @@
 }
 else
 {
-    <Datagrid TRowData="AthleteDto" Items="athletes" Placeholder="We couldn't find any athletes!">
+    <Datagrid TRowData="AthleteDto" Items="athletes" Placeholder="We couldn't find any athletes!" Fixed="FixedMode.All" style="max-height: 100%">
         <DatagridColumn TRowData="AthleteDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
-            <a href="@context.StravaUrl">
+            <a href="@StravaHelper.GetAthleteUrl(context.Id)" target="_blank">
                 <img src="@context.IconUrl" class="strava-user-icon" />
             </a>
             <span>@context.Name</span>

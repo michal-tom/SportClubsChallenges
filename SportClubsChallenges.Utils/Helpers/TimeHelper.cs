@@ -4,9 +4,15 @@
 
     public static class TimeHelper
     {
-        public static DateTime GetStartOfWeek(DayOfWeek? startOfWeek = DayOfWeek.Monday)
+        public static DateTime GetStartOfCurrentWeek(DayOfWeek startOfWeek = DayOfWeek.Monday)
         {
-            return DateTime.Today.AddDays(-(DateTime.Today.DayOfWeek - startOfWeek.Value));
+            var delta = startOfWeek - DateTime.Today.DayOfWeek;
+            if (delta > 0)
+            {
+                delta -= 7;
+            }
+
+            return DateTime.Today.AddDays(delta);
         }
 
         public static int GetPercentageProgress(DateTime startDate, DateTime endDate)

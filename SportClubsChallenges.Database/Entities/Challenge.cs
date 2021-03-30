@@ -33,6 +33,8 @@
 
         public DateTimeOffset EditionDate { get; set; }
 
+        public DateTimeOffset? UpdateDate { get; set; }
+
         #region References
 
         public virtual Club Club { get; set; }

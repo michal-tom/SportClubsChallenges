@@ -1,13 +1,24 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="main-container">       
-    <Header />
+<CascadingValue Value="this">
 
-    <NavMenu />
+    <div class="main-container">
+        <Header />
 
-    <div class="content-container">
-        <div class="content-area">
-            @Body
+        <NavMenu />
+
+        <div class="content-container">
+            <div class="content-area">
+                <AlertWrapper @ref="alertWrapper" />
+                <PopupWrapper @ref="popupWrapper" />
+                @Body
+            </div>
         </div>
     </div>
-</div>
+
+</CascadingValue>
+
+@code {
+    public AlertWrapper alertWrapper;
+    public PopupWrapper popupWrapper;
+}

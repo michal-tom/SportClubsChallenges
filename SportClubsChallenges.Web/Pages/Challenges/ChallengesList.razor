@@ -16,7 +16,7 @@
 }
 else
 {
-<Datagrid TRowData="ChallengeOverviewDto" Items="challenges" Placeholder="We couldn't find any challenges!">
+<Datagrid TRowData="ChallengeOverviewDto" Items="challenges" Placeholder="We couldn't find any challenges!" Fixed="FixedMode.All" style="max-height: 100%">
     <DatagridColumn TRowData="ChallengeOverviewDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true" />
     <DatagridColumn TRowData="ChallengeOverviewDto" Title="ClubName" Field="c => c.ClubName" CanSort="true" CanFilter="true" />
     <DatagridColumn TRowData="ChallengeOverviewDto" Title="Date Range">
@@ -26,14 +26,14 @@ else
     <DatagridColumn TRowData="ChallengeOverviewDto" Title="Participants" Field="c => c.ParticipantsCount" CanSort="true" />
     <DatagridColumn TRowData="ChallengeOverviewDto" Title="Actions">
         <ButtonGroup Variant="Primary">
-            <Button OnClick="() => ShowRank(context.Id)">Rank</Button>
+            <Button OnClick="() => ShowDetails(context.Id)">Details</Button>
             @if (context.IsAthleteRegistred)
             {
-                <Button Variant="Danger" OnClick="() => LeaveChallenge(context.Id, context.Name)">Leave</Button>
+                <Button Variant="Danger" OnClick="() => ConfirmLeaveChallenge(context.Id, context.Name)">Leave</Button>
             }
             else
             {
-                <Button Variant="Success" OnClick="() => JoinChallenge(context.Id, context.Name)">Join</Button>
+                <Button Variant="Success" OnClick="() => ConfirmJoinChallenge(context.Id, context.Name)">Join</Button>
             }
         </ButtonGroup>
     </DatagridColumn>
@@ -49,6 +49,9 @@ else
 
     long athleteId;
 
+    [CascadingParameter]
+    public MainLayout Layout { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         var user = httpContextAccessor.HttpContext.User;
@@ -62,30 +65,42 @@ else
         challenges = await challengeService.GetAvailableChallenges(this.athleteId);
     }
 
-    protected void ShowRank(long challengeId)
+    protected void ShowDetails(long challengeId)
     {
-        navigationManager.NavigateTo($"/challenges/rank/{challengeId}");
+        navigationManager.NavigateTo($"/challenges/details/{challengeId}");
+    }
+
+    protected void ConfirmLeaveChallenge(long challengeId, string challengeName)
+    {
+        this.Layout.popupWrapper.ShowConfirmation(
+            $"Do you really want to leave challenge '{challengeName}'?",
+            () => LeaveChallenge(challengeId, challengeName));
     }
 
     protected async Task LeaveChallenge(long challengeId, string challengeName)
     {
-        // TODO: check user confirmation
-
         await challengeService.LeaveChallenge(this.athleteId, challengeId);
 
-        // TODO: show notification ("You leave '{challengeName}' challenge!")
+        this.Layout.alertWrapper.AddAlert($"You leave '{challengeName}' challenge!");
 
         await LoadChallenges();
+        this.StateHasChanged();
+    }
+
+    protected void ConfirmJoinChallenge(long challengeId, string challengeName)
+    {
+        this.Layout.popupWrapper.ShowConfirmation(
+            $"Do you really want to join to challenge '{challengeName}'?",
+            () => JoinChallenge(challengeId, challengeName));
     }
 
     protected async Task JoinChallenge(long challengeId, string challengeName)
     {
-        // TODO: check user confirmation
-
         await challengeService.JoinChallenge(this.athleteId, challengeId);
 
-        // TODO: show notification ("You successfully join to '{challengeName}' challenge!")
+        this.Layout.alertWrapper.AddAlert($"You successfully join to '{challengeName}' challenge!");
 
         await LoadChallenges();
+        this.StateHasChanged();
     }
 }

@@ -25,7 +25,7 @@ else
     {
         @foreach (var participation in challengeParticipations)
         {
-            <Card Clickable="true" OnClick="() => ShowRank(participation.ChallengeId)">
+            <Card Clickable="true" OnClick="() => ShowDetails(participation.ChallengeId)">
                 <CardBody>
                     <CardBlock>
                         <div class="clr-row">
@@ -79,8 +79,8 @@ else
         challengeParticipations = await challengeService.GetChallengeParticipations(athleteId);
     }
 
-    protected void ShowRank(long id)
+    protected void ShowDetails(long id)
     {
-        navigationManager.NavigateTo($"/challenges/rank/{id}");
+        navigationManager.NavigateTo($"/challenges/details/{id}");
     }
 }

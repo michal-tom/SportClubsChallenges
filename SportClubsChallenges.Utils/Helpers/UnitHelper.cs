@@ -21,7 +21,7 @@
         public static string GetTimeDescription(int seconds)
         {
             var timespanDuration = TimeSpan.FromSeconds(seconds).Duration();
-            if (timespanDuration.Minutes == 0)
+            if (timespanDuration.TotalMinutes == 0)
             {
                 return "-";
             }

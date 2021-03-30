@@ -177,6 +177,7 @@
         {
             var entity = mapper.Map<Challenge>(dto);
             entity.CreationDate = DateTimeOffset.Now;
+            entity.EditionDate = DateTimeOffset.Now;
             entity.Club = db.Clubs.Find(dto.ClubId);
             entity.Author = db.Athletes.Find(dto.AuthorId);
             entity.ChallengeActivityTypes = new List<ChallengeActivityType>();

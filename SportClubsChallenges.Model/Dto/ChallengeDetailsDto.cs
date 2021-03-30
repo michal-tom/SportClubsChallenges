@@ -31,6 +31,8 @@
 
         public string ClubName { get; set; }
 
+        public string ClubIconUrl { get; set; }
+
         public ClubDto Club{ get; set; }
 
         public DateTime StartDate { get; set; }
@@ -53,9 +55,11 @@
 
         public DateTime EditionDate { get; set; }
 
-        public string ActivityTypes { get; set; }
+        public DateTime? UpdateDate { get; set; }
 
-        public IEnumerable<byte> ActivityTypesIds { get; set; }
+        public IList<string> ActivityTypes { get; set; }
+
+        public IList<byte> ActivityTypesIds { get; set; }
 
         public int ParticipantsCount { get; set; }
 

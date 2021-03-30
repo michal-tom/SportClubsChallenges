@@ -23,14 +23,14 @@
             );
 
             modelBuilder.Entity<Athlete>().HasData(
-                new Athlete { Id = 1, FirstName = "John", LastName = "Smith", AthleteStravaTokenId = 1 },
-                new Athlete { Id = 2, FirstName = "Lucy", LastName = "White", AthleteStravaTokenId = 2 },
-                new Athlete { Id = 9603930, FirstName = "Michał", LastName = "T.", AthleteStravaTokenId = 3, IsAdmin = true }
+                new Athlete { Id = 1, FirstName = "John", LastName = "Smith", AthleteStravaTokenId = 1, FirstLoginDate = DateTimeOffset.Now },
+                new Athlete { Id = 2, FirstName = "Lucy", LastName = "White", AthleteStravaTokenId = 2, FirstLoginDate = DateTimeOffset.Now },
+                new Athlete { Id = 9603930, FirstName = "Michał", LastName = "T.", AthleteStravaTokenId = 3, FirstLoginDate = DateTimeOffset.Now, IsAdmin = true }
             );
 
             modelBuilder.Entity<Club>().HasData(
-                new Club { Id = 1, Name = "Bike Club", SportType = "cycling" },
-                new Club { Id = 2, Name = "Club for runners", SportType = "running" }
+                new Club { Id = 1, Name = "Bike Club", SportType = "Cycling" },
+                new Club { Id = 2, Name = "Club for runners", SportType = "Running" }
             );
 
             modelBuilder.Entity<ClubMember>().HasData(

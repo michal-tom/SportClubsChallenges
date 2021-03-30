@@ -36,8 +36,6 @@
 
         public string GenderDescription => this.Gender == "M" ? "Male" : this.Gender == "F" ? "Female" : "Other";
 
-        public string StravaUrl => $"https://www.strava.com/athletes/{this.Id}";
-
         public string Location
         {
             get {

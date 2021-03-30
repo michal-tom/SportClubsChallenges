@@ -1,0 +1,44 @@
+﻿@if(popup != null)
+{
+    @RenderAlert(popup);
+}
+
+@code {
+    private Popup popup;
+
+    private delegate Task ConfirmDelegate(MouseEventArgs e);
+
+    public void ShowConfirmation(string text, Func<Task> onConfirmTask)
+    {
+        ConfirmDelegate confirmDelegate = async (MouseEventArgs e) => await onConfirmTask.Invoke();
+        var del = new EventCallback<MouseEventArgs>(null, confirmDelegate);
+
+        popup = new Popup {
+            Title = "Confirmation",
+            Body = text,
+            OnOkClick = new EventCallback<MouseEventArgs>(null, confirmDelegate)
+        };
+
+        StateHasChanged();
+    }
+
+    private RenderFragment RenderAlert(Popup p) => builder =>
+    {
+        builder.OpenComponent(0, typeof(PopupWindow));
+        builder.AddAttribute(1, nameof(PopupWindow.Title), p.Title);
+        builder.AddAttribute(2, nameof(PopupWindow.Body), p.Body);
+        builder.AddAttribute(3, nameof(PopupWindow.OnOkEvent), p.OnOkClick);
+        builder.AddAttribute(4, nameof(PopupWindow.WindowOpened), true);
+
+        builder.CloseComponent();
+    };
+
+    private class Popup
+    {
+        public string Title { get; set; }
+
+        public string Body { get; set; }
+
+        public EventCallback<MouseEventArgs> OnOkClick { get; set; }
+    }
+}
