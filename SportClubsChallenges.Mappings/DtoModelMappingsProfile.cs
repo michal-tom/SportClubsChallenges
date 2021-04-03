@@ -66,6 +66,7 @@
                 .ForMember(dest => dest.ChallengeName, opt => opt.MapFrom(src => src.Challenge.Name))
                 .ForMember(dest => dest.ChallengeStartDate, opt => opt.MapFrom(src => src.Challenge.StartDate.LocalDateTime))
                 .ForMember(dest => dest.ChallengeEndDate, opt => opt.MapFrom(src => src.Challenge.EndDate.LocalDateTime))
+                .ForMember(dest => dest.CompetitionType, opt => opt.MapFrom(src => src.Challenge.CompetitionType))
                 .ForMember(dest => dest.ChallengeCompetitionType, opt => opt.MapFrom(src => (ChallengeCompetitionTypeEnum) src.Challenge.CompetitionType))
                 .ForMember(dest => dest.IsChallengeActive, opt => opt.MapFrom(src => src.Challenge.IsActive))
                 .ForMember(dest => dest.ChallengeParticipantsCount, opt => opt.MapFrom(src => src.Challenge.ChallengeParticipants.Count))

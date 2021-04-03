@@ -23,7 +23,7 @@ else
                             <DescriptionTitle><h4>@clubData.Name</h4></DescriptionTitle>
                         </CardMediaBlock>
                         <div>Sport type:</div>
-                        <b>@clubData.SportType</b>
+                        <b><clr-icon shape="@HtmlHelper.GetIconForSportType(clubData.SportType)"></clr-icon> @clubData.SportType</b>
                         @if (!string.IsNullOrEmpty(clubData.Owner))
                         {
                             <div style="margin-top:10px">Owner:</div>
@@ -83,7 +83,7 @@ else
                                     <div>Date Range:</div>
                                     <b>@challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()</b>
                                     <div style="margin-top:10px">Competition type:</div>
-                                    <b>@challenge.CompetitionTypeDescription</b>
+                                    <b><clr-icon shape="@HtmlHelper.GetIconForCompetitionType(challenge.CompetitionType)" /> @challenge.CompetitionTypeDescription</b>
                                     <div style="margin-top:10px">Participants:</div>
                                     <b>@challenge.ParticipantsCount</b>
                                 </CardBlock>

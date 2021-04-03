@@ -6,6 +6,6 @@
 
         Running = 1,
 
-        Custom = 2
+        MultiSport = 2
     }
 }
