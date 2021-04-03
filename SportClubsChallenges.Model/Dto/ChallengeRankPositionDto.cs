@@ -12,6 +12,8 @@
 
         public int Score { get; set; }
 
+        public bool IsCurrentUserRank { get; set; }
+
         public string AthleteIconUrl => !string.IsNullOrEmpty(this.AthleteIconUrlMedium) ? this.AthleteIconUrlMedium : "/images/strava_user.png";
     }
 }

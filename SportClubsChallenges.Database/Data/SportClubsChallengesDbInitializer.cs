@@ -29,8 +29,8 @@
             );
 
             modelBuilder.Entity<Club>().HasData(
-                new Club { Id = 1, Name = "Bike Club", SportType = "Cycling" },
-                new Club { Id = 2, Name = "Club for runners", SportType = "Running" }
+                new Club { Id = 1, Name = "Bike Club", SportType = ChallengeSportCategoryEnum.Cycling.ToString() },
+                new Club { Id = 2, Name = "Club for runners", SportType = ChallengeSportCategoryEnum.Running.ToString() }
             );
 
             modelBuilder.Entity<ClubMember>().HasData(

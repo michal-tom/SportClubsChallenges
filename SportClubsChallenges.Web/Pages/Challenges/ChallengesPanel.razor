@@ -47,7 +47,7 @@ else
                                     (@UnitHelper.GetScoreDescription(participation.Score, participation.ScoreUnit))
                                 </b>
                                 <div style="margin-top:10px">Competition type:</div>
-                                <b>@participation.ChallengeCompetitionType</b>
+                                <b><clr-icon shape="@HtmlHelper.GetIconForCompetitionType(participation.CompetitionType)" /> @participation.ChallengeCompetitionType</b>
                             </div>
                         </div>
                     </CardBlock>

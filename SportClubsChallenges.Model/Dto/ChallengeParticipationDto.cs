@@ -17,6 +17,8 @@
 
         public bool IsChallengeActive { get; set; }
 
+        public byte CompetitionType { get; set; }
+
         public ChallengeCompetitionTypeEnum ChallengeCompetitionType { get; set; }
 
         public int ChallengeParticipantsCount { get; set; }

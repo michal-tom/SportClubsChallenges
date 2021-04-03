@@ -12,7 +12,7 @@
 
         Task<List<ChallengeParticipationDto>> GetChallengeParticipations(long athleteId);
 
-        Task<List<ChallengeRankPositionDto>> GetChallengeRank(long challengeId);
+        Task<List<ChallengeRankPositionDto>> GetChallengeRank(long challengeId, long athleteId);
 
         Task<ChallengeDetailsDto> GetChallenge(long challengeId);
 

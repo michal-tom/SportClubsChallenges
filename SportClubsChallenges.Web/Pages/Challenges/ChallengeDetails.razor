@@ -1,10 +1,15 @@
 ﻿@page "/challenges/details/{challengeId}"
 
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
 @inject IChallengeService challengeService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
 
 @attribute [Authorize]
 
-@if (challengeDetails == null  && rankList == null)
+@if (challengeDetails == null && rankList == null)
 {
     <Loading />
 }
@@ -38,7 +43,7 @@ else
                         <div style="margin-top:10px">Date range:</div>
                         <b>@challengeDetails.StartDate.ToShortDateString() - @challengeDetails.EndDate.ToShortDateString()</b>
                         <div style="margin-top:10px">Competition type:</div>
-                        <b>@challengeDetails.CompetitionTypeDescription</b>
+                        <b><clr-icon shape="@HtmlHelper.GetIconForCompetitionType(challengeDetails.CompetitionType)" /> @challengeDetails.CompetitionTypeDescription</b>
                         <div style="margin-top:10px">Activity types:</div>
                         <b>
                             @if (challengeDetails.ActivityTypes == null || !challengeDetails.ActivityTypes.Any())
@@ -65,7 +70,7 @@ else
                 </CardHeader>
                 <CardBody>
                     <CardBlock>
-                        <Datagrid TRowData="ChallengeRankPositionDto" Items="rankList" Placeholder="We couldn't find any participant in this challenge!">
+                        <Datagrid RowClass="GetClassificationRowClass" TRowData="ChallengeRankPositionDto" Items="rankList"  Placeholder="We couldn't find any participant in this challenge!">
                             <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Rank" Field="c => c.Rank" CanSort="true" CanFilter="true" />
                             <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Athlete" Field="c => c.AthleteName" CanSort="true" CanFilter="true">
                                 <img src="@context.AthleteIconUrl" class="strava-user-icon" />
@@ -92,13 +97,12 @@ else
 }
 
 @code {
-
     [Parameter]
     public string ChallengeId { get; set; }
 
-    ChallengeDetailsDto challengeDetails;
+    private ChallengeDetailsDto challengeDetails;
 
-    List<ChallengeRankPositionDto> rankList;
+    private List<ChallengeRankPositionDto> rankList;
 
     protected override async Task OnInitializedAsync()
     {
@@ -108,11 +112,36 @@ else
         }
 
         challengeDetails = await challengeService.GetChallenge(challengeId);
-        rankList = await challengeService.GetChallengeRank(challengeId);
-
         if (challengeDetails == null)
         {
             return;
         }
+
+        var user = httpContextAccessor.HttpContext.User;
+        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        rankList = await challengeService.GetChallengeRank(challengeId, athleteId);
     }
+
+    private Func<ChallengeRankPositionDto, int, string> GetClassificationRowClass = (positionDto, columnNumber) =>
+    {
+        var cssClassName = string.Empty;
+
+        if (positionDto.Rank == 1 && positionDto.Score > 0)
+        {
+            cssClassName += "font-bold ";
+        }
+
+        if (positionDto.Score == 0)
+        {
+            cssClassName += "font-italic ";
+        }
+
+        if (positionDto.IsCurrentUserRank)
+        {
+            cssClassName += "row-selected ";
+        }
+
+        return cssClassName.Trim();
+    };
 }
