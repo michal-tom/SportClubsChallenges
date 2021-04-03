@@ -11,6 +11,8 @@
 
     public class DtoModelMappingsProfile : Profile
     {
+        private static TimeZoneInfo cestTimezone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+
         public DtoModelMappingsProfile()
         {
             this.CreateMap<Club, ClubDto>().ReverseMap()
@@ -28,25 +30,26 @@
                 .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
                 .ForMember(dest => dest.IsAdmin, opt => opt.MapFrom(src => src.IsAdmin))
-                .ForMember(dest => dest.FirstLoginDate, opt => opt.MapFrom(src => src.FirstLoginDate.LocalDateTime))
-                .ForMember(dest => dest.LastLoginDate, opt => opt.MapFrom(src => src.LastLoginDate.LocalDateTime))
-                .ForMember(dest => dest.LastSyncDate, opt => opt.MapFrom(src => src.LastSyncDate.HasValue ? src.LastSyncDate.Value.LocalDateTime : (DateTime?) null));
+                .ForMember(dest => dest.FirstLoginDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.FirstLoginDate, cestTimezone).LocalDateTime))
+                .ForMember(dest => dest.LastLoginDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.LastLoginDate, cestTimezone).LocalDateTime))
+                .ForMember(dest => dest.LastSyncDate, opt => opt.MapFrom(src => src.LastSyncDate.HasValue ? TimeZoneInfo.ConvertTime(src.LastSyncDate.Value, cestTimezone).LocalDateTime : (DateTime?) null));
 
             this.CreateMap<Challenge, ChallengeDetailsDto>()
-                .ForMember(dest => dest.CompetitionTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeCompetitionTypeEnum) src.CompetitionType)))
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.LocalDateTime))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.LocalDateTime))
-                .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.CreationDate.LocalDateTime))
-                .ForMember(dest => dest.EditionDate, opt => opt.MapFrom(src => src.EditionDate.LocalDateTime))
-                .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => src.UpdateDate.HasValue ? src.UpdateDate.Value.LocalDateTime : (DateTime?) null))
+                .ForMember(dest => dest.CompetitionTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeCompetitionTypeEnum)src.CompetitionType)))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.StartDate, cestTimezone).LocalDateTime))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.EndDate, cestTimezone).LocalDateTime))
+                .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.CreationDate, cestTimezone).LocalDateTime))
+                .ForMember(dest => dest.EditionDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.EditionDate, cestTimezone).LocalDateTime))
+                .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => src.UpdateDate.HasValue ? TimeZoneInfo.ConvertTime(src.UpdateDate.Value, cestTimezone).LocalDateTime : (DateTime?)null))
                 .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Club.Name))
                 .ForMember(dest => dest.ClubIconUrl, opt => opt.MapFrom(src => src.Club.IconUrl))
                 .ForMember(dest => dest.Club, opt => opt.MapFrom(src => new ClubDto { Id = src.ClubId, Name = src.Club.Name }))
                 .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.FirstName + " " + src.Author.LastName))
                 .ForMember(dest => dest.ActivityTypes, opt => opt.MapFrom(src => src.ChallengeActivityTypes.Select(p => p.ActivityType.Name)))
                 .ForMember(dest => dest.ActivityTypesIds, opt => opt.MapFrom(src => src.ChallengeActivityTypes.Select(p => p.ActivityTypeId)))
-                .ForMember(dest => dest.ParticipantsCount, opt => opt.MapFrom(src => src.ChallengeParticipants.Count))
-                .ReverseMap()
+                .ForMember(dest => dest.ParticipantsCount, opt => opt.MapFrom(src => src.ChallengeParticipants.Count));
+
+            this.CreateMap<ChallengeDetailsDto, Challenge>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.StartDate, DateTimeKind.Local)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.EndDate, DateTimeKind.Local)))
                 .ForMember(dest => dest.CreationDate, opt => opt.Ignore())
@@ -56,16 +59,16 @@
 
             this.CreateMap<Challenge, ChallengeOverviewDto>()
                 .ForMember(dest => dest.CompetitionTypeDescription, opt => opt.MapFrom(src => EnumsHelper.GetEnumDescription((ChallengeCompetitionTypeEnum) src.CompetitionType)))
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.LocalDateTime))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.LocalDateTime))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.StartDate, cestTimezone).LocalDateTime))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.EndDate, cestTimezone).LocalDateTime))
                 .ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.Club.Name))
                 .ForMember(dest => dest.ParticipantsCount, opt => opt.MapFrom(src => src.ChallengeParticipants.Count));
 
             this.CreateMap<ChallengeParticipant, ChallengeParticipationDto>()
                 .ForMember(dest => dest.ChallengeId, opt => opt.MapFrom(src => src.ChallengeId))
                 .ForMember(dest => dest.ChallengeName, opt => opt.MapFrom(src => src.Challenge.Name))
-                .ForMember(dest => dest.ChallengeStartDate, opt => opt.MapFrom(src => src.Challenge.StartDate.LocalDateTime))
-                .ForMember(dest => dest.ChallengeEndDate, opt => opt.MapFrom(src => src.Challenge.EndDate.LocalDateTime))
+                .ForMember(dest => dest.ChallengeStartDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.Challenge.StartDate, cestTimezone).LocalDateTime))
+                .ForMember(dest => dest.ChallengeEndDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.Challenge.EndDate, cestTimezone).LocalDateTime))
                 .ForMember(dest => dest.CompetitionType, opt => opt.MapFrom(src => src.Challenge.CompetitionType))
                 .ForMember(dest => dest.ChallengeCompetitionType, opt => opt.MapFrom(src => (ChallengeCompetitionTypeEnum) src.Challenge.CompetitionType))
                 .ForMember(dest => dest.IsChallengeActive, opt => opt.MapFrom(src => src.Challenge.IsActive))
@@ -86,8 +89,8 @@
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.ActivityType, opt => opt.MapFrom(src => (ActivityTypeEnum) src.ActivityTypeId))
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.LocalDateTime))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.LocalDateTime))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.StartDate, cestTimezone).LocalDateTime))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.EndDate, cestTimezone).LocalDateTime))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
                 .ForMember(dest => dest.Distance, opt => opt.MapFrom(src => src.Distance))
                 .ForMember(dest => dest.Elevation, opt => opt.MapFrom(src => src.Elevation))
