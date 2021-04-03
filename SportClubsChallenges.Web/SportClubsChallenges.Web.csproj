@@ -9,7 +9,7 @@
     <PackageReference Include="AspNet.Security.OAuth.Strava" Version="3.1.6" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="Blazority" Version="0.7.1" />
+    <PackageReference Include="Blazority" Version="0.7.2" />
     <PackageReference Include="IdentityModel" Version="4.6.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
