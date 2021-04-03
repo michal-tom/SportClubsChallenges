@@ -62,13 +62,17 @@
             return await mapper.ProjectTo<ChallengeParticipationDto>(challengeParticipations).ToListAsync();
         }
 
-        public async Task<List<ChallengeRankPositionDto>> GetChallengeRank(long challengeId)
+        public async Task<List<ChallengeRankPositionDto>> GetChallengeRank(long challengeId, long athleteId)
         {
             var challengeParticipations = db.ChallengeParticipants
                 .Where(p => p.ChallengeId == challengeId)
                 .OrderBy(p => p.Rank);
 
-            return await mapper.ProjectTo<ChallengeRankPositionDto>(challengeParticipations).ToListAsync();
+            var rankList = await mapper.ProjectTo<ChallengeRankPositionDto>(challengeParticipations).ToListAsync();
+
+            rankList.Where(p => p.AthleteId == athleteId).ToList().ForEach(p => p.IsCurrentUserRank = true);
+
+            return rankList;
         }
 
         public async Task<ChallengeDetailsDto> GetChallenge(long challengeId)

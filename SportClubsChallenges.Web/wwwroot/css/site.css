@@ -44,3 +44,11 @@ div.card-media-title h1,h2,h3,h4,h5,h6 {
 .clr-timeline-step-header-description {
     font-size: .55rem;
 }
+
+.font-bold {
+    font-weight: 600;
+}
+
+.font-italic {
+    font-style: italic;
+}
