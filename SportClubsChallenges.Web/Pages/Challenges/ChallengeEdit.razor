@@ -18,43 +18,49 @@
 }
 else
 {
-    <h4>@pageTitle</h4>
-
-    <Form Model="@challenge" TItem="ChallengeDetailsDto" Layout="FormLayout.Compact" OnValidSubmit="() => AddOrEditChallenge()">
-        <div class="clr-row">
-            <div class="clr-col-md-12">
-                <Select @bind-Value="challenge.Club" Items="@clubs" Label="Club" HelpText="Pick a club from list" ValueFunc="@(p => p?.Id.ToString())" NameFunc="@(p => p?.Name)" Disabled="@(challenge.Id > 0)" />
-
-                <Text @bind-Value="challenge.Name" Label="Name" HelpText="Enter challenge name" ValidationFor="() => challenge.Name" />
-
-                <Textarea @bind-Value="challenge.Description" Label="Description" HelpText="Enter challenge description" ValidationFor="() => challenge.Description" />
-
-                <Datepicker @bind-Value="challenge.StartDate" Label="Entry Date" HelpText="Pick a start date of challenge" ValidationFor="() => challenge.StartDate" />
-
-                <Datepicker @bind-Value="challenge.EndDate" Label="Entry Date" HelpText="Pick a end date of challenge" ValidationFor="() => challenge.EndDate" />
-
-                <Select @bind-Value="challenge.CompetitionTypeDescription" Items="@challengeCompetitionTypes.Select(p => p.Value).ToList()" Label="Challenge type" HelpText="Pick a challenge type from list" />
-
-                <clr-select-container class="clr-form-control clr-row " blazority="">
-                    <label class="clr-control-label clr-col-12 clr-col-md-2" for="clr-select-1">Activities types</label>
-                    <div class="clr-control-container clr-col-md-10 clr-col-12 ">
-                        <Datagrid Items="activityTypes" Selection="SelectionMode.Multi" SelectType="SelectionType.Control" @bind-SelectedItems="selectedActivityTypes" Fixed="FixedMode.All" style="height: 150px; width: 200px;" Compact="true">
-                            <DatagridColumn Title="Name" TRowData="KeyValuePair<byte, string>" Field="c => c.Value" />
-                        </Datagrid>
-                    </div>
-                </clr-select-container>
-
-                <CheckboxContainer Label="Additional parameters">
-                    <Checkbox @bind-Value="@challenge.PreventManualActivities" Label="Prevent manual activities" />
-                    <Checkbox @bind-Value="@challenge.IncludeOnlyGpsActivities" Label="Prevent non-GPS activities" />
-                </CheckboxContainer>
+    <div class="panel-centered">
+        <div style="width: 600px">
+            <div class="panel-centered">
+                <h4>@pageTitle</h4>
             </div>
+
+            <Form Model="@challenge" TItem="ChallengeDetailsDto" Layout="FormLayout.Compact" OnValidSubmit="() => AddOrEditChallenge()">
+                <div class="clr-row">
+                    <div class="clr-col-md-12">
+                        <Select @bind-Value="challenge.Club" Items="@clubs" Label="Club" HelpText="Pick a club from list" ValueFunc="@(p => p?.Id.ToString())" NameFunc="@(p => p?.Name)" Disabled="@(challenge.Id > 0)" />
+
+                        <Text @bind-Value="challenge.Name" Label="Name" HelpText="Enter challenge name" ValidationFor="() => challenge.Name" />
+
+                        <Textarea @bind-Value="challenge.Description" Label="Description" HelpText="Enter challenge description" ValidationFor="() => challenge.Description" />
+
+                        <Datepicker @bind-Value="challenge.StartDate" Label="Entry Date" HelpText="Pick a start date of challenge" ValidationFor="() => challenge.StartDate" />
+
+                        <Datepicker @bind-Value="challenge.EndDate" Label="Entry Date" HelpText="Pick a end date of challenge" ValidationFor="() => challenge.EndDate" />
+
+                        <Select @bind-Value="challenge.CompetitionTypeDescription" Items="@challengeCompetitionTypes.Select(p => p.Value).ToList()" Label="Challenge type" HelpText="Pick a challenge type from list" />
+
+                        <clr-select-container class="clr-form-control clr-row " blazority="">
+                            <label class="clr-control-label clr-col-12 clr-col-md-2" for="clr-select-1">Activities types</label>
+                            <div class="clr-control-container clr-col-md-10 clr-col-12 ">
+                                <Datagrid Items="activityTypes" Selection="SelectionMode.Multi" SelectType="SelectionType.Control" @bind-SelectedItems="selectedActivityTypes" Fixed="FixedMode.All" style="height: 150px; width: 200px;" Compact="true">
+                                    <DatagridColumn Title="Name" TRowData="KeyValuePair<byte, string>" Field="c => c.Value" />
+                                </Datagrid>
+                            </div>
+                        </clr-select-container>
+
+                        <CheckboxContainer Label="Additional parameters">
+                            <Checkbox @bind-Value="@challenge.PreventManualActivities" Label="Prevent manual activities" />
+                            <Checkbox @bind-Value="@challenge.IncludeOnlyGpsActivities" Label="Prevent non-GPS activities" />
+                        </CheckboxContainer>
+                    </div>
+                </div>
+                <div class="row panel-centered">
+                    <Button Variant="Primary" type="submit">Submit</Button>
+                    <Button Variant="Warning" type="reset" OnClick="() => Cancel()">Cancel</Button>
+                </div>
+            </Form>
         </div>
-        <div class="row justify-content-center">
-            <Button Variant="Primary" type="submit">Submit</Button>
-            <Button Variant="Warning" type="reset" OnClick="() => Cancel()">Cancel</Button>
-        </div>
-    </Form>
+    </div>
 }
 
 @code {
@@ -62,15 +68,15 @@ else
     [Parameter]
     public long? ChallengeId { get; set; }
 
-    ChallengeDetailsDto challenge;
+    private ChallengeDetailsDto challenge;
 
-    string pageTitle = "Challenge";
+    private string pageTitle = "Challenge";
 
-    List<ClubDto> clubs = new List<ClubDto>();
-    Dictionary<byte, string> activityTypes = new Dictionary<byte, string>();
-    Dictionary<byte, string> challengeCompetitionTypes = new Dictionary<byte, string>();
+    private List<ClubDto> clubs = new List<ClubDto>();
+    private Dictionary<byte, string> activityTypes = new Dictionary<byte, string>();
+    private Dictionary<byte, string> challengeCompetitionTypes = new Dictionary<byte, string>();
 
-    HashSet<KeyValuePair<byte, string>> selectedActivityTypes = new HashSet<KeyValuePair<byte, string>>();
+    private HashSet<KeyValuePair<byte, string>> selectedActivityTypes = new HashSet<KeyValuePair<byte, string>>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,7 +98,7 @@ else
         }
     }
 
-    protected async Task AddOrEditChallenge()
+    private async Task AddOrEditChallenge()
     {
         var user = httpContextAccessor.HttpContext.User;
         var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
@@ -107,7 +113,7 @@ else
         navigationManager.NavigateTo("/challenges/admin");
     }
 
-    void Cancel()
+    private void Cancel()
     {
         navigationManager.NavigateTo("/challenges/admin");
     }
