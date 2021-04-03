@@ -34,8 +34,8 @@
                                 <CardText>City: @athlete.City</CardText>
                                 <CardText>Country: @athlete.Country</CardText>
                                 <CardText>Gender: @athlete.GenderDescription</CardText>
-                                <CardText>First login date: @athlete.FirstLoginDate.ToShortDateString() @athlete.FirstLoginDate.ToShortTimeString()</CardText>
-                                <CardText>Last login date: @athlete.LastLoginDate.ToShortDateString() @athlete.LastLoginDate.ToShortTimeString()</CardText>
+                                <CardText>First login date: @athlete.FirstLoginDate.ToString("dd/MM/yyyy HH:mm")</CardText>
+                                <CardText>Last login date: @athlete.LastLoginDate.ToString("dd/MM/yyyy HH:mm")</CardText>
                             </CardBlock>
                         </CardBody>
                         <CardFooter>
@@ -79,8 +79,8 @@
                         </CardHeader>
                         <CardBody>
                             <CardBlock>
-                                <CardText>First imported activity date: @(stats.FirstActivityDateTime?.Date.ToShortDateString() ?? "N/A")</CardText>
-                                <CardText>Last activities sync date: @(athlete.LastSyncDate?.ToShortDateString() ?? "N/A")</CardText>
+                                <CardText>First imported activity date: @(stats.FirstActivityDateTime?.Date.ToString("dd/MM/yyyy") ?? "N/A")</CardText>
+                                <CardText>Last activities sync date: @(athlete.LastSyncDate?.ToString("dd/MM/yyyy") ?? "N/A")</CardText>
                                 <CardText>Favorite activity type: @(stats.PreferedActivityType?.ToString() ?? "N/A")</CardText>
                                 <Tabs>
                                     <StatsTab Title="Total" Stats="@stats.TotalStats" />

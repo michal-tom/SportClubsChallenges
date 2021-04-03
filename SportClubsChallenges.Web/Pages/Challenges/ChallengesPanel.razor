@@ -56,9 +56,9 @@ else
                     <ProgressGroup>
                         <ProgressBar Value="@TimeHelper.GetPercentageProgress(participation.ChallengeStartDate, participation.ChallengeEndDate)"></ProgressBar>
                         <div class="clr-row" style="font-size: smaller !important;">
-                            <div class="clr-col-3">@participation.ChallengeStartDate.ToShortDateString()</div>
+                            <div class="clr-col-3">@participation.ChallengeStartDate.ToString("dd/MM/yyyy")</div>
                             <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(participation.ChallengeStartDate, participation.ChallengeEndDate)</div>
-                            <div class="clr-col-3 text-right">@participation.ChallengeEndDate.ToShortDateString()</div>
+                            <div class="clr-col-3 text-right">@participation.ChallengeEndDate.ToString("dd/MM/yyyy")</div>
                         </div>
                     </ProgressGroup>
                 </CardFooter>

@@ -81,7 +81,7 @@ else
                             <CardBody>
                                 <CardBlock>
                                     <div>Date Range:</div>
-                                    <b>@challenge.StartDate.ToShortDateString() - @challenge.EndDate.ToShortDateString()</b>
+                                    <b>@challenge.StartDate.ToString("dd/MM/yyyy") - @challenge.EndDate.ToString("dd/MM/yyyy")</b>
                                     <div style="margin-top:10px">Competition type:</div>
                                     <b><clr-icon shape="@HtmlHelper.GetIconForCompetitionType(challenge.CompetitionType)" /> @challenge.CompetitionTypeDescription</b>
                                     <div style="margin-top:10px">Participants:</div>
@@ -92,9 +92,9 @@ else
                                 <ProgressGroup>
                                     <ProgressBar Value="@TimeHelper.GetPercentageProgress(challenge.StartDate, challenge.EndDate)"></ProgressBar>
                                     <div class="clr-row" style="font-size: smaller !important;">
-                                        <div class="clr-col-3">@challenge.StartDate.ToShortDateString()</div>
+                                        <div class="clr-col-3">@challenge.StartDate.ToString("dd/MM/yyyy")</div>
                                         <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(challenge.StartDate, challenge.EndDate)</div>
-                                        <div class="clr-col-3 text-right">@challenge.EndDate.ToShortDateString()</div>
+                                        <div class="clr-col-3 text-right">@challenge.EndDate.ToString("dd/MM/yyyy")</div>
                                     </div>
                                 </ProgressGroup>
                             </CardFooter>

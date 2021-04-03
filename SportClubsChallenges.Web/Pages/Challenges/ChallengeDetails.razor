@@ -41,7 +41,7 @@ else
                             <CardMediaBlock ImageSource="@challengeDetails.ClubIconUrl" />
                         }
                         <div style="margin-top:10px">Date range:</div>
-                        <b>@challengeDetails.StartDate.ToShortDateString() - @challengeDetails.EndDate.ToShortDateString()</b>
+                        <b>@challengeDetails.StartDate.ToString("dd/MM/yyyy") - @challengeDetails.EndDate.ToString("dd/MM/yyyy")</b>
                         <div style="margin-top:10px">Competition type:</div>
                         <b><clr-icon shape="@HtmlHelper.GetIconForCompetitionType(challengeDetails.CompetitionType)" /> @challengeDetails.CompetitionTypeDescription</b>
                         <div style="margin-top:10px">Activity types:</div>
@@ -86,7 +86,7 @@ else
                         @if (challengeDetails.UpdateDate.HasValue)
                         {
                             <div class="clr-row">
-                                <div class="clr-col-12 text-right" style="font-size: 0.55rem">Last update: @challengeDetails?.UpdateDate.Value.ToShortDateString() @challengeDetails?.UpdateDate.Value.ToShortTimeString()</div>
+                                <div class="clr-col-12 text-right" style="font-size: 0.55rem">Last update: @challengeDetails?.UpdateDate.Value.ToString("dd/MM/yyyy HH:mm")</div>
                             </div>
                         }
                     </CardBlock>

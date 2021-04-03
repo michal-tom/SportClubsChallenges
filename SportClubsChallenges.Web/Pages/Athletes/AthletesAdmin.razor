@@ -21,13 +21,13 @@ else
         <DatagridColumn TRowData="AthleteDto" Title="Location" Field="c => c.Location" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="AthleteDto" Title="Gender" Field="c => c.GenderDescription" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="AthleteDto" Title="First login" Field="c => c.FirstLoginDate" CanSort="true" CanFilter="true">
-            @context.FirstLoginDate.ToShortDateString() @context.FirstLoginDate.ToShortTimeString()
+            @context.FirstLoginDate.ToString("dd/MM/yyyy HH:mm")
         </DatagridColumn>
         <DatagridColumn TRowData="AthleteDto" Title="Last login" Field="c => c.LastLoginDate" CanSort="true" CanFilter="true">
-            @context.LastLoginDate.ToShortDateString() @context.LastLoginDate.ToShortTimeString()
+            @context.LastLoginDate.ToString("dd/MM/yyyy HH:mm")
         </DatagridColumn>
         <DatagridColumn TRowData="AthleteDto" Title="Last sync" Field="c => c.LastSyncDate" CanSort="true" CanFilter="true">
-            @context.LastSyncDate?.ToShortDateString() @context.LastSyncDate?.ToShortTimeString()
+            @context.LastSyncDate?.ToString("dd/MM/yyyy HH:mm")
         </DatagridColumn>
         <DatagridColumn TRowData="AthleteDto" Title="Admin" Field="c => c.IsAdmin" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="AthleteDto" Title="Actions">

@@ -18,9 +18,9 @@ else
         {
         <li class="clr-timeline-step">
             <div class="clr-timeline-step-header">
-                <span>@activity.StartDate.ToShortDateString()</span>
+                <span>@activity.StartDate.ToString("dd/MM/yyyy")</span>
                 <br />
-                <span class="clr-timeline-step-header-description">@activity.StartDate.ToShortTimeString()</span>
+                <span class="clr-timeline-step-header-description">@activity.StartDate.ToString("HH:mm")</span>
             </div>
             <clr-icon shape="circle">
                 <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">

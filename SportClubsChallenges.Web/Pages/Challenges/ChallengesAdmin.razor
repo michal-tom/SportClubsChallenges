@@ -21,7 +21,7 @@ else
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="ClubName" Field="c => c.ClubName" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Date Range">
-            @context.StartDate.ToShortDateString() - @context.EndDate.ToShortDateString()
+            @context.StartDate.ToString("dd/MM/yyyy") - @context.EndDate.ToString("dd/MM/yyyy")
         </DatagridColumn>
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Type" Field="c => c.CompetitionTypeDescription" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Participants" Field="c => c.ParticipantsCount" CanSort="true" />

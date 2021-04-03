@@ -21,7 +21,7 @@ else
         </DatagridColumn>
         <DatagridColumn TRowData="ActivityDto" Title="Type" Field="c => c.ActivityType" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ActivityDto" Title="Date" Field="c => c.StartDate" CanSort="true" CanFilter="true">
-            @context.StartDate.ToShortDateString() @context.StartDate.ToShortTimeString()
+            @context.StartDate.ToString("dd/MM/yyyy HH:mm")
         </DatagridColumn>
         <DatagridColumn TRowData="ActivityDto" Title="Distance" Field="c => c.Distance" CanSort="true">
             @UnitHelper.GetDistanceDescription(context.Distance)
