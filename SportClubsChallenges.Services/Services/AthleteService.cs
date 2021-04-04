@@ -62,7 +62,7 @@
             }
 
             // get clubs and activities from Strava during first login to app
-            await this.QueueUpdateInitialAthleteData(athleteId);
+            await this.QueueUpdateAthleteDataFromStrava(athleteId);
         }
 
         public async Task<List<AthleteDto>> GetAllAthletes()
@@ -109,6 +109,13 @@
             return this.GetPeriodStats(activities, dayWeekAgo);
         }
 
+        public async Task QueueUpdateAthleteDataFromStrava(long athleteId)
+        {
+            var queuesClient = new AzureQueuesClient(this.storageRepository);
+            await queuesClient.SyncAthleteClubs(athleteId);
+            await queuesClient.SyncAthleteActivities(athleteId);
+        }
+
         private async Task<Athlete> UpdateAthleteData(ClaimsIdentity identity, long athleteId)
         {
             var currentDateTime = DateTimeOffset.Now;
@@ -131,13 +138,6 @@
             await db.SaveChangesAsync();
 
             return athlete;
-        }
-
-        private async Task QueueUpdateInitialAthleteData(long athleteId)
-        {
-            var queuesClient = new AzureQueuesClient(this.storageRepository);
-            await queuesClient.SyncAthleteClubs(athleteId);
-            await queuesClient.SyncAthleteActivities(athleteId);
         }
 
         private PeriodStatsDto GetPeriodStats(IEnumerable<Activity> activities, DateTimeOffset startDate)

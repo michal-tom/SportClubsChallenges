@@ -16,6 +16,8 @@
 
         Task EditAthlete(AthleteDto dto);
 
+        Task QueueUpdateAthleteDataFromStrava(long athleteId);
+
         OverallStatsDto GetAthleteActivitiesTotalStats(long id);
 
         PeriodStatsDto GetAthleteActivitiesLastSevenDaysStats(long id);
