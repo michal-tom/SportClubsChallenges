@@ -4,23 +4,24 @@
 @inject NavigationManager navigationManager
 
 <div class="panel-centered-with-top-padding">
-    <p>@message</p>
+    @if (isLoginRiderectAction)
+    {
+        <Loading />
+        <p>Authentication in progress, please wait...</p>
+    }
+    else
+    {
+        <p>Sorry, there's nothing at this address.</p>
+    }
 </div>
 
 @code {
 
-    private string message = string.Empty;
+    private bool isLoginRiderectAction { get; set; }
 
     protected override void OnInitialized()
     {
         var currentPath = new Uri(navigationManager.Uri).PathAndQuery;
-        if (!string.IsNullOrEmpty(currentPath) && currentPath.StartsWith("/login"))
-        {
-            message = "Authentication in progress, please wait...";
-        }
-        else
-        {
-            message = "Sorry, there's nothing at this address.";
-        }
+        this.isLoginRiderectAction = !string.IsNullOrEmpty(currentPath) && currentPath.StartsWith("/login");
     }
 }
