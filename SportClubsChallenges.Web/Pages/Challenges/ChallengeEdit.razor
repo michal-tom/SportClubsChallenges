@@ -37,6 +37,10 @@ else
 
                         <Datepicker @bind-Value="challenge.EndDate" Label="Entry Date" HelpText="Pick a end date of challenge" ValidationFor="() => challenge.EndDate" />
 
+                        <CheckboxContainer Label="Active">
+                            <Checkbox @bind-Value="@challenge.IsActive" />
+                        </CheckboxContainer>
+
                         <Select @bind-Value="challenge.CompetitionTypeDescription" Items="@challengeCompetitionTypes.Select(p => p.Value).ToList()" Label="Challenge type" HelpText="Pick a challenge type from list" />
 
                         <clr-select-container class="clr-form-control clr-row " blazority="">

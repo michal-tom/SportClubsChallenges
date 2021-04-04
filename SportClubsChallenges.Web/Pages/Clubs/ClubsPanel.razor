@@ -1,5 +1,6 @@
 ﻿@using System.Security.Claims
 @using Microsoft.AspNetCore.Http
+@using System.Linq;
 
 @inject IClubService clubService
 @inject IIdentityService identityService
@@ -8,13 +9,13 @@
 
 @attribute [Authorize]
 
-@if (clubs == null)
+@if (athleteClubsToShow == null)
 {
     <Loading />
 }
 else
 {
-    @if (clubs.Count == 0)
+    @if (athleteClubsToShow.Count == 0)
     {
         <div class="text-center">
             <p>You are not member of any Starava club!</p>
@@ -23,34 +24,59 @@ else
     }
     else
     {
-        @foreach (var club in clubs)
+        @foreach (var club in athleteClubsToShow)
         {
             <Card Clickable="true" OnClick="() => ShowDetails(club.Id)">
                 <CardBody>
                     <CardBlock>
-                        <CardText>@club.Name</CardText>
+                        <CardText>
+                            @club.Name
+                            @if (club.ActiveChallengesCount > 0)
+                            {
+                                <div class="float-right">
+                                    <Label Status="Status.Success">@club.ActiveChallengesCount <clr-icon shape="crown"></clr-icon></Label>
+                                </div>
+                            }
+                        </CardText>
                         <CardMediaBlock ImageSource="@club.IconUrl" />
                     </CardBlock>
                 </CardBody>
             </Card>
+        }
+
+        @if (allAthleteClubs.Count > MaxClubsToShow)
+        {
+            <div class="text-center">
+                <Button Flat="true" OnClick="ShowAllClubs">+@(athleteClubsToShow.Count - MaxClubsToShow) more</Button>
+            </div>
         }
     }
 }
 
 @code {
 
-    List<ClubDto> clubs;
+    private List<ClubDto> allAthleteClubs;
+
+    private List<ClubDto> athleteClubsToShow;
+
+    private readonly int MaxClubsToShow = 5;
 
     protected override async Task OnInitializedAsync()
     {
         var user = httpContextAccessor.HttpContext.User;
         var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
-        clubs = await clubService.GetAthleteClubs(athleteId);
+        allAthleteClubs = await clubService.GetAthleteClubs(athleteId);
+        athleteClubsToShow = allAthleteClubs.OrderByDescending(p => p.ActiveChallengesCount).ThenByDescending(p => p.InactiveChallengesCount).ThenBy(p => p.Id).Take(MaxClubsToShow).ToList();
     }
 
-    protected void ShowDetails(long id)
+    private void ShowDetails(long id)
     {
         navigationManager.NavigateTo($"/clubs/details/{id}");
+    }
+
+    private void ShowAllClubs()
+    {
+        navigationManager.NavigateTo($"/profile");
     }
 }

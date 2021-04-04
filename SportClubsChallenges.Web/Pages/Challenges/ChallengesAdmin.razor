@@ -23,6 +23,7 @@ else
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Date Range">
             @context.StartDate.ToString("dd/MM/yyyy") - @context.EndDate.ToString("dd/MM/yyyy")
         </DatagridColumn>
+        <DatagridColumn TRowData="ChallengeOverviewDto" Title="Active" Field="c => c.IsActive" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Type" Field="c => c.CompetitionTypeDescription" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Participants" Field="c => c.ParticipantsCount" CanSort="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Actions">

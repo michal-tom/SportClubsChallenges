@@ -60,7 +60,21 @@
                                                 <DescriptionTitle><h4>@club.Name</h4></DescriptionTitle>
                                             </CardMediaBlock>
                                             <CardText>Sport: <clr-icon shape="@HtmlHelper.GetIconForSportType(club.SportType)"></clr-icon> @club.SportType</CardText>
-                                            <CardText>Members count: @club.MembersCount</CardText>
+                                            <CardText>Members count: <Badge Status="Status.Info">@club.MembersCount</Badge></CardText>
+                                            @if (club.ActiveChallengesCount > 0 || club.InactiveChallengesCount > 0)
+                                            {
+                                                <CardText>
+                                                    Challenges:
+                                                    @if (club.ActiveChallengesCount > 0)
+                                                    {
+                                                        <Badge Status="Status.Success">@club.ActiveChallengesCount</Badge>
+                                                    }
+                                                    @if (club.InactiveChallengesCount > 0)
+                                                    {
+                                                        <Badge>@club.InactiveChallengesCount</Badge>
+                                                    }
+                                                </CardText>
+                                            }
                                         </CardBlock>
                                     </CardBody>
                                 </Card>
@@ -78,7 +92,7 @@
                     <CardBody>
                         <CardBlock>
                             <CardText>First imported activity date: @(stats.FirstActivityDateTime?.Date.ToString("dd/MM/yyyy") ?? "N/A")</CardText>
-                            <CardText>Last activities sync date: @(athlete.LastSyncDate?.ToString("dd/MM/yyyy") ?? "N/A") <clr-icon shape="refresh" @onclick="ConfirmSync"></clr-icon></CardText>
+                            <CardText>Last activities sync date: @(athlete.LastSyncDate?.ToString("dd/MM/yyyy") ?? "N/A") <a role="button"><clr-icon shape="refresh" @onclick="ConfirmSync"></clr-icon></a></CardText>
                             <CardText>Favorite activity type: @(stats.PreferedActivityType?.ToString() ?? "N/A")</CardText>
                             <Tabs>
                                 <StatsTab Title="Total" Stats="@stats.TotalStats" />
@@ -128,14 +142,14 @@
         navigationManager.NavigateTo($"/clubs/details/{id}");
     }
 
-    protected void ConfirmSync()
+    private void ConfirmSync()
     {
         this.Layout.popupWrapper.ShowConfirmation(
             $"Do you really want to manually sync your activities from Strava?",
             QueueSyncData);
     }
 
-    protected async Task QueueSyncData()
+    private async Task QueueSyncData()
     {
         await athleteService.QueueUpdateAthleteDataFromStrava(this.athlete.Id);
 

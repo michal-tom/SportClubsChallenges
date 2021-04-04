@@ -15,7 +15,10 @@
 
         public DtoModelMappingsProfile()
         {
-            this.CreateMap<Club, ClubDto>().ReverseMap()
+            this.CreateMap<Club, ClubDto>()
+                .ForMember(dest => dest.ActiveChallengesCount, opt => opt.MapFrom(src => src.Challenges.Count(p => p.IsActive)))
+                .ForMember(dest => dest.InactiveChallengesCount, opt => opt.MapFrom(src => src.Challenges.Count(p => !p.IsActive)))
+                .ReverseMap()
                 .ForMember(dest => dest.IconUrl, opt => opt.Ignore())
                 .ForMember(dest => dest.Name, opt => opt.Ignore())
                 .ForMember(dest => dest.SportType, opt => opt.Ignore());

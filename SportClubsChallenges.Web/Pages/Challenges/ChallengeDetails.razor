@@ -88,7 +88,7 @@ else
                             <div class="clr-row">
                                 <div class="clr-col-12 text-right" style="font-size: 0.55rem">
                                     Last update: @challengeDetails?.UpdateDate.Value.ToString("dd/MM/yyyy HH:mm")
-                                    <clr-icon shape="refresh" @onclick="() => ConfirmUpdateClassification(challengeDetails.Id)"></clr-icon>
+                                    <a role="button"><clr-icon shape="refresh" @onclick="() => ConfirmUpdateClassification(challengeDetails.Id)"></clr-icon></a>
                                 </div>
                             </div>
                         }

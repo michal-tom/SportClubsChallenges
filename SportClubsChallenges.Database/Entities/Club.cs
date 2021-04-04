@@ -26,6 +26,8 @@
 
         public virtual ICollection<ClubMember> ClubMembers { get; set; }
 
+        public virtual ICollection<Challenge> Challenges { get; set; }
+
         #endregion
     }
 }

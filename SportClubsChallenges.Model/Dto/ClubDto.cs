@@ -15,5 +15,9 @@
         public string Owner { get; set; }
 
         public int MembersCount { get; set; }
+
+        public int ActiveChallengesCount { get; set; }
+
+        public int InactiveChallengesCount { get; set; }
     }
 }

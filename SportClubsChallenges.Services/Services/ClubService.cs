@@ -23,7 +23,7 @@
 
         public async Task<List<ClubDto>> GetAllClubs()
         {
-            return await mapper.ProjectTo<ClubDto>(db.Clubs.AsNoTracking()).ToListAsync();
+            return await mapper.ProjectTo<ClubDto>(db.Clubs.Include(p => p.Challenges).AsNoTracking()).ToListAsync();
         }
 
         public async Task<List<ClubDto>> GetAthleteClubs(long athleteId)
@@ -34,7 +34,7 @@
 
         public async Task<ClubDto> GetClub(long id)
         {
-            var entity = await db.Clubs.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            var entity = await db.Clubs.Include(p => p.Challenges).AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
             return mapper.Map<ClubDto>(entity);
         }
 
