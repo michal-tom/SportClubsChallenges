@@ -139,6 +139,6 @@
     {
         await athleteService.QueueUpdateAthleteDataFromStrava(this.athlete.Id);
 
-        this.Layout.alertWrapper.AddAlert($"Sync triggered, activities should be updated soon.");
+        this.Layout.alertWrapper.AddAlert($"Sync job triggered, activities should be updated soon.");
     }
 }

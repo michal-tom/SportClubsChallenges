@@ -70,7 +70,7 @@ else
                 </CardHeader>
                 <CardBody>
                     <CardBlock>
-                        <Datagrid RowClass="GetClassificationRowClass" TRowData="ChallengeRankPositionDto" Items="rankList"  Placeholder="We couldn't find any participant in this challenge!">
+                        <Datagrid RowClass="GetClassificationRowClass" TRowData="ChallengeRankPositionDto" Items="rankList" Placeholder="We couldn't find any participant in this challenge!">
                             <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Rank" Field="c => c.Rank" CanSort="true" CanFilter="true" />
                             <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Athlete" Field="c => c.AthleteName" CanSort="true" CanFilter="true">
                                 <img src="@context.AthleteIconUrl" class="strava-user-icon" />
@@ -86,11 +86,18 @@ else
                         @if (challengeDetails.UpdateDate.HasValue)
                         {
                             <div class="clr-row">
-                                <div class="clr-col-12 text-right" style="font-size: 0.55rem">Last update: @challengeDetails?.UpdateDate.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                                <div class="clr-col-12 text-right" style="font-size: 0.55rem">
+                                    Last update: @challengeDetails?.UpdateDate.Value.ToString("dd/MM/yyyy HH:mm")
+                                    <clr-icon shape="refresh" @onclick="() => ConfirmUpdateClassification(challengeDetails.Id)"></clr-icon>
+                                </div>
                             </div>
                         }
                     </CardBlock>
                 </CardBody>
+                <CardFooter>
+                    <Button Flat="true" Small="true" OnClick="() => ConfirmJoinChallenge(challengeDetails.Id, challengeDetails.Name)" Disabled="@IsJoinButtonDisabled">Join to challenge</Button>
+                    <Button Flat="true" Small="true" OnClick="() => ConfirmLeaveChallenge(challengeDetails.Id, challengeDetails.Name)" Disabled="@IsLeaveButtonDisabled">Leave challenge</Button>
+                </CardFooter>
             </Card>
         </div>
     </div>
@@ -100,9 +107,18 @@ else
     [Parameter]
     public string ChallengeId { get; set; }
 
+    private long athleteId;
+
     private ChallengeDetailsDto challengeDetails;
 
     private List<ChallengeRankPositionDto> rankList;
+
+    [CascadingParameter]
+    public MainLayout Layout { get; set; }
+
+    private bool IsJoinButtonDisabled => challengeDetails == null || !challengeDetails.IsActive || rankList == null || rankList.Any(p => p.AthleteId == athleteId);
+
+    private bool IsLeaveButtonDisabled => challengeDetails == null || !challengeDetails.IsActive || rankList == null || !rankList.Any(p => p.AthleteId == athleteId);
 
     protected override async Task OnInitializedAsync()
     {
@@ -111,14 +127,19 @@ else
             return;
         }
 
+        var user = httpContextAccessor.HttpContext.User;
+        athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+        await this.LoadData(challengeId);
+    }
+
+    private async Task LoadData(long challengeId)
+    {
         challengeDetails = await challengeService.GetChallenge(challengeId);
         if (challengeDetails == null)
         {
             return;
         }
-
-        var user = httpContextAccessor.HttpContext.User;
-        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
         rankList = await challengeService.GetChallengeRank(challengeId, athleteId);
     }
@@ -144,4 +165,52 @@ else
 
         return cssClassName.Trim();
     };
+
+    private void ConfirmLeaveChallenge(long challengeId, string challengeName)
+    {
+        this.Layout.popupWrapper.ShowConfirmation(
+            $"Do you really want to leave challenge '{challengeName}'?",
+            () => LeaveChallenge(challengeId, challengeName));
+    }
+
+    private async Task LeaveChallenge(long challengeId, string challengeName)
+    {
+        await challengeService.LeaveChallenge(this.athleteId, challengeId);
+
+        this.Layout.alertWrapper.AddAlert($"You leave '{challengeName}' challenge!");
+
+        await this.LoadData(challengeId);
+        this.StateHasChanged();
+    }
+
+    private void ConfirmJoinChallenge(long challengeId, string challengeName)
+    {
+        this.Layout.popupWrapper.ShowConfirmation(
+            $"Do you really want to join to challenge '{challengeName}'?",
+            () => JoinChallenge(challengeId, challengeName));
+    }
+
+    private async Task JoinChallenge(long challengeId, string challengeName)
+    {
+        await challengeService.JoinChallenge(this.athleteId, challengeId);
+
+        this.Layout.alertWrapper.AddAlert($"You successfully join to '{challengeName}' challenge!");
+
+        await this.LoadData(challengeId);
+        this.StateHasChanged();
+    }
+
+    protected void ConfirmUpdateClassification(long challengeId)
+    {
+        this.Layout.popupWrapper.ShowConfirmation(
+            $"Do you really want to manually update challenge classification?",
+            () => QueueUpdateClassification(challengeId));
+    }
+
+    protected async Task QueueUpdateClassification(long challengeId)
+    {
+        await challengeService.UpdateChallengeRank(challengeId);
+
+        this.Layout.alertWrapper.AddAlert($"Update job triggered, classification should be updated soon.");
+    }
 }

@@ -167,6 +167,12 @@
             await this.UpdateChallengeRank(challengeId);
         }
 
+        public async Task UpdateChallengeRank(long challengeId)
+        {
+            var queuesClient = new AzureQueuesClient(this.storageRepository);
+            await queuesClient.UpdateChallengeRank(challengeId);
+        }
+
         public Dictionary<byte, string> GetAvailableChallengeCompetitionTypes()
         {
             return EnumsHelper.GetEnumWithDescriptions<ChallengeCompetitionTypeEnum>();
@@ -207,12 +213,6 @@
             {
                 entity.ChallengeActivityTypes.Add(new ChallengeActivityType { ChallengeId = entity.Id, ActivityTypeId = activityTypeId });
             }
-        }
-
-        private async Task UpdateChallengeRank(long challengeId)
-        {
-            var queuesClient = new AzureQueuesClient(this.storageRepository);
-            await queuesClient.UpdateChallengeRank(challengeId);
         }
     }
 }
