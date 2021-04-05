@@ -152,7 +152,6 @@
         {
             foreach (var currentActivityInDb in activitiesInDb.Where(p => !p.IsDeleted && !activitesFromStrava.Any(a => a.Id == p.Id)))
             {
-                // TODO: test if works
                 currentActivityInDb.IsDeleted = true;
             }
         }

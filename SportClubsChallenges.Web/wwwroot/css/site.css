@@ -70,3 +70,10 @@ div.card-media-title h1,h2,h3,h4,h5,h6 {
 .alerts-container > clr-alert:last-child > .alert {
     margin-bottom: .3rem;
 }
+
+clr-icon.small-icon {
+    height: 0.6rem;
+    width: 0.6rem;
+    min-height: 0.6rem;
+    min-width: 0.6rem;
+}
