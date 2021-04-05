@@ -43,7 +43,7 @@ else
                         <div style="margin-top:10px">Date range:</div>
                         <b>@challengeDetails.StartDate.ToString("dd/MM/yyyy") - @challengeDetails.EndDate.ToString("dd/MM/yyyy")</b>
                         <div style="margin-top:10px">Competition type:</div>
-                        <b><clr-icon shape="@HtmlHelper.GetIconForCompetitionType(challengeDetails.CompetitionType)" /> @challengeDetails.CompetitionTypeDescription</b>
+                        <b><ChallengeCompetitionType Type="@challengeDetails.CompetitionType" /></b>
                         <div style="margin-top:10px">Activity types:</div>
                         <b>
                             @if (challengeDetails.ActivityTypes == null || !challengeDetails.ActivityTypes.Any())

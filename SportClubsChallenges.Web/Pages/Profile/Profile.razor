@@ -59,7 +59,7 @@
                                             <CardMediaBlock ImageSource="@club.IconUrl" AlternateText="Club logo">
                                                 <DescriptionTitle><h4>@club.Name</h4></DescriptionTitle>
                                             </CardMediaBlock>
-                                            <CardText>Sport: <clr-icon shape="@HtmlHelper.GetIconForSportType(club.SportType)"></clr-icon> @club.SportType</CardText>
+                                            <CardText>Sport: <ClubSportType Type="@club.SportType" /></CardText>
                                             <CardText>Members count: <Badge Status="Status.Info">@club.MembersCount</Badge></CardText>
                                             @if (club.ActiveChallengesCount > 0 || club.InactiveChallengesCount > 0)
                                             {

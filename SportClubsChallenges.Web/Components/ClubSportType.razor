@@ -1,0 +1,46 @@
+﻿@using SportClubsChallenges.Utils.Enums;
+
+<span>
+    @if (IsMultiSport)
+    {
+        <clr-icon shape="swimming"></clr-icon>
+        <clr-icon shape="bicycle"></clr-icon>
+        <clr-icon shape="running"></clr-icon>
+        <span>MultiSport</span>
+    }
+    else
+    {
+        <clr-icon shape="@Icon"></clr-icon>
+        <span>@Type</span>
+    }
+</span>
+
+@code {
+    [Parameter]
+    public string Type { get; set; }
+
+    private bool IsMultiSport { get; set; }
+
+    private string Icon { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrEmpty(this.Type))
+        {
+            return;
+        }
+
+        if (this.Type.ToLower() == ChallengeSportCategoryEnum.Cycling.ToString().ToLower())
+        {
+            this.Icon = "bicycle";
+        }
+        else if (this.Type.ToLower() == ChallengeSportCategoryEnum.Running.ToString().ToLower())
+        {
+            this.Icon = "running";
+        }
+        else if (this.Type.ToLower() == ChallengeSportCategoryEnum.Running.ToString().ToLower())
+        {
+            this.IsMultiSport = true;
+        }
+    }
+}

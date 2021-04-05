@@ -62,3 +62,11 @@ div.card-media-title h1,h2,h3,h4,h5,h6 {
 .float-right {
     float: right;
 }
+
+.alerts-container > clr-alert:first-child > .alert {
+    margin-top: 0rem;
+}
+
+.alerts-container > clr-alert:last-child > .alert {
+    margin-bottom: .3rem;
+}

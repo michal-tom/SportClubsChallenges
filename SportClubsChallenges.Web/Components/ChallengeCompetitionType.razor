@@ -1,0 +1,34 @@
+﻿@using SportClubsChallenges.Utils.Enums;
+
+<span>
+    <clr-icon shape="@Icon"></clr-icon>
+    <span>@CompetitionTypeDescription</span>
+</span>
+
+@code {
+    [Parameter]
+    public byte Type { get; set; }
+
+    private string Icon { get; set; }
+
+    private string CompetitionTypeDescription { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var competitionTypeEnumValue = (ChallengeCompetitionTypeEnum) this.Type;
+        this.CompetitionTypeDescription = competitionTypeEnumValue.ToString();
+
+        switch (competitionTypeEnumValue)
+        {
+            case ChallengeCompetitionTypeEnum.Distance:
+                this.Icon = "distance";
+                break;
+            case ChallengeCompetitionTypeEnum.Time:
+                this.Icon = "clock";
+                break;
+            case ChallengeCompetitionTypeEnum.Elevation:
+                this.Icon = "elevation";
+                break;
+        };
+    }
+}
