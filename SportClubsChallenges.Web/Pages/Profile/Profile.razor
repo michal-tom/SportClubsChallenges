@@ -51,33 +51,42 @@
                     </CardHeader>
                     <CardBody>
                         <CardBlock>
-                            @foreach (var club in clubs)
+                            @if (clubs.Count == 0)
                             {
-                                <Card Clickable="true" OnClick="() => ShowClubDetails(club.Id)">
-                                    <CardBody>
-                                        <CardBlock>
-                                            <CardMediaBlock ImageSource="@club.IconUrl" AlternateText="Club logo">
-                                                <DescriptionTitle><h4>@club.Name</h4></DescriptionTitle>
-                                            </CardMediaBlock>
-                                            <CardText>Sport: <ClubSportType Type="@club.SportType" /></CardText>
-                                            <CardText>Members count: <Badge Status="Status.Info">@club.MembersCount</Badge></CardText>
-                                            @if (club.ActiveChallengesCount > 0 || club.InactiveChallengesCount > 0)
-                                            {
-                                                <CardText>
-                                                    Challenges:
-                                                    @if (club.ActiveChallengesCount > 0)
-                                                    {
-                                                        <Badge Status="Status.Success">@club.ActiveChallengesCount</Badge>
-                                                    }
-                                                    @if (club.InactiveChallengesCount > 0)
-                                                    {
-                                                        <Badge>@club.InactiveChallengesCount</Badge>
-                                                    }
-                                                </CardText>
-                                            }
-                                        </CardBlock>
-                                    </CardBody>
-                                </Card>
+                                <div class="text-center">
+                                    <p>You are not member of any Strava club or data wasn't imported from Strava yet.</p>
+                                </div>
+                            }
+                            else
+                            {
+                                @foreach (var club in clubs)
+                                {
+                                    <Card Clickable="true" OnClick="() => ShowClubDetails(club.Id)">
+                                        <CardBody>
+                                            <CardBlock>
+                                                <CardMediaBlock ImageSource="@club.IconUrl" AlternateText="Club logo">
+                                                    <DescriptionTitle><h4>@club.Name</h4></DescriptionTitle>
+                                                </CardMediaBlock>
+                                                <CardText>Sport: <ClubSportType Type="@club.SportType" /></CardText>
+                                                <CardText>Members count: <Badge Status="Status.Info">@club.MembersCount</Badge></CardText>
+                                                @if (club.ActiveChallengesCount > 0 || club.InactiveChallengesCount > 0)
+                                                {
+                                                    <CardText>
+                                                        Challenges:
+                                                        @if (club.ActiveChallengesCount > 0)
+                                                        {
+                                                            <Badge Status="Status.Success">@club.ActiveChallengesCount</Badge>
+                                                        }
+                                                        @if (club.InactiveChallengesCount > 0)
+                                                        {
+                                                            <Badge>@club.InactiveChallengesCount</Badge>
+                                                        }
+                                                    </CardText>
+                                                }
+                                            </CardBlock>
+                                        </CardBody>
+                                    </Card>
+                                }
                             }
                         </CardBlock>
                     </CardBody>

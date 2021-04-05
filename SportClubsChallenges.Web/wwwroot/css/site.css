@@ -81,3 +81,7 @@ clr-icon.small-icon {
     min-height: 0.6rem;
     min-width: 0.6rem;
 }
+
+div.text-center > p:last-child {
+    margin-bottom: 1.2rem;
+}

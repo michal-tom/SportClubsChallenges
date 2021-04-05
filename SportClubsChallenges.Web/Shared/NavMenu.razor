@@ -17,11 +17,13 @@
                         Activities
                     </NavLink>
                 </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/admin">
-                        Admin
-                    </NavLink>
-                </li>
+                <AuthorizeView Roles="Admin" Context="AdminContext">
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/admin">
+                            Admin
+                        </NavLink>
+                    </li>
+                </AuthorizeView>
                 <li class="nav-item">
                     <NavLink class="nav-link" href="/profile">
                         Profile

@@ -11,33 +11,41 @@
 {
     <Loading />
 }
+else if (activities.Count == 0)
+{
+    <div class="text-center">
+        <p>None of your activities have been imported yet.</p>
+    </div>
+}
 else
 {
     <ul class="clr-timeline clr-timeline-vertical">
         @foreach (var activity in activities)
         {
-        <li class="clr-timeline-step">
-            <div class="clr-timeline-step-header">
-                <span>@activity.StartDate.ToString("dd/MM/yyyy")</span>
-                <br />
-                <span class="clr-timeline-step-header-description">@activity.StartDate.ToString("HH:mm")</span>
-            </div>
-            <clr-icon shape="circle">
-                <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18,34A16,16,0,1,1,34,18,16,16,0,0,1,18,34ZM18,4A14,14,0,1,0,32,18,14,14,0,0,0,18,4Z"></path>
-                </svg>
-            </clr-icon>
-            <div class="clr-timeline-step-body">
-                <span class="clr-timeline-step-title">
-                    @activity.Name
-                </span>
-                <span class="clr-timeline-step-description">
-                    <Label>@activity.ActivityType</Label> <clr-icon shape="route" class="small-icon"></clr-icon> @UnitHelper.GetDistanceDescription(activity.Distance) <clr-icon shape="timer" class="small-icon"></clr-icon> @UnitHelper.GetTimeDescription(activity.Duration)
-                </span>
-            </div>
-        </li>
+            <li class="clr-timeline-step">
+                <div class="clr-timeline-step-header">
+                    <span>@activity.StartDate.ToString("dd/MM/yyyy")</span>
+                    <br />
+                    <span class="clr-timeline-step-header-description">@activity.StartDate.ToString("HH:mm")</span>
+                </div>
+                <clr-icon shape="circle">
+                    <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18,34A16,16,0,1,1,34,18,16,16,0,0,1,18,34ZM18,4A14,14,0,1,0,32,18,14,14,0,0,0,18,4Z"></path>
+                    </svg>
+                </clr-icon>
+                <div class="clr-timeline-step-body">
+                    <span class="clr-timeline-step-title">
+                        @activity.Name
+                    </span>
+                    <span class="clr-timeline-step-description">
+                        <Label>@activity.ActivityType</Label> <clr-icon shape="route" class="small-icon"></clr-icon> @UnitHelper.GetDistanceDescription(activity.Distance) <clr-icon shape="timer" class="small-icon"></clr-icon> @UnitHelper.GetTimeDescription(activity.Duration)
+                    </span>
+                </div>
+            </li>
         }
     </ul>
+
+    <ActivitiesWeekStats />
 }
 
 @code {

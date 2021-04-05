@@ -12,58 +12,55 @@
 {
     <Loading />
 }
+else if (challengeParticipations.Count == 0)
+{
+    <div class="text-center">
+        <p>You are not registered to any challenge!</p>
+        <p>Please go <a href="/challenges/list">Challenges</a> page to join to any challenge from your Strava club.</p>
+    </div>
+}
 else
 {
-    @if (challengeParticipations.Count == 0)
+    @foreach (var participation in challengeParticipations)
     {
-        <div class="text-center">
-            <p>You are not registered to any challenge!</p>
-            <p>Please go <a href="/challenges/list">Challenges</a> page to join to any challenge from your Strava club.</p>
-        </div>
-    }
-    else
-    {
-        @foreach (var participation in challengeParticipations)
-        {
-            <Card Clickable="true" OnClick="() => ShowDetails(participation.ChallengeId)">
-                <CardBody>
-                    <CardBlock>
-                        <div class="clr-row">
-                            <div class="clr-col-md-6 clr-col-12">
-                                <div>Name:</div>
-                                <b>@participation.ChallengeName</b>
-                                <div style="margin-top:10px">Club:</div>
-                                <b>@participation.ClubName</b>
-                                <br />
-                                @if (!string.IsNullOrEmpty(participation.ClubIconUrl))
-                                {
-                                    <CardMediaBlock ImageSource="@participation.ClubIconUrl" />
-                                }
-                            </div>
-                            <div class="clr-col-md-6 clr-col-12">
-                                <div>Current place:</div>
-                                <b>
-                                    @participation.Rank / @participation.ChallengeParticipantsCount
-                                    (@UnitHelper.GetScoreDescription(participation.Score, participation.ScoreUnit))
-                                </b>
-                                <div style="margin-top:10px">Competition type:</div>
-                                <b><ChallengeCompetitionType Type="@participation.CompetitionType" /></b>
-                            </div>
+        <Card Clickable="true" OnClick="() => ShowDetails(participation.ChallengeId)">
+            <CardBody>
+                <CardBlock>
+                    <div class="clr-row">
+                        <div class="clr-col-md-6 clr-col-12">
+                            <div>Name:</div>
+                            <b>@participation.ChallengeName</b>
+                            <div style="margin-top:10px">Club:</div>
+                            <b>@participation.ClubName</b>
+                            <br />
+                            @if (!string.IsNullOrEmpty(participation.ClubIconUrl))
+                            {
+                                <CardMediaBlock ImageSource="@participation.ClubIconUrl" />
+                            }
                         </div>
-                    </CardBlock>
-                </CardBody>
-                <CardFooter>
-                    <ProgressGroup>
-                        <ProgressBar Value="@TimeHelper.GetPercentageProgress(participation.ChallengeStartDate, participation.ChallengeEndDate)"></ProgressBar>
-                        <div class="clr-row" style="font-size: smaller !important;">
-                            <div class="clr-col-3">@participation.ChallengeStartDate.ToString("dd/MM/yyyy")</div>
-                            <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(participation.ChallengeStartDate, participation.ChallengeEndDate)</div>
-                            <div class="clr-col-3 text-right">@participation.ChallengeEndDate.ToString("dd/MM/yyyy")</div>
+                        <div class="clr-col-md-6 clr-col-12">
+                            <div>Current place:</div>
+                            <b>
+                                @participation.Rank / @participation.ChallengeParticipantsCount
+                                (@UnitHelper.GetScoreDescription(participation.Score, participation.ScoreUnit))
+                            </b>
+                            <div style="margin-top:10px">Competition type:</div>
+                            <b><ChallengeCompetitionType Type="@participation.CompetitionType" /></b>
                         </div>
-                    </ProgressGroup>
-                </CardFooter>
-            </Card>
-        }
+                    </div>
+                </CardBlock>
+            </CardBody>
+            <CardFooter>
+                <ProgressGroup>
+                    <ProgressBar Value="@TimeHelper.GetPercentageProgress(participation.ChallengeStartDate, participation.ChallengeEndDate)"></ProgressBar>
+                    <div class="clr-row" style="font-size: smaller !important;">
+                        <div class="clr-col-3">@participation.ChallengeStartDate.ToString("dd/MM/yyyy")</div>
+                        <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(participation.ChallengeStartDate, participation.ChallengeEndDate)</div>
+                        <div class="clr-col-3 text-right">@participation.ChallengeEndDate.ToString("dd/MM/yyyy")</div>
+                    </div>
+                </ProgressGroup>
+            </CardFooter>
+        </Card>
     }
 }
 
