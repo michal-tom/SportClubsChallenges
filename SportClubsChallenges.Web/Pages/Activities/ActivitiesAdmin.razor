@@ -1,3 +1,61 @@
 ﻿@page "/activities/admin"
 
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IActivityService activityService
+
 @attribute [Authorize(Roles = "Admin")]
+
+@if (activities == null)
+{
+    <Loading />
+}
+else
+{
+    <Datagrid TRowData="ActivityDto" Items="activities" RowClass="GetGridRowClass" Placeholder="We couldn't find any activities!" Fixed="FixedMode.All" style="max-height: 100%">
+        <DatagridColumn TRowData="ActivityDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true">
+            <StravaIconLink Name="@context.Name" Url="@StravaHelper.GetActivityUrl(context.Id)" />
+        </DatagridColumn>
+        <DatagridColumn TRowData="ActivityDto" Title="Athlete" Field="c => c.AthleteName" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ActivityDto" Title="Type" Field="c => c.ActivityType" CanSort="true" CanFilter="true" />
+        <DatagridColumn TRowData="ActivityDto" Title="Date" Field="c => c.StartDate" CanSort="true" CanFilter="true">
+            @context.StartDate.ToString("dd/MM/yyyy HH:mm")
+        </DatagridColumn>
+        <DatagridColumn TRowData="ActivityDto" Title="Distance" Field="c => c.Distance" CanSort="true">
+            @UnitHelper.GetDistanceDescription(context.Distance)
+        </DatagridColumn>
+        <DatagridColumn TRowData="ActivityDto" Title="Time" Field="c => c.Duration" CanSort="true" CanFilter="true">
+            @UnitHelper.GetTimeDescription(context.Duration)
+        </DatagridColumn>
+        <DatagridColumn TRowData="ActivityDto" Title="Elevation" Field="c => c.Elevation" CanSort="true" CanFilter="true">
+            @UnitHelper.GetDistanceMetersDescription(context.Elevation)
+        </DatagridColumn>
+        <DatagridFooter TRowData="ActivityDto">
+            <DatagridPagination @ref="Paginator" TRowData="ActivityDto" PageSize="25" PageSizes="new int[] { 5, 10, 25, 50 }" PageSizeLabel="Activities per page">
+                @(Paginator.Pager.StartIndex + 1) - @(Paginator.Pager.EndIndex + 1) of @(Paginator.Pager.ItemCount) activities
+            </DatagridPagination>
+        </DatagridFooter>
+    </Datagrid>
+}
+
+@code {
+    private List<ActivityDto> activities;
+
+    private DatagridPagination<ActivityDto> Paginator;
+
+    protected override async Task OnInitializedAsync()
+    {
+        activities = await activityService.GetAllActivities();
+    }
+
+    private Func<ActivityDto, int, string> GetGridRowClass = (activity, columnNumber) =>
+    {
+        if (activity.IsDeleted)
+        {
+            return "font-italic font-line-through";
+        }
+
+        return string.Empty;
+    };
+}

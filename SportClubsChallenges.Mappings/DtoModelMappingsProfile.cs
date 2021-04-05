@@ -91,6 +91,7 @@
             this.CreateMap<Activity, ActivityDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.AthleteName, opt => opt.MapFrom(src => src.Athlete.FirstName + " " + src.Athlete.LastName))
                 .ForMember(dest => dest.ActivityType, opt => opt.MapFrom(src => (ActivityTypeEnum) src.ActivityTypeId))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.StartDate, cestTimezone).LocalDateTime))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.EndDate, cestTimezone).LocalDateTime))
@@ -99,7 +100,8 @@
                 .ForMember(dest => dest.Elevation, opt => opt.MapFrom(src => src.Elevation))
                 .ForMember(dest => dest.Pace, opt => opt.MapFrom(src => src.Pace))
                 .ForMember(dest => dest.IsManual, opt => opt.MapFrom(src => src.IsManual))
-                .ForMember(dest => dest.IsGps, opt => opt.MapFrom(src => src.IsGps));
+                .ForMember(dest => dest.IsGps, opt => opt.MapFrom(src => src.IsGps))
+                .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted));
 
             this.CreateMap<AthleteStravaToken, StravaToken>()
                 .ForMember(dest => dest.DatabaseId, opt => opt.MapFrom(src => src.Id));

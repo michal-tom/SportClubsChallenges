@@ -6,7 +6,6 @@
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
-    using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Model.Dto;
 
@@ -30,6 +29,11 @@
                 .Take(maxCount == null ? int.MaxValue : maxCount.Value);
 
             return await mapper.ProjectTo<ActivityDto>(activities).ToListAsync();
+        }
+
+        public async Task<List<ActivityDto>> GetAllActivities()
+        {
+            return await mapper.ProjectTo<ActivityDto>(db.Activities.OrderByDescending(p => p.StartDate)).ToListAsync();
         }
     }
 }

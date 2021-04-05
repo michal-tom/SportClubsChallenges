@@ -8,6 +8,8 @@
 
         public string Name { get; set; }
 
+        public string AthleteName { get; set; }
+
         public string ActivityType { get; set; }
 
         public DateTime StartDate { get; set; }
@@ -25,5 +27,7 @@
         public bool IsManual { get; set; }
 
         public bool IsGps { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

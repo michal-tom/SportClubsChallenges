@@ -70,7 +70,7 @@ else
                 </CardHeader>
                 <CardBody>
                     <CardBlock>
-                        <Datagrid RowClass="GetClassificationRowClass" TRowData="ChallengeRankPositionDto" Items="rankList" Placeholder="We couldn't find any participant in this challenge!">
+                        <Datagrid TRowData="ChallengeRankPositionDto" Items="rankList" RowClass="GetClassificationGridRowClass" Placeholder="We couldn't find any participant in this challenge!">
                             <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Rank" Field="c => c.Rank" CanSort="true" CanFilter="true" />
                             <DatagridColumn TRowData="ChallengeRankPositionDto" Title="Athlete" Field="c => c.AthleteName" CanSort="true" CanFilter="true">
                                 <img src="@context.AthleteIconUrl" class="strava-user-icon" />
@@ -144,7 +144,7 @@ else
         rankList = await challengeService.GetChallengeRank(challengeId, athleteId);
     }
 
-    private Func<ChallengeRankPositionDto, int, string> GetClassificationRowClass = (positionDto, columnNumber) =>
+    private Func<ChallengeRankPositionDto, int, string> GetClassificationGridRowClass = (positionDto, columnNumber) =>
     {
         var cssClassName = string.Empty;
 
