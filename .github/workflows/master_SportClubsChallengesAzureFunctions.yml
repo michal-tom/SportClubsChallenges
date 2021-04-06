@@ -26,13 +26,13 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: 'Clean nuget cache'
-      run: dotnet clean ./SportClubsChallenges.sln --configuration Release && dotnet nuget locals all --clear
+      run: dotnet clean ./SportClubsChallenges.sln --configuration ReleaseAzFunc && dotnet nuget locals all --clear
 
     - name: 'Resolve Project Dependencies Using Dotnet'
       shell: pwsh
       run: |
         pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-        dotnet build --configuration Release --output ./output
+        dotnet build --configuration ReleaseAzFunc --output ./output
         popd
 
     - name: 'Run Azure Functions Action'

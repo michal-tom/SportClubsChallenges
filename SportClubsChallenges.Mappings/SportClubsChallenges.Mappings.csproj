@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Configurations>Debug;Release;ReleaseWeb;ReleaseAzFunc</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,8 +12,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SportClubsChallenges.Database\SportClubsChallenges.Database.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Model\SportClubsChallenges.Model.csproj" />
-    <ProjectReference Include="..\SportClubsChallenges.Strava\SportClubsChallenges.Strava.csproj" />
-    <ProjectReference Include="..\Strava.NET\Strava.NET.csproj" />
   </ItemGroup>
 
 </Project>

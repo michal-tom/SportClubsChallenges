@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>1.0.1</Version>
+    <Configurations>Debug;Release;ReleaseWeb;ReleaseAzFunc</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +29,6 @@
     <ProjectReference Include="..\SportClubsChallenges.Mappings\SportClubsChallenges.Mappings.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Model\SportClubsChallenges.Model.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Services\SportClubsChallenges.Domain.csproj" />
-    <ProjectReference Include="..\SportClubsChallenges.Strava\SportClubsChallenges.Strava.csproj" />
   </ItemGroup>
 
   <ItemGroup>

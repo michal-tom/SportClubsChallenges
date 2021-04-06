@@ -22,13 +22,13 @@ jobs:
         dotnet-version: '3.1.301'
         
     - name: 'Clean nuget cache'
-      run: dotnet clean ./SportClubsChallenges.sln --configuration Release && dotnet nuget locals all --clear
+      run: dotnet clean ./SportClubsChallenges.sln --configuration ReleaseWeb && dotnet nuget locals all --clear
 
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build --configuration ReleaseWeb
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish -c ReleaseWeb -o ${{env.DOTNET_ROOT}}/myapp
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2

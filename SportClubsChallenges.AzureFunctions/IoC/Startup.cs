@@ -3,7 +3,6 @@
 [assembly: FunctionsStartup(typeof(SportClubsChallenges.AzureFunctions.IoC.Startup))]
 namespace SportClubsChallenges.AzureFunctions.IoC
 {
-    using AutoMapper;
     using Microsoft.Azure.Functions.Extensions.DependencyInjection;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;

@@ -1,4 +1,4 @@
-﻿namespace SportClubsChallenges.Mappings
+﻿namespace SportClubsChallenges.Strava
 {
     using System;
     using System.Globalization;
