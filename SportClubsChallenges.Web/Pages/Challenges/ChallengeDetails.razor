@@ -177,7 +177,7 @@ else
     {
         await challengeService.LeaveChallenge(this.athleteId, challengeId);
 
-        this.Layout.alertWrapper.AddAlert($"You leave '{challengeName}' challenge!");
+        this.Layout.alertWrapper.ShowAlert($"You leave '{challengeName}' challenge!");
 
         await this.LoadData(challengeId);
         this.StateHasChanged();
@@ -194,7 +194,7 @@ else
     {
         await challengeService.JoinChallenge(this.athleteId, challengeId);
 
-        this.Layout.alertWrapper.AddAlert($"You successfully join to '{challengeName}' challenge!");
+        this.Layout.alertWrapper.ShowAlert($"You successfully join to '{challengeName}' challenge!");
 
         await this.LoadData(challengeId);
         this.StateHasChanged();
@@ -211,6 +211,6 @@ else
     {
         await challengeService.UpdateChallengeRank(challengeId);
 
-        this.Layout.alertWrapper.AddAlert($"Update job triggered, classification should be updated soon.");
+        this.Layout.alertWrapper.ShowAlert($"Update job triggered, classification should be updated soon.");
     }
 }

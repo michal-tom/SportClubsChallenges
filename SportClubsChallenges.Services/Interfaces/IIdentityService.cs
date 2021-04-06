@@ -7,6 +7,8 @@
     {
         long GetAthleteIdFromIdentity(ClaimsIdentity identity);
 
+        bool ShouldShowInitialAlert(ClaimsIdentity identity);
+
         void UpdateIdentity(ClaimsIdentity identity, Athlete athlete);
 
         void UpdateAthleteDataFromIdentity(ClaimsIdentity identity, Athlete athlete);

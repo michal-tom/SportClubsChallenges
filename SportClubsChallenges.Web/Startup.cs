@@ -1,7 +1,9 @@
 namespace SportClubsChallenges.Web
 {
     using System.Security.Claims;
+    using System.Threading.Tasks;
     using AspNet.Security.OAuth.Strava;
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -9,6 +11,7 @@ namespace SportClubsChallenges.Web
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Blazored.LocalStorage;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Domain.Services;
@@ -41,24 +44,15 @@ namespace SportClubsChallenges.Web
                 options.Scope.Add("activity:read_all");
                 options.Scope.Add("profile:read_all");
                 options.SaveTokens = true;
-
-                options.Events.OnTicketReceived = async ctx =>
-                {
-                    var user = (ClaimsIdentity) ctx.Principal.Identity;
-                    if (user.IsAuthenticated)
-                    {
-                        var athleteService = ctx.HttpContext.RequestServices.GetService<IAthleteService>();
-                        await athleteService.OnAthleteLogin(user, ctx.Properties);
-                    }
-
-                    return;
-                };
+                options.Events.OnTicketReceived += SignUpUser;
             });
 
             services.AddHttpContextAccessor();
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddBlazoredLocalStorage();
 
             services.AddAutoMapper(typeof(DtoModelMappingsProfile));
 
@@ -100,6 +94,18 @@ namespace SportClubsChallenges.Web
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+        }
+
+        private async Task SignUpUser(TicketReceivedContext ticketReceivedContext)
+        {
+            var user = (ClaimsIdentity) ticketReceivedContext.Principal.Identity;
+            if (user.IsAuthenticated)
+            {
+                var athleteService = ticketReceivedContext.HttpContext.RequestServices.GetService<IAthleteService>();
+                await athleteService.OnAthleteLogin(user, ticketReceivedContext.Properties);
+            }
+
+            return;
         }
     }
 }

@@ -5,8 +5,6 @@
 
     public class OverallStatsDto
     {
-        public DateTimeOffset? FirstActivityDateTime { get; set; }
-
         public byte? PreferedActivityTypeId { get; set; }
 
         public ActivityTypeEnum? PreferedActivityType => (ActivityTypeEnum?) this.PreferedActivityTypeId;

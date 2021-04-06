@@ -35,6 +35,9 @@
 
         public long AthleteStravaTokenId { get; set; }
 
+        [NotMapped]
+        public bool IsNewUser { get; set; }
+
         #region References
 
         public virtual AthleteStravaToken AthleteStravaToken { get; set; }

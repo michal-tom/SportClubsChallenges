@@ -11,110 +11,118 @@
 
 @attribute [Authorize]
 
-    @if (athlete == null)
-    {
-        <Loading />
-    }
-    else
-    {
-        <div class="clr-row">
-            <div class="clr-col-md-4 clr-col-12">
-                <Card>
-                    <CardHeader>
-                        <clr-icon shape="info-standard"></clr-icon>
-                        <span>General info</span>
-                    </CardHeader>
-                    <CardBody>
-                        <CardBlock>
-                            <CardMediaBlock ImageSource="@athlete.AvatarUrl" AlternateText="Strava avatar">
-                                <DescriptionTitle><h4>@athlete.Name</h4></DescriptionTitle>
-                            </CardMediaBlock>
-                            <CardText>City: @athlete.City</CardText>
-                            <CardText>Country: @athlete.Country</CardText>
-                            <CardText>Gender: @athlete.GenderDescription</CardText>
-                            <CardText>First login date: @athlete.FirstLoginDate.ToString("dd/MM/yyyy HH:mm")</CardText>
-                            <CardText>Last login date: @athlete.LastLoginDate.ToString("dd/MM/yyyy HH:mm")</CardText>
-                        </CardBlock>
-                    </CardBody>
-                    <CardFooter>
-                        <Button Flat="true" Small="true" OnClick="() => ShowActivities()">Activities</Button>
-                        <Button Flat="true" Small="true" OnClick="() => ShowChallenges()">Challenges</Button>
-                    </CardFooter>
-                </Card>
-            </div>
-            <div class="clr-col-md-4 clr-col-12">
-                <Card>
-                    <CardHeader>
-                        <clr-icon shape="id-badge"></clr-icon>
-                        <span>Clubs</span>
-                        <Badge Status="Status.Info">@clubs?.Count</Badge>
-                    </CardHeader>
-                    <CardBody>
-                        <CardBlock>
-                            @if (clubs.Count == 0)
+@if (athlete == null)
+{
+    <Loading />
+}
+else
+{
+    <div class="clr-row">
+        <div class="clr-col-md-4 clr-col-12">
+            <Card>
+                <CardHeader>
+                    <clr-icon shape="info-standard"></clr-icon>
+                    <span>General info</span>
+                </CardHeader>
+                <CardBody>
+                    <CardBlock>
+                        <CardMediaBlock ImageSource="@athlete.AvatarUrl" AlternateText="Strava avatar">
+                            <DescriptionTitle><h4>@athlete.Name</h4></DescriptionTitle>
+                        </CardMediaBlock>
+                        <CardText>City: @athlete.City</CardText>
+                        <CardText>Country: @athlete.Country</CardText>
+                        <CardText>Gender: @athlete.GenderDescription</CardText>
+                        <CardText>First login: @athlete.FirstLoginDate.ToString("dd/MM/yyyy HH:mm")</CardText>
+                        <CardText>Last login: @athlete.LastLoginDate.ToString("dd/MM/yyyy HH:mm")</CardText>
+                    </CardBlock>
+                </CardBody>
+                <CardFooter>
+                    <Button Flat="true" Small="true" OnClick="() => ShowActivities()">Activities</Button>
+                    <Button Flat="true" Small="true" OnClick="() => ShowChallenges()">Challenges</Button>
+                </CardFooter>
+            </Card>
+        </div>
+        <div class="clr-col-md-4 clr-col-12">
+            <Card>
+                <CardHeader>
+                    <clr-icon shape="id-badge"></clr-icon>
+                    <span>Clubs</span>
+                    <Badge Status="Status.Info">@clubs?.Count</Badge>
+                </CardHeader>
+                <CardBody>
+                    <CardBlock>
+                        @if (clubs.Count == 0)
+                        {
+                            <div class="text-center">
+                                <p>You are not a member of any Strava club or your data has not been imported from Strava yet.</p>
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var club in clubs)
                             {
-                                <div class="text-center">
-                                    <p>You are not member of any Strava club or data wasn't imported from Strava yet.</p>
-                                </div>
+                                <Card Clickable="true" OnClick="() => ShowClubDetails(club.Id)">
+                                    <CardBody>
+                                        <CardBlock>
+                                            <CardMediaBlock ImageSource="@club.IconUrl" AlternateText="Club logo">
+                                                <DescriptionTitle><h4>@club.Name</h4></DescriptionTitle>
+                                            </CardMediaBlock>
+                                            <CardText>Sport: <ClubSportType Type="@club.SportType" /></CardText>
+                                            <CardText>Members count: <Badge Status="Status.Info">@club.MembersCount</Badge></CardText>
+                                            @if (club.ActiveChallengesCount > 0 || club.InactiveChallengesCount > 0)
+                                            {
+                                                <CardText>
+                                                    Challenges:
+                                                    @if (club.ActiveChallengesCount > 0)
+                                                    {
+                                                        <Badge Status="Status.Success">@club.ActiveChallengesCount</Badge>
+                                                    }
+                                                    @if (club.InactiveChallengesCount > 0)
+                                                    {
+                                                        <Badge>@club.InactiveChallengesCount</Badge>
+                                                    }
+                                                </CardText>
+                                            }
+                                        </CardBlock>
+                                    </CardBody>
+                                </Card>
+                            }
+                        }
+                    </CardBlock>
+                </CardBody>
+            </Card>
+        </div>
+        <div class="clr-col-md-4 clr-col-12">
+            <Card>
+                <CardHeader>
+                    <clr-icon shape="bar-chart"></clr-icon>
+                    <span>Stats</span>
+                </CardHeader>
+                <CardBody>
+                    <CardBlock>
+                        <CardText>Last data sync: @(athlete.LastSyncDate?.ToString("dd/MM/yyyy HH:mm") ?? "N/A") <a role="button"><clr-icon shape="refresh" @onclick="ConfirmSync"></clr-icon></a></CardText>
+                        <CardText>Favorite activity: 
+                            @if (stats.PreferedActivityType == null)
+                            {
+                                @("N/A")
                             }
                             else
                             {
-                                @foreach (var club in clubs)
-                                {
-                                    <Card Clickable="true" OnClick="() => ShowClubDetails(club.Id)">
-                                        <CardBody>
-                                            <CardBlock>
-                                                <CardMediaBlock ImageSource="@club.IconUrl" AlternateText="Club logo">
-                                                    <DescriptionTitle><h4>@club.Name</h4></DescriptionTitle>
-                                                </CardMediaBlock>
-                                                <CardText>Sport: <ClubSportType Type="@club.SportType" /></CardText>
-                                                <CardText>Members count: <Badge Status="Status.Info">@club.MembersCount</Badge></CardText>
-                                                @if (club.ActiveChallengesCount > 0 || club.InactiveChallengesCount > 0)
-                                                {
-                                                    <CardText>
-                                                        Challenges:
-                                                        @if (club.ActiveChallengesCount > 0)
-                                                        {
-                                                            <Badge Status="Status.Success">@club.ActiveChallengesCount</Badge>
-                                                        }
-                                                        @if (club.InactiveChallengesCount > 0)
-                                                        {
-                                                            <Badge>@club.InactiveChallengesCount</Badge>
-                                                        }
-                                                    </CardText>
-                                                }
-                                            </CardBlock>
-                                        </CardBody>
-                                    </Card>
-                                }
+                                <Label>@stats.PreferedActivityType.ToString()</Label>
                             }
-                        </CardBlock>
-                    </CardBody>
-                </Card>
-            </div>
-            <div class="clr-col-md-4 clr-col-12">
-                <Card>
-                    <CardHeader>
-                        <clr-icon shape="bar-chart"></clr-icon>
-                        <span>Stats</span>
-                    </CardHeader>
-                    <CardBody>
-                        <CardBlock>
-                            <CardText>First imported activity date: @(stats.FirstActivityDateTime?.Date.ToString("dd/MM/yyyy") ?? "N/A")</CardText>
-                            <CardText>Last activities sync date: @(athlete.LastSyncDate?.ToString("dd/MM/yyyy") ?? "N/A") <a role="button"><clr-icon shape="refresh" @onclick="ConfirmSync"></clr-icon></a></CardText>
-                            <CardText>Favorite activity type: @(stats.PreferedActivityType?.ToString() ?? "N/A")</CardText>
-                            <Tabs>
-                                <StatsTab Title="Total" Stats="@stats.TotalStats" />
-                                <StatsTab Title="Year" Stats="@stats.YearStats" />
-                                <StatsTab Title="Month" Stats="@stats.MonthStats" />
-                                <StatsTab Title="Week" Stats="@stats.WeekStats" />
-                            </Tabs>
-                        </CardBlock>
-                    </CardBody>
-                </Card>
-            </div>
+                        </CardText>
+                        <Tabs>
+                            <StatsTab Title="Total" Stats="@stats.TotalStats" />
+                            <StatsTab Title="Year" Stats="@stats.YearStats" />
+                            <StatsTab Title="Month" Stats="@stats.MonthStats" />
+                            <StatsTab Title="Week" Stats="@stats.WeekStats" />
+                        </Tabs>
+                    </CardBlock>
+                </CardBody>
+            </Card>
         </div>
-    }
+    </div>
+}
 
 @code {
     private AthleteDto athlete;
@@ -162,6 +170,6 @@
     {
         await athleteService.QueueUpdateAthleteDataFromStrava(this.athlete.Id);
 
-        this.Layout.alertWrapper.AddAlert($"Sync job triggered, activities should be updated soon.");
+        this.Layout.alertWrapper.ShowAlert($"Sync job triggered, activities should be updated soon.");
     }
 }

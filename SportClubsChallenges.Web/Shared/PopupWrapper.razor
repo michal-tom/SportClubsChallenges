@@ -16,6 +16,8 @@
         popup = new Popup {
             Title = "Confirmation",
             Body = text,
+            OkButtonTitle = "Yes",
+            CancelButtonTitle = "No",
             OnOkClick = new EventCallback<MouseEventArgs>(null, confirmDelegate)
         };
 
@@ -27,8 +29,10 @@
         builder.OpenComponent(0, typeof(PopupWindow));
         builder.AddAttribute(1, nameof(PopupWindow.Title), p.Title);
         builder.AddAttribute(2, nameof(PopupWindow.Body), p.Body);
-        builder.AddAttribute(3, nameof(PopupWindow.OnOkEvent), p.OnOkClick);
-        builder.AddAttribute(4, nameof(PopupWindow.WindowOpened), true);
+        builder.AddAttribute(3, nameof(PopupWindow.OkButtonTitle), p.OkButtonTitle);
+        builder.AddAttribute(4, nameof(PopupWindow.CancelButtonTitle), p.CancelButtonTitle);
+        builder.AddAttribute(5, nameof(PopupWindow.OnOkEvent), p.OnOkClick);
+        builder.AddAttribute(6, nameof(PopupWindow.WindowOpened), true);
 
         builder.CloseComponent();
     };
@@ -38,6 +42,10 @@
         public string Title { get; set; }
 
         public string Body { get; set; }
+
+        public string OkButtonTitle { get; set; }
+
+        public string CancelButtonTitle { get; set; }
 
         public EventCallback<MouseEventArgs> OnOkClick { get; set; }
     }

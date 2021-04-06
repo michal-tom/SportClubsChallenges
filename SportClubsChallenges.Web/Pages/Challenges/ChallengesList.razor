@@ -81,7 +81,7 @@ else
     {
         await challengeService.LeaveChallenge(this.athleteId, challengeId);
 
-        this.Layout.alertWrapper.AddAlert($"You leave '{challengeName}' challenge!");
+        this.Layout.alertWrapper.ShowAlert($"You leave '{challengeName}' challenge!");
 
         await LoadChallenges();
         this.StateHasChanged();
@@ -98,7 +98,7 @@ else
     {
         await challengeService.JoinChallenge(this.athleteId, challengeId);
 
-        this.Layout.alertWrapper.AddAlert($"You successfully join to '{challengeName}' challenge!");
+        this.Layout.alertWrapper.ShowAlert($"You successfully join to '{challengeName}' challenge!");
 
         await LoadChallenges();
         this.StateHasChanged();

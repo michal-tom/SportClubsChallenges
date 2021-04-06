@@ -56,13 +56,11 @@
 
             this.identityService.UpdateIdentity(identity, athlete);
 
-            if (athlete.LastLoginDate != athlete.FirstLoginDate)
+            if (athlete.IsNewUser)
             {
-                return;
+                // get clubs and activities from Strava during first login to app
+                await this.QueueUpdateAthleteDataFromStrava(athleteId);
             }
-
-            // get clubs and activities from Strava during first login to app
-            await this.QueueUpdateAthleteDataFromStrava(athleteId);
         }
 
         public async Task<List<AthleteDto>> GetAllAthletes()
@@ -96,7 +94,6 @@
                 YearStats = this.GetPeriodStats(activities, new DateTimeOffset(DateTimeOffset.Now.Year, 1, 1, 0, 0, 0, TimeSpan.Zero)),
                 MonthStats = this.GetPeriodStats(activities, new DateTimeOffset(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month, 1, 0, 0, 0, TimeSpan.Zero)),
                 WeekStats = this.GetPeriodStats(activities, new DateTimeOffset(TimeHelper.GetStartOfCurrentWeek())),
-                FirstActivityDateTime = activities.OrderBy(p => p.StartDate.Ticks).FirstOrDefault()?.StartDate,
                 PreferedActivityTypeId = activities.GroupBy(p => p.ActivityTypeId).OrderByDescending(group => group.Count()).FirstOrDefault()?.Key ?? null
             };
         }
@@ -123,9 +120,10 @@
             var athlete = this.db.Athletes.Include(p => p.AthleteStravaToken).FirstOrDefault(p => p.Id == athleteId);
             if (athlete == null)
             {
-                athlete = new Athlete { 
-                    Id = athleteId, 
-                    FirstLoginDate = currentDateTime, 
+                athlete = new Athlete {
+                    Id = athleteId,
+                    FirstLoginDate = currentDateTime,
+                    IsNewUser = true,
                     AthleteStravaToken = new AthleteStravaToken()
                 };
                 this.db.Athletes.Add(athlete);

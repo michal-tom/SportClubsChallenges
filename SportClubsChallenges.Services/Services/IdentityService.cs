@@ -24,6 +24,17 @@
             return athleteId;
         }
 
+        public bool ShouldShowInitialAlert(ClaimsIdentity identity)
+        {
+            if (identity == null)
+            {
+                return false;
+            }
+
+            var persistentClaimValue = GetClaimValueFromIdentity(identity, ClaimTypes.IsPersistent);
+            return !string.IsNullOrEmpty(persistentClaimValue) && persistentClaimValue == "true";
+        }
+
         public void UpdateIdentity(ClaimsIdentity identity, Athlete athlete)
         {
             if (!identity.HasClaim(p => p.Type == ClaimTypes.Name))
@@ -34,6 +45,11 @@
             if (athlete.IsAdmin)
             {
                 identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
+            }
+
+            if (athlete.IsNewUser)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.IsPersistent, "true"));
             }
         }
 

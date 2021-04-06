@@ -1,12 +1,14 @@
 ﻿<Alert Type="@Type">
-    <AlertItem>
-        <AlertText>@Text</AlertText>
-    </AlertItem>
+    @foreach (var message in Messages) {
+        <AlertItem>
+            <AlertText>@message</AlertText>
+        </AlertItem>
+    }
 </Alert>
 
 @code{
     [Parameter]
-    public string Text { get; set; }
+    public List<string> Messages { get; set; }
 
     [Parameter]
     public AlertType Type { get; set; }

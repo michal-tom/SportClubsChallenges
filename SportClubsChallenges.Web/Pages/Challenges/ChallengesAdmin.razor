@@ -61,7 +61,7 @@ else
     {
         await challengeService.DeleteChallenge(id);
 
-        this.Layout.alertWrapper.AddAlert($"Challenge '{challengeName}' was successfully removed!");
+        this.Layout.alertWrapper.ShowAlert($"Challenge '{challengeName}' was successfully removed!");
 
         await LoadChallenges();
         this.StateHasChanged();

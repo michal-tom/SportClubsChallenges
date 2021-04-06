@@ -1,6 +1,12 @@
 ﻿@page "/"
 
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
 @inject NavigationManager navigationManager
+@inject ILocalStorageService localStoreService
 
 @attribute [Authorize]
 
@@ -50,7 +56,30 @@
 </div>
 
 @code {
-    protected void ShowActivities()
+    private readonly string showedInitialAlertLocalStorageKey = "showedInitialAlert";
+
+    [CascadingParameter]
+    public MainLayout Layout { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var user = httpContextAccessor.HttpContext.User;
+        var showInitialAlert = identityService.ShouldShowInitialAlert(user.Identity as ClaimsIdentity);
+
+        if (!showInitialAlert)
+        {
+            return;
+        }
+
+        var alreadyShowedInitialAlert = await localStoreService.GetItemAsync<string>(showedInitialAlertLocalStorageKey);
+        if (string.IsNullOrEmpty(alreadyShowedInitialAlert) || alreadyShowedInitialAlert != "true")
+        {
+            this.Layout.alertWrapper.ShowInitialAlert();
+            await localStoreService.SetItemAsync(showedInitialAlertLocalStorageKey, "true");
+        }
+    }
+
+    private void ShowActivities()
     {
         navigationManager.NavigateTo("/activities/list");
     }

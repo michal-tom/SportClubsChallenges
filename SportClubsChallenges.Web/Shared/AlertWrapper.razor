@@ -8,23 +8,38 @@
 @code {
     private List<Alert> alerts = new List<Alert>();
 
-    public void AddAlert(string text, AlertType type = AlertType.Info)
+    public void ShowAlert(string message, AlertType type = AlertType.Info)
     {
-        alerts.Add(new Alert { Text = text, Type = type });
+        alerts.Add(new Alert { Messages = new List<string> { message }, Type = type });
         StateHasChanged();
+    }
+
+    public void ShowMultilineAlert(List<string> messages, AlertType type = AlertType.Info)
+    {
+        alerts.Add(new Alert { Messages = messages, Type = type });
+        StateHasChanged();
+    }
+
+    public void ShowInitialAlert()
+    {
+        var messages = new List<string> {
+            "Welcome in Sport Clubs Challenges website!",
+            "Your data from Strava should be imported soon, please just wait a few more seconds.",
+            "When your data will be ready, you can sign up to challenge(s) created for your Strava club(s)."};
+        this.ShowMultilineAlert(messages, AlertType.Info);
     }
 
     private RenderFragment RenderAlert(Alert alert) => builder =>
     {
         builder.OpenComponent(0, typeof(AlertMessage));
-        builder.AddAttribute(1, nameof(AlertMessage.Text), alert.Text);
+        builder.AddAttribute(1, nameof(AlertMessage.Messages), alert.Messages);
         builder.AddAttribute(2, nameof(AlertMessage.Type), alert.Type);
         builder.CloseComponent();
     };
 
     private class Alert
     {
-        public string Text { get; set; }
+        public List<string> Messages { get; set; }
 
         public AlertType Type { get; set; }
     }

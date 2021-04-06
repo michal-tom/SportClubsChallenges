@@ -2,8 +2,8 @@
     <ModalTitle>@Title</ModalTitle>
     <ModalBody><p>@Body</p></ModalBody>
     <ModalFooter>
-        <Button Variant="Outline" OnClick="OnCancelClick">Cancel</Button>
-        <Button Variant="Primary" OnClick="OnOkClick">OK</Button>
+        <Button Variant="Primary" OnClick="OnOkClick">@OkButtonTitle</Button>
+        <Button Variant="Outline" OnClick="OnCancelClick">@CancelButtonTitle</Button>
     </ModalFooter>
 </Modal>
 
@@ -16,6 +16,12 @@
 
     [Parameter]
     public string Body { get; set; }
+
+    [Parameter]
+    public string OkButtonTitle { get; set; }
+
+    [Parameter]
+    public string CancelButtonTitle { get; set; }
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnOkEvent { get; set; }
