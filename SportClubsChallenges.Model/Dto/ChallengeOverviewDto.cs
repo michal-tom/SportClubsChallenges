@@ -1,6 +1,7 @@
 ﻿namespace SportClubsChallenges.Model.Dto
 {
     using System;
+    using SportClubsChallenges.Utils.Enums;
 
     public class ChallengeOverviewDto
     {
@@ -25,5 +26,10 @@
         public int ParticipantsCount { get; set; }
 
         public bool IsAthleteRegistred { get; set; }
+
+        public ChallengeStatusEnum Status => 
+            this.StartDate.Date > DateTime.Now.Date ? ChallengeStatusEnum.Upcoming :
+            this.EndDate.Date < DateTime.Now.Date ? ChallengeStatusEnum.Finished :
+            !this.IsActive ? ChallengeStatusEnum.Inactive : ChallengeStatusEnum.Active;
     }
 }
