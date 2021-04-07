@@ -33,9 +33,9 @@ else
 
                         <Textarea @bind-Value="challenge.Description" Label="Description" HelpText="Enter challenge description" ValidationFor="() => challenge.Description" />
 
-                        <Datepicker @bind-Value="challenge.StartDate" Label="Entry Date" HelpText="Pick a start date of challenge" ValidationFor="() => challenge.StartDate" />
+                        <Datepicker @bind-Value="challenge.StartDate" Label="Entry Date" DateFormat="dd/MM/yyyy" HelpText="Pick a start date of challenge" ValidationFor="() => challenge.StartDate" />
 
-                        <Datepicker @bind-Value="challenge.EndDate" Label="Entry Date" HelpText="Pick a end date of challenge" ValidationFor="() => challenge.EndDate" />
+                        <Datepicker @bind-Value="challenge.EndDate" Label="Entry Date" DateFormat="dd/MM/yyyy" HelpText="Pick a end date of challenge" ValidationFor="() => challenge.EndDate" />
 
                         <CheckboxContainer Label="Active">
                             <Checkbox @bind-Value="@challenge.IsActive" />

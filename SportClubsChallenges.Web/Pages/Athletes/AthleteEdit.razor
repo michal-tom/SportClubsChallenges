@@ -34,11 +34,11 @@ else
 
                          <Text @bind-Value="athlete.Gender" Label="Gender" HelpText="Enter athlete gender" ValidationFor="() => athlete.Gender" Disabled="true" />
 
-                         <Datepicker @bind-Value="athlete.FirstLoginDate" Label="First login date" HelpText="Pick a first login date" ValidationFor="() => athlete.FirstLoginDate" />
+                         <Datepicker @bind-Value="athlete.FirstLoginDate" Label="First login date" DateFormat="dd/MM/yyyy" HelpText="Pick a first login date" ValidationFor="() => athlete.FirstLoginDate" />
 
-                         <Datepicker @bind-Value="athlete.LastLoginDate" Label="Last login date" HelpText="Pick a last login date" ValidationFor="() => athlete.LastLoginDate" />
+                         <Datepicker @bind-Value="athlete.LastLoginDate" Label="Last login date" DateFormat="dd/MM/yyyy" HelpText="Pick a last login date" ValidationFor="() => athlete.LastLoginDate" />
 
-                         <Datepicker @bind-Value="athlete.LastSyncDate" Label="Last sync date" HelpText="Pick a last sync date" ValidationFor="() => athlete.LastSyncDate" />
+                         <Datepicker @bind-Value="athlete.LastSyncDate" Label="Last sync date" DateFormat="dd/MM/yyyy" HelpText="Pick a last sync date" ValidationFor="() => athlete.LastSyncDate" />
 
                          <CheckboxContainer Label="Is Admin">
                              <Checkbox @bind-Value="@athlete.IsAdmin" />
