@@ -2,6 +2,7 @@
 
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
+@using SportClubsChallenges.Utils.Enums;
 
 @inject IChallengeService challengeService
 @inject IIdentityService identityService
@@ -116,9 +117,17 @@ else
     [CascadingParameter]
     public MainLayout Layout { get; set; }
 
-    private bool IsJoinButtonDisabled => challengeDetails == null || !challengeDetails.IsActive || rankList == null || rankList.Any(p => p.AthleteId == athleteId);
+    private bool IsJoinButtonDisabled => challengeDetails == null
+        || challengeDetails.Status == ChallengeStatusEnum.Finished
+        || challengeDetails.Status == ChallengeStatusEnum.Inactive
+        || rankList == null
+        || rankList.Any(p => p.AthleteId == athleteId);
 
-    private bool IsLeaveButtonDisabled => challengeDetails == null || !challengeDetails.IsActive || rankList == null || !rankList.Any(p => p.AthleteId == athleteId);
+    private bool IsLeaveButtonDisabled => challengeDetails == null
+        || challengeDetails.Status == ChallengeStatusEnum.Finished
+        || challengeDetails.Status == ChallengeStatusEnum.Inactive
+        || rankList == null
+        || !rankList.Any(p => p.AthleteId == athleteId);
 
     protected override async Task OnInitializedAsync()
     {

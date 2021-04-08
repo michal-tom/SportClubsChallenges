@@ -24,13 +24,17 @@ else
     @foreach (var participation in challengeParticipations)
     {
         <Card Clickable="true" OnClick="() => ShowDetails(participation.ChallengeId)">
+            <CardHeader>
+                @participation.ChallengeName
+                <div class="float-right">
+                    <ChallengeStatus Status="@participation.ChallengeStatus.ToString()" />
+                </div>
+            </CardHeader>
             <CardBody>
                 <CardBlock>
                     <div class="clr-row">
                         <div class="clr-col-md-6 clr-col-12">
-                            <div>Name:</div>
-                            <b>@participation.ChallengeName</b>
-                            <div style="margin-top:10px">Club:</div>
+                            <div>Club:</div>
                             <b>@participation.ClubName</b>
                             <br />
                             @if (!string.IsNullOrEmpty(participation.ClubIconUrl))
@@ -66,17 +70,17 @@ else
 
 @code {
 
-    List<ChallengeParticipationDto> challengeParticipations;
+    private List<ChallengeParticipationDto> challengeParticipations;
 
     protected override async Task OnInitializedAsync()
     {
         var user = httpContextAccessor.HttpContext.User;
         var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
-        challengeParticipations = await challengeService.GetChallengeParticipations(athleteId);
+        challengeParticipations = await challengeService.GetActiveChallengeParticipations(athleteId);
     }
 
-    protected void ShowDetails(long id)
+    private void ShowDetails(long id)
     {
         navigationManager.NavigateTo($"/challenges/details/{id}");
     }

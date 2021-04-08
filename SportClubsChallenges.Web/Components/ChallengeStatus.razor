@@ -1,0 +1,26 @@
+﻿@using SportClubsChallenges.Utils.Enums;
+
+<Label Status="@LabelStatus">@Status</Label>
+
+@code {
+    [Parameter]
+    public string Status { get; set; }
+
+    private Blazority.Status LabelStatus { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (this.Status.ToLower() == ChallengeStatusEnum.Active.ToString().ToLower())
+        {
+            this.LabelStatus = Blazority.Status.Success;
+        }
+        else if (this.Status.ToLower() == ChallengeStatusEnum.Upcoming.ToString().ToLower())
+        {
+            this.LabelStatus = Blazority.Status.Info;
+        }
+        else
+        {
+            this.LabelStatus = Blazority.Status.Warning;
+        }
+    }
+}

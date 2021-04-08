@@ -53,10 +53,10 @@
             return challengesOverview;
         }
 
-        public async Task<List<ChallengeParticipationDto>> GetChallengeParticipations(long athleteId)
+        public async Task<List<ChallengeParticipationDto>> GetActiveChallengeParticipations(long athleteId)
         {
             var challengeParticipations = db.ChallengeParticipants
-                .Where(p => p.AthleteId == athleteId)
+                .Where(p => p.AthleteId == athleteId && p.Challenge.IsActive)
                 .OrderByDescending(p => p.RegistrationDate);
 
             return await mapper.ProjectTo<ChallengeParticipationDto>(challengeParticipations).ToListAsync();

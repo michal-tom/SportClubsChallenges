@@ -31,6 +31,11 @@
 
         public int Score { get; set; }
 
+        public ChallengeStatusEnum ChallengeStatus =>
+            this.ChallengeStartDate.Date > DateTime.Now.Date ? ChallengeStatusEnum.Upcoming :
+            this.ChallengeEndDate.Date < DateTime.Now.Date ? ChallengeStatusEnum.Finished :
+            !this.IsChallengeActive ? ChallengeStatusEnum.Inactive : ChallengeStatusEnum.Active;
+
         public ChallengeScoreUnit ScoreUnit => EnumsHelper.GetEnumAttribute<UnitAttribute>((ChallengeCompetitionTypeEnum) this.ChallengeCompetitionType).Unit;
     }
 }
