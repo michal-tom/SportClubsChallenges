@@ -60,7 +60,7 @@
             // get all athletes from active challenges
             var athlethsInActiveChallenges = await this.db.Athletes
                 .Include(p => p.AthleteStravaToken)
-                .Where(p => p.ChallengeParticipants.Any(c => c.Challenge.IsActive))
+                .Where(p => p.IsAdmin || p.ChallengeParticipants.Any(c => c.Challenge.IsActive))
                 .ToListAsync();
 
             foreach (var athlete in athlethsInActiveChallenges)
