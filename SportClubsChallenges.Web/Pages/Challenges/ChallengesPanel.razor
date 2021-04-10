@@ -48,7 +48,7 @@ else
                                 @participation.Rank / @participation.ChallengeParticipantsCount
                                 (@UnitHelper.GetScoreDescription(participation.Score, participation.ScoreUnit))
                             </b>
-                            <div style="margin-top:10px">Competition type:</div>
+                            <div class="card-block-section-margin-top">Competition type:</div>
                             <b><ChallengeCompetitionType Type="@participation.CompetitionType" /></b>
                         </div>
                     </div>
@@ -57,7 +57,7 @@ else
             <CardFooter>
                 <ProgressGroup>
                     <ProgressBar Value="@TimeHelper.GetPercentageProgress(participation.ChallengeStartDate, participation.ChallengeEndDate)"></ProgressBar>
-                    <div class="clr-row" style="font-size: smaller !important;">
+                    <div class="clr-row font-size-smaller">
                         <div class="clr-col-3">@participation.ChallengeStartDate.ToString("dd/MM/yyyy")</div>
                         <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(participation.ChallengeStartDate, participation.ChallengeEndDate)</div>
                         <div class="clr-col-3 text-right">@participation.ChallengeEndDate.ToString("dd/MM/yyyy")</div>

@@ -17,7 +17,7 @@
 }
 else
 {
-    <Datagrid TRowData="ChallengeOverviewDto" Items="challenges" GroupBy="u => u.Status" Placeholder="We couldn't find any challenges!" Fixed="FixedMode.All" style="max-height: 100%">
+    <Datagrid TRowData="ChallengeOverviewDto" Items="challenges" GroupBy="u => u.Status" Placeholder="We couldn't find any challenges!" Fixed="FixedMode.All" style="max-height: 100%;">
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Name" Field="c => c.Name" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="ClubName" Field="c => c.ClubName" CanSort="true" CanFilter="true" />
         <DatagridColumn TRowData="ChallengeOverviewDto" Title="Date Range">

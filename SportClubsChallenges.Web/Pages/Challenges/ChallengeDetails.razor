@@ -29,23 +29,23 @@ else
                         <b>@challengeDetails.Name</b>
                         @if (!string.IsNullOrEmpty(challengeDetails.Description))
                         {
-                            <div style="margin-top:10px">Description:</div>
+                            <div class="card-block-section-margin-top">Description:</div>
                             <b>@challengeDetails.Description</b>
                         }
-                        <div style="margin-top:10px">Author:</div>
+                        <div class="card-block-section-margin-top">Author:</div>
                         <b>@challengeDetails.AuthorName</b>
-                        <div style="margin-top:10px">Club:</div>
+                        <div class="card-block-section-margin-top">Club:</div>
                         <b>@challengeDetails.ClubName</b>
                         <br />
                         @if (!string.IsNullOrEmpty(challengeDetails.ClubIconUrl))
                         {
                             <CardMediaBlock ImageSource="@challengeDetails.ClubIconUrl" />
                         }
-                        <div style="margin-top:10px">Date range:</div>
+                        <div class="card-block-section-margin-top">Date range:</div>
                         <b>@challengeDetails.StartDate.ToString("dd/MM/yyyy") - @challengeDetails.EndDate.ToString("dd/MM/yyyy")</b>
-                        <div style="margin-top:10px">Competition type:</div>
+                        <div class="card-block-section-margin-top">Competition type:</div>
                         <b><ChallengeCompetitionType Type="@challengeDetails.CompetitionType" /></b>
-                        <div style="margin-top:10px">Activity types:</div>
+                        <div class="card-block-section-margin-top">Activity types:</div>
                         <b>
                             @if (challengeDetails.ActivityTypes == null || !challengeDetails.ActivityTypes.Any())
                             {
@@ -87,7 +87,7 @@ else
                         @if (challengeDetails.UpdateDate.HasValue)
                         {
                             <div class="clr-row">
-                                <div class="clr-col-12 text-right" style="font-size: 0.55rem">
+                                <div class="clr-col-12 text-right font-size-smaller">
                                     Last update: @challengeDetails?.UpdateDate.Value.ToString("dd/MM/yyyy HH:mm")
                                     <a role="button"><clr-icon shape="refresh" @onclick="() => ConfirmUpdateClassification(challengeDetails.Id)"></clr-icon></a>
                                 </div>

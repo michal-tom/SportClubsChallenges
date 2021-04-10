@@ -8,10 +8,10 @@
     <AuthorizeView>
         <Authorized>
             <div class="header-actions">
-                <a href="/profile" class="nav-link nav-icon" style="padding-right: 0rem; width: 2rem;">
+                <a href="/profile" class="nav-link nav-icon padding-right-zero" style="width: 2rem;">
                     <clr-icon shape="user"></clr-icon>
                 </a>
-                <a href="/profile" class="nav-link" style="padding-left: 0rem;">
+                <a href="/profile" class="nav-link padding-left-zero">
                     <span>@(context.User?.Identity?.Name)</span>
                 </a>
                 <a href="@StravaHelper.GetMainPageUrl()" class="nav-link strava-poweredby" />

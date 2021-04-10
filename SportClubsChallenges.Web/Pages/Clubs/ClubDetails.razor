@@ -29,10 +29,10 @@ else
                         <b><ClubSportType Type="@clubData.SportType" /></b>
                         @if (!string.IsNullOrEmpty(clubData.Owner))
                         {
-                            <div style="margin-top:10px">Owner:</div>
+                            <div class="card-block-section-margin-top">Owner:</div>
                             <b>@clubData.Owner</b>
                         }
-                        <div style="margin-top:10px">Members count (in Strava):</div>
+                        <div class="card-block-section-margin-top">Members (in Strava):</div>
                         <b>@clubData.MembersCount</b>
                     </CardBlock>
                 </CardBody>
@@ -88,16 +88,16 @@ else
                                     <CardBlock>
                                         <div>Date Range:</div>
                                         <b>@challenge.StartDate.ToString("dd/MM/yyyy") - @challenge.EndDate.ToString("dd/MM/yyyy")</b>
-                                        <div style="margin-top:10px">Competition type:</div>
+                                        <div class="card-block-section-margin-top">Competition type:</div>
                                         <b><ChallengeCompetitionType Type="@challenge.CompetitionType" /></b>
-                                        <div style="margin-top:10px">Participants:</div>
+                                        <div class="card-block-section-margin-top">Participants:</div>
                                         <b>@challenge.ParticipantsCount</b>
                                     </CardBlock>
                                 </CardBody>
                                 <CardFooter>
                                     <ProgressGroup>
                                         <ProgressBar Value="@TimeHelper.GetPercentageProgress(challenge.StartDate, challenge.EndDate)"></ProgressBar>
-                                        <div class="clr-row" style="font-size: smaller !important;">
+                                        <div class="clr-row font-size-smaller">
                                             <div class="clr-col-3">@challenge.StartDate.ToString("dd/MM/yyyy")</div>
                                             <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(challenge.StartDate, challenge.EndDate)</div>
                                             <div class="clr-col-3 text-right">@challenge.EndDate.ToString("dd/MM/yyyy")</div>

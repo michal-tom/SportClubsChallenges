@@ -5,6 +5,10 @@ div.panel-centered {
     flex-direction: row;
 }
 
+div.panel-centered > div.centered-form {
+    width: 30rem;
+}
+
 div.panel-centered-with-top-padding {
     display: flex;
     padding-top: 8%;
@@ -18,7 +22,7 @@ div.card-centered-title {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding-bottom: 10px;
+    padding-bottom: 0.5rem;
 }
 
 div.horizontal-centered-tabs > clr-tabs > ul {
@@ -39,7 +43,7 @@ div.horizontal-centered-tabs > clr-tabs > ul {
 }
 
 div.card-media-title h1,h2,h3,h4,h5,h6 {
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 .clr-timeline.clr-timeline-vertical .clr-timeline-step-header {
@@ -67,6 +71,10 @@ div.card-media-title h1,h2,h3,h4,h5,h6 {
     float: right;
 }
 
+.font-size-smaller {
+    font-size: smaller !important;
+}
+
 .alerts-container > clr-alert:first-child > .alert {
     margin-top: 0rem;
 }
@@ -84,4 +92,16 @@ clr-icon.small-icon {
 
 div.text-center > p:last-child {
     margin-bottom: 1.2rem;
+}
+
+.card-block-section-margin-top {
+    margin-top: 0.5rem;
+}
+
+.padding-left-zero {
+    padding-left: 0 !important;
+}
+
+.padding-right-zero {
+    padding-right: 0 !important;
 }
