@@ -1,8 +1,11 @@
 ﻿@page "/clubs/details/{clubId}"
 
+@using Microsoft.AspNetCore.Http
+
 @inject IClubService clubService
 @inject IJSRuntime JSRuntime
 @inject NavigationManager navigationManager
+@inject IHttpContextAccessor httpContextAccessor
 
 @if (clubData == null)
 {
@@ -74,34 +77,34 @@ else
                     <CardBlock>
                         @foreach (var challenge in clubChallenges)
                         {
-                        <Card Clickable="true" OnClick="() => ShowChallengeDetails(challenge.Id)">
-                            <CardHeader>
-                                @challenge.Name
-                                <div class="float-right">
-                                    <ChallengeStatus Status="@challenge.Status.ToString()" />
-                                </div>
-                            </CardHeader>
-                            <CardBody>
-                                <CardBlock>
-                                    <div>Date Range:</div>
-                                    <b>@challenge.StartDate.ToString("dd/MM/yyyy") - @challenge.EndDate.ToString("dd/MM/yyyy")</b>
-                                    <div style="margin-top:10px">Competition type:</div>
-                                    <b><ChallengeCompetitionType Type="@challenge.CompetitionType" /></b>
-                                    <div style="margin-top:10px">Participants:</div>
-                                    <b>@challenge.ParticipantsCount</b>
-                                </CardBlock>
-                            </CardBody>
-                            <CardFooter>
-                                <ProgressGroup>
-                                    <ProgressBar Value="@TimeHelper.GetPercentageProgress(challenge.StartDate, challenge.EndDate)"></ProgressBar>
-                                    <div class="clr-row" style="font-size: smaller !important;">
-                                        <div class="clr-col-3">@challenge.StartDate.ToString("dd/MM/yyyy")</div>
-                                        <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(challenge.StartDate, challenge.EndDate)</div>
-                                        <div class="clr-col-3 text-right">@challenge.EndDate.ToString("dd/MM/yyyy")</div>
+                            <Card Clickable="true" OnClick="() => ShowChallengeDetails(challenge.Id)">
+                                <CardHeader>
+                                    @challenge.Name
+                                    <div class="float-right">
+                                        <ChallengeStatus Status="@challenge.Status.ToString()" />
                                     </div>
-                                </ProgressGroup>
-                            </CardFooter>
-                        </Card>
+                                </CardHeader>
+                                <CardBody>
+                                    <CardBlock>
+                                        <div>Date Range:</div>
+                                        <b>@challenge.StartDate.ToString("dd/MM/yyyy") - @challenge.EndDate.ToString("dd/MM/yyyy")</b>
+                                        <div style="margin-top:10px">Competition type:</div>
+                                        <b><ChallengeCompetitionType Type="@challenge.CompetitionType" /></b>
+                                        <div style="margin-top:10px">Participants:</div>
+                                        <b>@challenge.ParticipantsCount</b>
+                                    </CardBlock>
+                                </CardBody>
+                                <CardFooter>
+                                    <ProgressGroup>
+                                        <ProgressBar Value="@TimeHelper.GetPercentageProgress(challenge.StartDate, challenge.EndDate)"></ProgressBar>
+                                        <div class="clr-row" style="font-size: smaller !important;">
+                                            <div class="clr-col-3">@challenge.StartDate.ToString("dd/MM/yyyy")</div>
+                                            <div class="clr-col-6">@TimeHelper.GetChallengeDatePeriodDescription(challenge.StartDate, challenge.EndDate)</div>
+                                            <div class="clr-col-3 text-right">@challenge.EndDate.ToString("dd/MM/yyyy")</div>
+                                        </div>
+                                    </ProgressGroup>
+                                </CardFooter>
+                            </Card>
                         }
                     </CardBlock>
                 </CardBody>
@@ -111,34 +114,36 @@ else
 }
 
 @code {
-
     [Parameter]
     public string ClubId { get; set; }
 
-    ClubDto clubData;
+    private ClubDto clubData;
 
-    List<AthleteDto> clubMembers;
+    private List<AthleteDto> clubMembers;
 
-    List<ChallengeOverviewDto> clubChallenges;
+    private List<ChallengeOverviewDto> clubChallenges;
 
     protected override async Task OnInitializedAsync()
     {
-        if (this.ClubId == null || !long.TryParse(this.ClubId, out long clubId))
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
         {
-            return;
-        }
+            if (this.ClubId == null || !long.TryParse(this.ClubId, out long clubId))
+            {
+                return;
+            }
 
-        clubData = await clubService.GetClub(clubId);
-        clubMembers = await clubService.GetMembers(clubId);
-        clubChallenges = await clubService.GetChallenges(clubId);
+            clubData = await clubService.GetClub(clubId);
+            clubMembers = await clubService.GetMembers(clubId);
+            clubChallenges = await clubService.GetChallenges(clubId);
+        }
     }
 
-    protected void ShowChallengeDetails(long id)
+    private void ShowChallengeDetails(long id)
     {
         navigationManager.NavigateTo($"/challenges/details/{id}");
     }
 
-    protected async Task ShowClubOnStrava()
+    private async Task ShowClubOnStrava()
     {
         await JSRuntime.InvokeAsync<object>("open", StravaHelper.GetClubUrl(clubData.Url), "_blank");
     }

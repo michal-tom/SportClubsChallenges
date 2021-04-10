@@ -53,7 +53,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        club = await clubService.GetClub(this.ClubId);
+        if (httpContextAccessor.HttpContext.Response.HasStarted) 
+        {
+            club = await clubService.GetClub(this.ClubId);
+        }
     }
 
     private async Task EditClub()

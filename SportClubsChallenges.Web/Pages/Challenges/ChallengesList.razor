@@ -48,20 +48,22 @@ else
 }
 
 @code {
+    private List<ChallengeOverviewDto> challenges;
 
-    List<ChallengeOverviewDto> challenges;
-
-    long athleteId;
+    private long athleteId;
 
     [CascadingParameter]
     public MainLayout Layout { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var user = httpContextAccessor.HttpContext.User;
-        this.athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            var user = httpContextAccessor.HttpContext.User;
+            this.athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
-        await LoadChallenges();
+            await LoadChallenges();
+        }
     }
 
     private async Task LoadChallenges()
@@ -69,19 +71,19 @@ else
         challenges = await challengeService.GetAvailableChallenges(this.athleteId);
     }
 
-    protected void ShowDetails(long challengeId)
+    private void ShowDetails(long challengeId)
     {
         navigationManager.NavigateTo($"/challenges/details/{challengeId}");
     }
 
-    protected void ConfirmLeaveChallenge(long challengeId, string challengeName)
+    private void ConfirmLeaveChallenge(long challengeId, string challengeName)
     {
         this.Layout.popupWrapper.ShowConfirmation(
             $"Do you really want to leave challenge '{challengeName}'?",
             () => LeaveChallenge(challengeId, challengeName));
     }
 
-    protected async Task LeaveChallenge(long challengeId, string challengeName)
+    private async Task LeaveChallenge(long challengeId, string challengeName)
     {
         await challengeService.LeaveChallenge(this.athleteId, challengeId);
 
@@ -91,14 +93,14 @@ else
         this.StateHasChanged();
     }
 
-    protected void ConfirmJoinChallenge(long challengeId, string challengeName)
+    private void ConfirmJoinChallenge(long challengeId, string challengeName)
     {
         this.Layout.popupWrapper.ShowConfirmation(
             $"Do you really want to join to challenge '{challengeName}'?",
             () => JoinChallenge(challengeId, challengeName));
     }
 
-    protected async Task JoinChallenge(long challengeId, string challengeName)
+    private async Task JoinChallenge(long challengeId, string challengeName)
     {
         await challengeService.JoinChallenge(this.athleteId, challengeId);
 

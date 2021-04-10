@@ -131,15 +131,18 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (ChallengeId == null || !long.TryParse(ChallengeId, out long challengeId))
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
         {
-            return;
+            if (ChallengeId == null || !long.TryParse(ChallengeId, out long challengeId))
+            {
+                return;
+            }
+
+            var user = httpContextAccessor.HttpContext.User;
+            athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+
+            await this.LoadData(challengeId);
         }
-
-        var user = httpContextAccessor.HttpContext.User;
-        athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
-
-        await this.LoadData(challengeId);
     }
 
     private async Task LoadData(long challengeId)
@@ -209,14 +212,14 @@ else
         this.StateHasChanged();
     }
 
-    protected void ConfirmUpdateClassification(long challengeId)
+    private void ConfirmUpdateClassification(long challengeId)
     {
         this.Layout.popupWrapper.ShowConfirmation(
             $"Do you really want to manually update challenge classification?",
             () => QueueUpdateClassification(challengeId));
     }
 
-    protected async Task QueueUpdateClassification(long challengeId)
+    private async Task QueueUpdateClassification(long challengeId)
     {
         await challengeService.UpdateChallengeRank(challengeId);
 

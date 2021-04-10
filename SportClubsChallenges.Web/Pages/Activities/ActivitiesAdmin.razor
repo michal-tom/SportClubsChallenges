@@ -1,9 +1,9 @@
 ﻿@page "/activities/admin"
 
-@using System.Security.Claims
 @using Microsoft.AspNetCore.Http
 
 @inject IActivityService activityService
+@inject IHttpContextAccessor httpContextAccessor
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -46,7 +46,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        activities = await activityService.GetAllActivities();
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            activities = await activityService.GetAllActivities();
+        }
     }
 
     private Func<ActivityDto, int, string> GetGridRowClass = (activity, columnNumber) =>

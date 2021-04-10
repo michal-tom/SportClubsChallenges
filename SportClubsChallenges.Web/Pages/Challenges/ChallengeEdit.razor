@@ -68,7 +68,6 @@ else
 }
 
 @code {
-
     [Parameter]
     public long? ChallengeId { get; set; }
 
@@ -84,21 +83,24 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        clubs = await clubService.GetAllClubs();
-        activityTypes = await challengeService.GetAvailableActivityTypes();
-        challengeCompetitionTypes = challengeService.GetAvailableChallengeCompetitionTypes();
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            clubs = await clubService.GetAllClubs();
+            activityTypes = await challengeService.GetAvailableActivityTypes();
+            challengeCompetitionTypes = challengeService.GetAvailableChallengeCompetitionTypes();
 
-        if (!this.ChallengeId.HasValue)
-        {
-            challenge = new ChallengeDetailsDto();
-            challenge.Club = new ClubDto { Id = clubs.First().Id, Name = clubs.First().Name };
-            pageTitle = "Create new challenge";
-        }
-        else
-        {
-            challenge = await challengeService.GetChallenge(this.ChallengeId.Value);
-            selectedActivityTypes = activityTypes.Where(p => challenge.ActivityTypesIds.Contains(p.Key)).ToHashSet();
-            pageTitle = $"Edit challenge {challenge.Name}";
+            if (!this.ChallengeId.HasValue)
+            {
+                challenge = new ChallengeDetailsDto();
+                challenge.Club = new ClubDto { Id = clubs.First().Id, Name = clubs.First().Name };
+                pageTitle = "Create new challenge";
+            }
+            else
+            {
+                challenge = await challengeService.GetChallenge(this.ChallengeId.Value);
+                selectedActivityTypes = activityTypes.Where(p => challenge.ActivityTypesIds.Contains(p.Key)).ToHashSet();
+                pageTitle = $"Edit challenge {challenge.Name}";
+            }
         }
     }
 

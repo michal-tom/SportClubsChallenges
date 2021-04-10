@@ -136,12 +136,15 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var user = httpContextAccessor.HttpContext.User;
-        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            var user = httpContextAccessor.HttpContext.User;
+            var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
-        athlete = await athleteService.GetAthlete(athleteId);
-        clubs = await clubService.GetAthleteClubs(athleteId);
-        stats = athleteService.GetAthleteActivitiesTotalStats(athleteId);
+            athlete = await athleteService.GetAthlete(athleteId);
+            clubs = await clubService.GetAthleteClubs(athleteId);
+            stats = athleteService.GetAthleteActivitiesTotalStats(athleteId);
+        }
     }
 
     private void ShowActivities()

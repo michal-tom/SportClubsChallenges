@@ -69,15 +69,17 @@ else
 }
 
 @code {
-
     private List<ChallengeParticipationDto> challengeParticipations;
 
     protected override async Task OnInitializedAsync()
     {
-        var user = httpContextAccessor.HttpContext.User;
-        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            var user = httpContextAccessor.HttpContext.User;
+            var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
-        challengeParticipations = await challengeService.GetActiveChallengeParticipations(athleteId);
+            challengeParticipations = await challengeService.GetActiveChallengeParticipations(athleteId);
+        }
     }
 
     private void ShowDetails(long id)

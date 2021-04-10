@@ -48,9 +48,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var user = httpContextAccessor.HttpContext.User;
-        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            var user = httpContextAccessor.HttpContext.User;
+            var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
-        activities = await activityService.GetAthleteActivities(athleteId);
+            activities = await activityService.GetAthleteActivities(athleteId);
+        }
     }
 }

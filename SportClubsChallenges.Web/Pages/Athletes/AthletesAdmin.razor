@@ -1,7 +1,10 @@
 ﻿@page "/athletes/admin"
 
+@using Microsoft.AspNetCore.Http
+
 @inject IAthleteService athleteService
 @inject NavigationManager navigationManager
+@inject IHttpContextAccessor httpContextAccessor
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -42,14 +45,17 @@ else
 }
 
 @code {
-    List<AthleteDto> athletes;
+    private List<AthleteDto> athletes;
 
     protected override async Task OnInitializedAsync()
     {
-        athletes = await athleteService.GetAllAthletes();
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            athletes = await athleteService.GetAllAthletes();
+        }
     }
 
-    protected void EditAthlete(long athleteId)
+    private void EditAthlete(long athleteId)
     {
         navigationManager.NavigateTo($"/athletes/edit/{athleteId}");
     }

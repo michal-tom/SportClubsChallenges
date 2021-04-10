@@ -1,7 +1,10 @@
 ﻿@page "/challenges/admin"
 
+@using Microsoft.AspNetCore.Http
+
 @inject IChallengeService challengeService
 @inject NavigationManager navigationManager
+@inject IHttpContextAccessor httpContextAccessor
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -39,25 +42,27 @@ else
 }
 
 @code {
-
-    List<ChallengeOverviewDto> challenges;
+    private List<ChallengeOverviewDto> challenges;
 
     [CascadingParameter]
     public MainLayout Layout { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadChallenges();
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            await LoadChallenges();
+        }
     }
 
-    protected void ConfirmDeleteChallenge(long id, string challengeName)
+    private void ConfirmDeleteChallenge(long id, string challengeName)
     {
         this.Layout.popupWrapper.ShowConfirmation(
             $"Do you really want to remove challenge '{challengeName}'?",
             () => DeleteChallenge(id, challengeName));
     }
 
-    protected async Task DeleteChallenge(long id, string challengeName)
+    private async Task DeleteChallenge(long id, string challengeName)
     {
         await challengeService.DeleteChallenge(id);
 
@@ -67,12 +72,12 @@ else
         this.StateHasChanged();
     }
 
-    protected void AddChallenge()
+    private void AddChallenge()
     {
         navigationManager.NavigateTo($"/challenges/add");
     }
 
-    protected void EditChallenge(long id)
+    private void EditChallenge(long id)
     {
         navigationManager.NavigateTo($"/challenges/edit/{id}");
     }

@@ -1,7 +1,10 @@
 ﻿@page "/clubs/admin"
 
+@using Microsoft.AspNetCore.Http
+
 @inject IClubService clubService
 @inject NavigationManager navigationManager
+@inject IHttpContextAccessor httpContextAccessor
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -32,19 +35,22 @@ else
 }
 
 @code {
-    List<ClubDto> clubs;
+    private List<ClubDto> clubs;
 
     protected override async Task OnInitializedAsync()
     {
-        clubs = await clubService.GetAllClubs();
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            clubs = await clubService.GetAllClubs();
+        }
     }
 
-    protected void EditClub(long clubId)
+    private void EditClub(long clubId)
     {
         navigationManager.NavigateTo($"/clubs/edit/{clubId}");
     }
 
-    protected void ShowDetails(long clubId)
+    private void ShowDetails(long clubId)
     {
         navigationManager.NavigateTo($"/clubs/details/{clubId}");
     }

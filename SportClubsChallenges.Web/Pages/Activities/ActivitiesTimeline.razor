@@ -52,13 +52,15 @@ else
     [Parameter]
     public int Count { get; set; }
 
-    List<ActivityDto> activities;
+    private List<ActivityDto> activities;
 
     protected override async Task OnInitializedAsync()
     {
-        var user = httpContextAccessor.HttpContext.User;
-        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+        if (httpContextAccessor.HttpContext.Response.HasStarted) {
+            var user = httpContextAccessor.HttpContext.User;
+            var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
-        activities = await activityService.GetAthleteActivities(athleteId, this.Count);
+            activities = await activityService.GetAthleteActivities(athleteId, this.Count);
+        }
     }
 }

@@ -59,11 +59,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var user = httpContextAccessor.HttpContext.User;
-        var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            var user = httpContextAccessor.HttpContext.User;
+            var athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
 
-        allAthleteClubs = await clubService.GetAthleteClubs(athleteId);
-        athleteClubsToShow = allAthleteClubs.OrderByDescending(p => p.ActiveChallengesCount).ThenByDescending(p => p.InactiveChallengesCount).ThenBy(p => p.Id).Take(MaxClubsToShow).ToList();
+            allAthleteClubs = await clubService.GetAthleteClubs(athleteId);
+            athleteClubsToShow = allAthleteClubs.OrderByDescending(p => p.ActiveChallengesCount).ThenByDescending(p => p.InactiveChallengesCount).ThenBy(p => p.Id).Take(MaxClubsToShow).ToList();
+        } 
     }
 
     private void ShowDetails(long id)
