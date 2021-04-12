@@ -35,8 +35,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
 
             log.LogInformation("Request validated.");
 
-            var json = JsonConvert.SerializeObject(new ValidateCallbackResponse { HubChallenge = challenge });
-            return new OkObjectResult(json);
+            return new JsonResult(new ValidateCallbackResponse { HubChallenge = challenge });
         }
 
         private class ValidateCallbackResponse
