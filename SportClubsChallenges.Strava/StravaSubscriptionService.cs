@@ -29,7 +29,7 @@
             var httpClient = this.httpClientFactory.CreateClient();
                     
             var response = await httpClient.PostAsync(this.StravaSubscriptionUrl, encodedContent);
-            // response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -51,16 +51,21 @@
             return await response.Content.ReadAsStringAsync();
         }
 
-        public void DeleteSubscription()
+        public async Task<string> DeleteSubscription(long id)
         {
-            // TODO
-            //var request = new RestRequest($"api/v3/push_subscriptions/{subscriptionId}", Method.DELETE);
-            //request.AddQueryParameter("client_id", clientId.ToString());
-            //request.AddQueryParameter("client_secret", clientSecret);
-            //var response = _restClient.ExecuteWithRetry(request);
+            var parameters = new Dictionary<string, string> {
+                { "client_id", "60033" },
+                { "client_secret", "45b4066142165ecd3dee2d28556da83d77081bea" }
+            };
 
-            //response.ThrowExceptionIfNotSuccessful();
-            //return response.Content;
+            var url = QueryHelpers.AddQueryString($"{this.StravaSubscriptionUrl}/{id}", parameters);
+
+            var httpClient = this.httpClientFactory.CreateClient();
+
+            var response = await httpClient.DeleteAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }

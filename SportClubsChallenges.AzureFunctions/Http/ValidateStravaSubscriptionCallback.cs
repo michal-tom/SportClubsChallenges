@@ -13,7 +13,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
     {
         [FunctionName("ValidateStravaSubscriptionCallback")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = FunctionsConsts.WebhooksRoute)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = FunctionsConsts.EventsRoute)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("HTTP trigger function {0}.", nameof(ValidateStravaSubscriptionCallback));

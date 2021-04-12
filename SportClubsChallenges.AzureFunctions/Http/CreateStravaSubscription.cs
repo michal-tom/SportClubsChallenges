@@ -13,6 +13,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
     public class CreateStravaSubscription
     {
         private readonly IStravaSubscriptionService stravaSubscriptionService;
+
         private readonly string hostname;
 
         public CreateStravaSubscription(IStravaSubscriptionService stravaSubscriptionService, IConfiguration configuration)
@@ -28,7 +29,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
         {
             log.LogInformation("HTTP trigger function {0}.", nameof(CreateStravaSubscription));
 
-            var callbackUrl = $"{this.hostname}/api/{FunctionsConsts.WebhooksRoute}";
+            var callbackUrl = $"{this.hostname}/api/{FunctionsConsts.EventsRoute}";
 
             log.LogInformation($"Creating subscription for callback url: {callbackUrl}.");
 
