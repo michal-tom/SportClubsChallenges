@@ -29,7 +29,7 @@
             var httpClient = this.httpClientFactory.CreateClient();
                     
             var response = await httpClient.PostAsync(this.StravaSubscriptionUrl, encodedContent);
-            response.EnsureSuccessStatusCode();
+            // response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
         }

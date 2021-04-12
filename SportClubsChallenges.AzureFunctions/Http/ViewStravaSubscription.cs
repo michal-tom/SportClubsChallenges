@@ -25,7 +25,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
         {
             log.LogInformation("HTTP trigger function {0}.", nameof(ViewStravaSubscription));
 
-            var responseMessage = await stravaSubscriptionService.ViewSubscription();
+            var responseMessage = await this.stravaSubscriptionService.ViewSubscription();
             
             return new OkObjectResult(responseMessage);
         }
