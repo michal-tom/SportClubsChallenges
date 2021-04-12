@@ -37,7 +37,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
             [HttpTrigger(AuthorizationLevel.Admin, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function SyncAllData a request.");
+            log.LogInformation("HTTP trigger function {0}.", nameof(SyncAllData));
 
             var activitiesJob = new GetAthletesActivitiesJob(this.db, this.stravaWrapper, this.tokenService, this.mapper);
             await activitiesJob.Run();
@@ -56,7 +56,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
                 await classificationsJob.Run(challenge.Id);
             }
 
-            return new OkObjectResult("OK");
+            return new OkResult();
         }
     }
 }
