@@ -5,4 +5,8 @@
     <Configurations>Debug;Release;ReleaseWeb;ReleaseAzFunc</Configurations>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
 </Project>

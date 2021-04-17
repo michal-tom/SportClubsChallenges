@@ -1,14 +1,13 @@
 ﻿namespace SportClubsChallenges.Strava
 {
-    using Microsoft.AspNetCore.WebUtilities;
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.WebUtilities;
+    using SportClubsChallenges.Utils.Consts;
 
     public class StravaSubscriptionService : IStravaSubscriptionService
     {
-        private readonly string StravaSubscriptionUrl = "https://www.strava.com/api/v3/push_subscriptions";
-
         private readonly IHttpClientFactory httpClientFactory;
 
         public StravaSubscriptionService(IHttpClientFactory httpClientFactory)
@@ -28,7 +27,7 @@
 
             var httpClient = this.httpClientFactory.CreateClient();
                     
-            var response = await httpClient.PostAsync(this.StravaSubscriptionUrl, encodedContent);
+            var response = await httpClient.PostAsync(StravaConsts.SubscriptionUrlAddress, encodedContent);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
@@ -41,7 +40,7 @@
                 { "client_secret", "45b4066142165ecd3dee2d28556da83d77081bea" }
             };
 
-            var url = QueryHelpers.AddQueryString(this.StravaSubscriptionUrl, parameters);
+            var url = QueryHelpers.AddQueryString(StravaConsts.SubscriptionUrlAddress, parameters);
 
             var httpClient = this.httpClientFactory.CreateClient();
 
@@ -58,7 +57,7 @@
                 { "client_secret", "45b4066142165ecd3dee2d28556da83d77081bea" }
             };
 
-            var url = QueryHelpers.AddQueryString($"{this.StravaSubscriptionUrl}/{id}", parameters);
+            var url = QueryHelpers.AddQueryString($"{StravaConsts.SubscriptionUrlAddress}/{id}", parameters);
 
             var httpClient = this.httpClientFactory.CreateClient();
 

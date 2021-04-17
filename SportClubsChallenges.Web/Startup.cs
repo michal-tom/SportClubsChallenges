@@ -12,10 +12,10 @@ namespace SportClubsChallenges.Web
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Blazored.LocalStorage;
+    using SportClubsChallenges.AzureQueues;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Domain.Services;
-    using SportClubsChallenges.AzureQueues;
     using SportClubsChallenges.Mappings;
 
     public class Startup

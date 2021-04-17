@@ -62,6 +62,8 @@
 
             services.AddDbContext<SportClubsChallengesDbContext>(options => options.UseSqlServer(connectionstring));
 
+            services.AddScoped<IActivityService, ActivityService>();
+
             services.AddHttpClient<StravaApiWrapper>();
 
             services.AddScoped<IStravaApiWrapper, StravaApiWrapper>();
@@ -85,10 +87,11 @@
         {
             var dbContext = services.GetRequiredService<SportClubsChallengesDbContext>();
             var stravaWrapper = services.GetRequiredService<IStravaApiWrapper>();
+            var activityService = services.GetRequiredService<IActivityService>();
             var tokenService = services.GetRequiredService<ITokenService>();
             var mapper = services.GetRequiredService<IMapper>();
 
-            var job = new GetAthletesActivitiesJob(dbContext, stravaWrapper, tokenService, mapper);
+            var job = new GetAthletesActivitiesJob(dbContext, activityService, stravaWrapper, tokenService, mapper);
             await job.Run();
         }
 

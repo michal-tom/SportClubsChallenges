@@ -18,15 +18,18 @@ namespace SportClubsChallenges.AzureFunctions.Http
     {
         private readonly SportClubsChallengesDbContext db;
 
+        private readonly IActivityService activityService;
+
         private readonly IStravaApiWrapper stravaWrapper;
 
         private readonly ITokenService tokenService;
 
         private readonly IMapper mapper;
 
-        public SyncAllData(SportClubsChallengesDbContext db, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
+        public SyncAllData(SportClubsChallengesDbContext db, IActivityService activityService, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
         {
             this.db = db;
+            this.activityService = activityService;
             this.stravaWrapper = stravaWrapper;
             this.tokenService = tokenService;
             this.mapper = mapper;
@@ -39,7 +42,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
         {
             log.LogInformation("HTTP trigger function {0}.", nameof(SyncAllData));
 
-            var activitiesJob = new GetAthletesActivitiesJob(this.db, this.stravaWrapper, this.tokenService, this.mapper);
+            var activitiesJob = new GetAthletesActivitiesJob(this.db, this.activityService, this.stravaWrapper, this.tokenService, this.mapper);
             await activitiesJob.Run();
 
             var athletes = await this.db.Athletes.ToListAsync();

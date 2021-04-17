@@ -64,6 +64,25 @@
             return allActivites;
         }
 
+        public async Task<DetailedActivity> GetActivity(StravaToken token, long activityId)
+        {
+            try
+            {
+                await this.RefreshAccessTokenIfNeededAsync(token);
+
+                var apiClient = new ApiClient { AccessToken = token.AccessToken };
+                var apiInstance = new ActivitiesApi(apiClient);
+
+                return apiInstance.GetActivityById(activityId, includeAllEfforts: false);
+
+            }
+            catch (Exception)
+            {
+                // TODO: log error
+                return null;
+            }
+        }
+
         public async Task<List<SummaryClub>> GetAthleteClubs(StravaToken token)
         {
             var allClubs = new List<SummaryClub>();

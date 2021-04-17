@@ -27,6 +27,7 @@
     <ProjectReference Include="..\SportClubsChallenges.Database\SportClubsChallenges.Database.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Jobs\SportClubsChallenges.Jobs.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Mappings\SportClubsChallenges.Mappings.csproj" />
+    <ProjectReference Include="..\SportClubsChallenges.Model\SportClubsChallenges.Model.csproj" />
     <ProjectReference Include="..\SportClubsChallenges.Services\SportClubsChallenges.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>

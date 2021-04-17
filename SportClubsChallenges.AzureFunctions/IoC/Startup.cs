@@ -36,6 +36,8 @@ namespace SportClubsChallenges.AzureFunctions.IoC
 
             builder.Services.AddDbContext<SportClubsChallengesDbContext>(options => options.UseSqlServer(connectionstring));
 
+            builder.Services.AddScoped<IActivityService, ActivityService>();
+
             builder.Services.AddHttpClient<StravaApiWrapper>();
             builder.Services.AddHttpClient<StravaSubscriptionService>();
 

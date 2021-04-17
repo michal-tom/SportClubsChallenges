@@ -1,6 +1,5 @@
 namespace SportClubsChallenges.AzureFunctions.Http
 {
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.WebJobs;
     using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -12,7 +11,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
     public static class ValidateStravaSubscriptionCallback
     {
         [FunctionName("ValidateStravaSubscriptionCallback")]
-        public static async Task<IActionResult> Run(
+        public static IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = FunctionsConsts.EventsRoute)] HttpRequest req,
             ILogger log)
         {

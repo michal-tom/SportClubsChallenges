@@ -51,7 +51,6 @@
 
         public void OnStravaTokenRefresh(object sender, object args)
         {
-          //  StravaToken token;
             if (!(sender is StravaToken token) || string.IsNullOrEmpty(token.AccessToken) || string.IsNullOrEmpty(token.RefreshToken))
             {
                 return;

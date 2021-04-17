@@ -32,6 +32,8 @@
 
         public bool IsGps { get; set; }
 
+        public bool IsPrivate { get; set; }
+
         public bool IsDeleted { get; set; }
 
         #region References
