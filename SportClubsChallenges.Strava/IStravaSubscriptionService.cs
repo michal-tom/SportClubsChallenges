@@ -4,10 +4,10 @@
 
     public interface IStravaSubscriptionService
     {
-        Task<string> CreateSubscription(string callbackUrl, string token);
+        Task<string> CreateSubscription(string callbackUrl, string token, string clientId, string clientSecret);
 
-        Task<string> ViewSubscription();
+        Task<string> ViewSubscription(string clientId, string clientSecret);
 
-        Task<string> DeleteSubscription(long id);
+        Task<string> DeleteSubscription(long id, string clientId, string clientSecret);
     }
 }

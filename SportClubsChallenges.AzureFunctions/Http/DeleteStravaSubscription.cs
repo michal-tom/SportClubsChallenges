@@ -5,6 +5,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
     using Microsoft.Azure.WebJobs;
     using Microsoft.Azure.WebJobs.Extensions.Http;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using SportClubsChallenges.AzureFunctions.Consts;
     using SportClubsChallenges.Strava;
@@ -13,9 +14,15 @@ namespace SportClubsChallenges.AzureFunctions.Http
     {
         private readonly IStravaSubscriptionService stravaSubscriptionService;
 
-        public DeleteStravaSubscription(IStravaSubscriptionService stravaSubscriptionService)
+        private readonly string ClientId;
+
+        private readonly string ClientSecret;
+
+        public DeleteStravaSubscription(IStravaSubscriptionService stravaSubscriptionService, IConfiguration configuration)
         {
             this.stravaSubscriptionService = stravaSubscriptionService;
+            this.ClientId = configuration["StravaClientId"];
+            this.ClientSecret = configuration["StravaClientSecret"];
         }
 
         [FunctionName("DeleteStravaSubscription")]
@@ -33,7 +40,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
 
             log.LogInformation($"Removing subscription with id: {id}.");
 
-            var responseMessage = await this.stravaSubscriptionService.DeleteSubscription(id);
+            var responseMessage = await this.stravaSubscriptionService.DeleteSubscription(id, this.ClientId, this.ClientSecret);
 
             return new OkObjectResult(responseMessage);
         }

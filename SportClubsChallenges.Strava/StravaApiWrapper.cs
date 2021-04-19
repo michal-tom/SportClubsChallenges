@@ -9,6 +9,7 @@
     using global::Strava.NET.Client;
     using global::Strava.NET.Model;
     using IdentityModel.Client;
+    using Microsoft.Extensions.Configuration;
     using SportClubsChallenges.Model.Strava;
     using SportClubsChallenges.Utils.Consts;
 
@@ -16,11 +17,14 @@
     {
         private readonly IHttpClientFactory httpClientFactory;
 
+        private readonly IConfiguration configuration;
+
         private static readonly DateTimeOffset ActivitiesMinDataTime = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
-        public StravaApiWrapper(IHttpClientFactory httpClientFactory)
+        public StravaApiWrapper(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             this.httpClientFactory = httpClientFactory;
+            this.configuration = configuration;
         }
 
         public async Task<List<SummaryActivity>> GetAthleteActivites(StravaToken token, DateTimeOffset startTime, DateTimeOffset? endTime = null)
@@ -121,7 +125,7 @@
 
         private async Task RefreshAccessTokenIfNeededAsync(StravaToken token)
         {
-            // check if strava token should be refreshed 
+            // check if strava token should be refreshed
             if ((token.ExpirationDate.AddSeconds(-60)).ToUniversalTime() > DateTimeOffset.UtcNow)
             {
                 return;
@@ -129,13 +133,12 @@
 
             var httpClient = this.httpClientFactory.CreateClient();
 
-            // TODO: read client id and secret from config file
             var refreshResponse = await httpClient.RequestRefreshTokenAsync(
                new RefreshTokenRequest
                {
                    Address = StravaAuthenticationDefaults.TokenEndpoint,
-                   ClientId = "60033",
-                   ClientSecret = "45b4066142165ecd3dee2d28556da83d77081bea",
+                   ClientId = configuration["StravaClientId"],
+                   ClientSecret = configuration["StravaClientSecret"],
                    RefreshToken = token.RefreshToken
                });
 

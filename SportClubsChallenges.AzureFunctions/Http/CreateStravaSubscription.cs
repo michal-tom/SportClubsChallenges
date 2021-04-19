@@ -14,12 +14,18 @@ namespace SportClubsChallenges.AzureFunctions.Http
     {
         private readonly IStravaSubscriptionService stravaSubscriptionService;
 
-        private readonly string hostname;
+        private readonly string HostName;
+
+        private readonly string ClientId;
+
+        private readonly string ClientSecret;
 
         public CreateStravaSubscription(IStravaSubscriptionService stravaSubscriptionService, IConfiguration configuration)
         {
             this.stravaSubscriptionService = stravaSubscriptionService;
-            this.hostname = configuration["SportClubsChallengeAzureFunctionsUrl"];
+            this.HostName = configuration["SportClubsChallengeAzureFunctionsUrl"];
+            this.ClientId = configuration["StravaClientId"];
+            this.ClientSecret = configuration["StravaClientSecret"];
         }
 
         [FunctionName("CreateStravaSubscription")]
@@ -29,11 +35,11 @@ namespace SportClubsChallenges.AzureFunctions.Http
         {
             log.LogInformation("HTTP trigger function {0}.", nameof(CreateStravaSubscription));
 
-            var callbackUrl = $"{this.hostname}/api/{FunctionsConsts.EventsRoute}";
+            var callbackUrl = $"{this.HostName}/api/{FunctionsConsts.EventsRoute}";
 
             log.LogInformation($"Creating subscription for callback url: {callbackUrl}.");
 
-            var responseMessage = await this.stravaSubscriptionService.CreateSubscription(callbackUrl, FunctionsConsts.SubscriptionCallbackToken);
+            var responseMessage = await this.stravaSubscriptionService.CreateSubscription(callbackUrl, FunctionsConsts.SubscriptionCallbackToken, this.ClientId, this.ClientSecret);
 
             return new OkObjectResult(responseMessage);
         }

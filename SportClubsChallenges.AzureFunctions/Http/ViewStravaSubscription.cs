@@ -5,6 +5,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
     using Microsoft.Azure.WebJobs;
     using Microsoft.Azure.WebJobs.Extensions.Http;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using SportClubsChallenges.AzureFunctions.Consts;
     using SportClubsChallenges.Strava;
@@ -13,9 +14,15 @@ namespace SportClubsChallenges.AzureFunctions.Http
     {
         private readonly IStravaSubscriptionService stravaSubscriptionService;
 
-        public ViewStravaSubscription(IStravaSubscriptionService stravaSubscriptionService)
+        private readonly string ClientId;
+
+        private readonly string ClientSecret;
+
+        public ViewStravaSubscription(IStravaSubscriptionService stravaSubscriptionService, IConfiguration configuration)
         {
             this.stravaSubscriptionService = stravaSubscriptionService;
+            this.ClientId = configuration["StravaClientId"];
+            this.ClientSecret = configuration["StravaClientSecret"];
         }
 
         [FunctionName("ViewStravaSubscription")]
@@ -25,7 +32,7 @@ namespace SportClubsChallenges.AzureFunctions.Http
         {
             log.LogInformation("HTTP trigger function {0}.", nameof(ViewStravaSubscription));
 
-            var responseMessage = await this.stravaSubscriptionService.ViewSubscription();
+            var responseMessage = await this.stravaSubscriptionService.ViewSubscription(this.ClientId, this.ClientSecret);
             
             return new OkObjectResult(responseMessage);
         }

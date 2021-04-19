@@ -38,23 +38,23 @@
             await UpdateClassifications(services);
 
             Console.WriteLine("Update classifications - DONE");
-
-            Console.ReadKey();
         }
 
         private static ServiceProvider ConfigureServices()
         {
-            var builder = new ConfigurationBuilder()
+            IConfigurationBuilder builder = new ConfigurationBuilder()
                .AddJsonFile("commonsettings.json", optional: false, reloadOnChange: true)
                .AddJsonFile("connectionstrings.json", optional: false, reloadOnChange: true)
                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                .AddEnvironmentVariables();
 
-            var configuration = builder.Build();
+            IConfiguration configuration = builder.Build();
 
             var connectionstring = configuration.GetConnectionString("SportClubsChallengesDbConnString");
 
             var services = new ServiceCollection();
+
+            services.AddSingleton<IConfiguration>(provider => configuration);
 
             services.AddAutoMapper(typeof(DtoModelMappingsProfile));
             services.AddAutoMapper(typeof(StravaModelMappingsProfile));

@@ -15,11 +15,11 @@
             this.httpClientFactory = httpClientFactory;
         }
 
-        public async Task<string> CreateSubscription(string callbackUrl, string token)
+        public async Task<string> CreateSubscription(string callbackUrl, string token, string clientId, string clientSecret)
         {
             var parameters = new Dictionary<string, string> { 
-                { "client_id", "60033" }, 
-                { "client_secret", "45b4066142165ecd3dee2d28556da83d77081bea" },
+                { "client_id", clientId }, 
+                { "client_secret", clientSecret },
                 { "callback_url", callbackUrl },
                 { "verify_token", token }
             };
@@ -33,11 +33,11 @@
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> ViewSubscription()
+        public async Task<string> ViewSubscription(string clientId, string clientSecret)
         {
             var parameters = new Dictionary<string, string> {
-                { "client_id", "60033" },
-                { "client_secret", "45b4066142165ecd3dee2d28556da83d77081bea" }
+                { "client_id", clientId },
+                { "client_secret", clientSecret }
             };
 
             var url = QueryHelpers.AddQueryString(StravaConsts.SubscriptionUrlAddress, parameters);
@@ -50,11 +50,11 @@
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> DeleteSubscription(long id)
+        public async Task<string> DeleteSubscription(long id, string clientId, string clientSecret)
         {
             var parameters = new Dictionary<string, string> {
-                { "client_id", "60033" },
-                { "client_secret", "45b4066142165ecd3dee2d28556da83d77081bea" }
+                { "client_id", clientId },
+                { "client_secret", clientSecret }
             };
 
             var url = QueryHelpers.AddQueryString($"{StravaConsts.SubscriptionUrlAddress}/{id}", parameters);

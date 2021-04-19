@@ -38,8 +38,8 @@ namespace SportClubsChallenges.Web
             .AddStrava(options =>
             {
                 options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.ClientId = "60033";
-                options.ClientSecret = "45b4066142165ecd3dee2d28556da83d77081bea";
+                options.ClientId = Configuration["StravaClientId"];
+                options.ClientSecret = Configuration["StravaClientSecret"];
                 options.Scope.Add("activity:read");
                 options.Scope.Add("activity:read_all");
                 options.Scope.Add("profile:read_all");
