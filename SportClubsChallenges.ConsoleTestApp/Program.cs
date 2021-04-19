@@ -1,7 +1,6 @@
 ﻿namespace SportClubsChallenges.ConsoleTestApp
 {
     using System;
-    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -39,8 +38,6 @@
             await UpdateClassifications(services);
 
             Console.WriteLine("Update classifications - DONE");
-            Console.WriteLine();
-            Console.WriteLine("Wait for any key");
 
             Console.ReadKey();
         }
@@ -48,10 +45,12 @@
         private static ServiceProvider ConfigureServices()
         {
             var builder = new ConfigurationBuilder()
-               .SetBasePath(Directory.GetCurrentDirectory())
-               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+               .AddJsonFile("commonsettings.json", optional: false, reloadOnChange: true)
+               .AddJsonFile("connectionstrings.json", optional: false, reloadOnChange: true)
+               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+               .AddEnvironmentVariables();
 
-            IConfigurationRoot configuration = builder.Build();
+            var configuration = builder.Build();
 
             var connectionstring = configuration.GetConnectionString("SportClubsChallengesDbConnString");
 

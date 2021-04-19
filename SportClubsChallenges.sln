@@ -33,6 +33,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{
 		.github\workflows\master_SportClubsChallengesAzureFunctions.yml = .github\workflows\master_SportClubsChallengesAzureFunctions.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{02159123-B4D3-4E47-90F6-34CC7B39186E}"
+	ProjectSection(SolutionItems) = preProject
+		commonsettings.json = commonsettings.json
+		connectionstrings.json = connectionstrings.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

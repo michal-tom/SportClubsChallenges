@@ -21,8 +21,9 @@ namespace SportClubsChallenges.AzureFunctions.IoC
             FunctionsHostBuilderContext context = builder.GetContext();
 
             builder.ConfigurationBuilder
-                .AddJsonFile(Path.Combine(context.ApplicationRootPath, "appsettings.json"), optional: true, reloadOnChange: false)
-                .AddJsonFile(Path.Combine(context.ApplicationRootPath, $"appsettings.{context.EnvironmentName}.json"), optional: true, reloadOnChange: false)
+                .AddJsonFile(Path.Combine(context.ApplicationRootPath, "commonsettings.json"), optional: false, reloadOnChange: false)
+                .AddJsonFile(Path.Combine(context.ApplicationRootPath, "connectionstrings.json"), optional: false, reloadOnChange: false)
+                .AddJsonFile(Path.Combine(context.ApplicationRootPath, "appsettings.json"), optional: false, reloadOnChange: false)
                 .AddEnvironmentVariables();
         }
 

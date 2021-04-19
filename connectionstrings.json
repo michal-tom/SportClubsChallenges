@@ -1,0 +1,6 @@
+{
+  "ConnectionStrings": {
+    "SportClubsChallengesDbConnString": "Server=(localdb)\\mssqllocaldb;Database=SportClubsChallenges;Trusted_Connection=True;MultipleActiveResultSets=true",
+    "SportClubsChallengeStorage": "UseDevelopmentStorage=true"
+  }
+}
