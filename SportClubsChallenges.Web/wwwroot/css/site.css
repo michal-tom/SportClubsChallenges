@@ -1,3 +1,13 @@
+.scs-logo {
+    -webkit-box-flex: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 1.8rem;
+    width: 1.8rem;
+    margin-right: .45rem;
+    display: inline-block;
+}
+
 div.panel-centered {
     display: flex;
     align-items: center;
