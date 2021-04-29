@@ -50,6 +50,7 @@
                 .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.FirstName + " " + src.Author.LastName))
                 .ForMember(dest => dest.ActivityTypes, opt => opt.MapFrom(src => src.ChallengeActivityTypes.Select(p => p.ActivityType.Name)))
                 .ForMember(dest => dest.ActivityTypesIds, opt => opt.MapFrom(src => src.ChallengeActivityTypes.Select(p => p.ActivityTypeId)))
+                .ForMember(dest => dest.ActivityTypesProfile, opt => opt.MapFrom(src => src.ChallengeActivityTypes.Any() ? ActivityTypeProfileEnum.Custom.ToString() : ActivityTypeProfileEnum.All.ToString()))
                 .ForMember(dest => dest.ParticipantsCount, opt => opt.MapFrom(src => src.ChallengeParticipants.Count));
 
             this.CreateMap<ChallengeDetailsDto, Challenge>()

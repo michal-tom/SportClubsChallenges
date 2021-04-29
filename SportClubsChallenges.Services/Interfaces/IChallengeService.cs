@@ -1,8 +1,8 @@
 ﻿namespace SportClubsChallenges.Domain.Interfaces
 {
-    using SportClubsChallenges.Model.Dto;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using SportClubsChallenges.Model.Dto;
 
     public interface IChallengeService
     {
@@ -26,7 +26,13 @@
 
         Task UpdateChallengeRank(long challengeId);
 
-        Task<Dictionary<byte, string>> GetAvailableActivityTypes();
+        Dictionary<byte, string> GetAvailableActivityTypes();
+
+        Dictionary<byte, string> GetBikeActivityTypes();
+
+        Dictionary<byte, string> GetRunningActivityTypes();
+
+        Dictionary<byte, string> GetAvailableActivityTypeProfiles();
 
         Dictionary<byte, string> GetAvailableChallengeCompetitionTypes();
     }

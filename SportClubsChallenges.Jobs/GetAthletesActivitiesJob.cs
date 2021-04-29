@@ -14,7 +14,6 @@
 
     public class GetAthletesActivitiesJob
     {
-        // TODO: get from config
         private readonly DateTimeOffset applicationStartDate = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
         private readonly SportClubsChallengesDbContext db;

@@ -7,6 +7,19 @@
 
     public static class EnumsHelper
     {
+        public static Dictionary<byte, string> GetEnumValues<TEnum>() where TEnum : struct, IConvertible
+        {
+            if (!typeof(TEnum).IsEnum)
+            {
+                throw new ArgumentException("TEnum must be an enumerated type");
+            }
+
+            return Enum.GetValues(typeof(TEnum))
+                .Cast<object>()
+                .Where(p => p != null)
+                .ToDictionary(p => (byte) p, p => p.ToString());
+        }
+
         public static Dictionary<byte, string> GetEnumWithDescriptions<TEnum>() where TEnum : struct, IConvertible
         {
             if (!typeof(TEnum).IsEnum)
@@ -18,6 +31,19 @@
                 .Cast<object>()
                 .Where(p => p != null)
                 .ToDictionary(p => (byte) p, p => GetEnumDescription((Enum) p));
+        }
+
+        public static Dictionary<byte, string> GetEnumWithAttribute<TEnum, TAttribute>() where TEnum : struct, IConvertible where TAttribute : Attribute
+        {
+            if (!typeof(TEnum).IsEnum)
+            {
+                throw new ArgumentException("TEnum must be an enumerated type");
+            }
+
+            return Enum.GetValues(typeof(TEnum))
+                .Cast<object>()
+                .Where(p => p != null && GetEnumAttribute<TAttribute>((Enum) p) != null )
+                .ToDictionary(p => (byte) p, p => p.ToString());
         }
 
         public static string GetEnumDescription(Enum value)

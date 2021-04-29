@@ -17,6 +17,7 @@
             this.StartDate = DateTime.Now.Date;
             this.EndDate = DateTime.Now.Date;
             this.ActivityTypesIds = new List<byte>();
+            this.ActivityTypesProfile = ActivityTypeProfileEnum.All.ToString();
         }
 
         public long Id { get; set; }
@@ -60,6 +61,8 @@
         public IList<string> ActivityTypes { get; set; }
 
         public IList<byte> ActivityTypesIds { get; set; }
+
+        public string ActivityTypesProfile { get; set; }
 
         public int ParticipantsCount { get; set; }
 

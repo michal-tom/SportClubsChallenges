@@ -3,6 +3,7 @@
 
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
+@using SportClubsChallenges.Utils.Enums;
 
 @inject IChallengeService challengeService
 @inject IClubService clubService
@@ -46,9 +47,20 @@ else
                         <clr-select-container class="clr-form-control clr-row " blazority="">
                             <label class="clr-control-label clr-col-12 clr-col-md-2" for="clr-select-1">Activities types</label>
                             <div class="clr-control-container clr-col-md-10 clr-col-12 ">
-                                <Datagrid Items="activityTypes" Selection="SelectionMode.Multi" SelectType="SelectionType.Control" @bind-SelectedItems="selectedActivityTypes" Fixed="FixedMode.All" style="height: 150px; width: 200px;" Compact="true">
-                                    <DatagridColumn Title="Name" TRowData="KeyValuePair<byte, string>" Field="c => c.Value" />
-                                </Datagrid>
+                                <div class="clr-row">
+                                    <div class="clr-col-md-12">
+                                       
+                                            <div class="clr-control-container">
+                                                <RadioGroupControl Value="challenge.ActivityTypesProfile" Items="activityTypeProfiles.Select(p => p.Value).ToList()" Inline="false" ValueExpression="@( () => challenge.ActivityTypesProfile )" ValueChanged="@( (string s) => ActivityTypesProfileChanged(s) )"></RadioGroupControl>
+                                            </div>
+                                        
+                                    </div>
+                                    <div class="clr-col-md-12">
+                                        <Datagrid Items="activityTypes" Selection="SelectionMode.Multi" SelectType="SelectionType.Control" @bind-SelectedItems="selectedActivityTypes" CanSelectRow="@CanSelectActivityType" Fixed="FixedMode.All" style="height: 150px; width: 200px;" Compact="true">
+                                            <DatagridColumn Title="Name" TRowData="KeyValuePair<byte, string>" Field="c => c.Value" />
+                                        </Datagrid>
+                                    </div>
+                                </div>
                             </div>
                         </clr-select-container>
 
@@ -77,6 +89,7 @@ else
 
     private List<ClubDto> clubs = new List<ClubDto>();
     private Dictionary<byte, string> activityTypes = new Dictionary<byte, string>();
+    private Dictionary<byte, string> activityTypeProfiles = new Dictionary<byte, string>();
     private Dictionary<byte, string> challengeCompetitionTypes = new Dictionary<byte, string>();
 
     private HashSet<KeyValuePair<byte, string>> selectedActivityTypes = new HashSet<KeyValuePair<byte, string>>();
@@ -86,13 +99,15 @@ else
         if (httpContextAccessor.HttpContext.Response.HasStarted)
         {
             clubs = await clubService.GetAllClubs();
-            activityTypes = await challengeService.GetAvailableActivityTypes();
+            activityTypes = challengeService.GetAvailableActivityTypes();
+            activityTypeProfiles = challengeService.GetAvailableActivityTypeProfiles();
             challengeCompetitionTypes = challengeService.GetAvailableChallengeCompetitionTypes();
 
             if (!this.ChallengeId.HasValue)
             {
                 challenge = new ChallengeDetailsDto();
                 challenge.Club = new ClubDto { Id = clubs.First().Id, Name = clubs.First().Name };
+                selectedActivityTypes = activityTypes.ToHashSet();
                 pageTitle = "Create new challenge";
             }
             else
@@ -122,5 +137,28 @@ else
     private void Cancel()
     {
         navigationManager.NavigateTo("/challenges/admin");
+    }
+
+    private bool CanSelectActivityType(SelectionInfo<KeyValuePair<byte, string>> info)
+    {
+        return challenge.ActivityTypesProfile == ActivityTypeProfileEnum.Custom.ToString();
+    }
+
+    private void ActivityTypesProfileChanged(string profile)
+    {
+        challenge.ActivityTypesProfile = profile;
+
+        if (profile == ActivityTypeProfileEnum.All.ToString())
+        {
+            selectedActivityTypes = activityTypes.ToHashSet();
+        }
+        else if (profile == ActivityTypeProfileEnum.Bike.ToString())
+        {
+            selectedActivityTypes = challengeService.GetBikeActivityTypes().ToHashSet();
+        }
+        else if (profile == ActivityTypeProfileEnum.Running.ToString())
+        {
+            selectedActivityTypes = challengeService.GetRunningActivityTypes().ToHashSet();
+        }
     }
 }

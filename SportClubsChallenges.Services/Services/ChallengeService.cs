@@ -9,6 +9,7 @@
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Model.Dto;
+    using SportClubsChallenges.Utils.Attributes;
     using SportClubsChallenges.Utils.Enums;
     using SportClubsChallenges.Utils.Helpers;
     using System.Linq;
@@ -178,9 +179,25 @@
             return EnumsHelper.GetEnumWithDescriptions<ChallengeCompetitionTypeEnum>();
         }
 
-        public async Task<Dictionary<byte, string>> GetAvailableActivityTypes()
+        public Dictionary<byte, string> GetAvailableActivityTypes()
         {
-            return await db.ActivityTypes.AsNoTracking().ToDictionaryAsync(p => p.Id, p => p.Name);
+            return EnumsHelper.GetEnumValues<ActivityTypeEnum>();
+        }
+
+        public Dictionary<byte, string> GetBikeActivityTypes()
+        {
+            return EnumsHelper.GetEnumWithAttribute<ActivityTypeEnum, BikeActivityAttribute>();
+        }
+
+
+        public Dictionary<byte, string> GetRunningActivityTypes()
+        {
+            return EnumsHelper.GetEnumWithAttribute<ActivityTypeEnum, RunActivityAttribute>();
+        }
+
+        public Dictionary<byte, string> GetAvailableActivityTypeProfiles()
+        {
+            return EnumsHelper.GetEnumValues<ActivityTypeProfileEnum>();
         }
 
         private void AddChallenge(ChallengeDetailsDto dto)
