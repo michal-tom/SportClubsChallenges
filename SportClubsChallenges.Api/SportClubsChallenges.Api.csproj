@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Configurations>Debug;Release;ReleaseAzFunc;ReleaseWeb</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\connectionstrings.json" Link="connectionstrings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SportClubsChallenges.Mappings\SportClubsChallenges.Mappings.csproj" />
+    <ProjectReference Include="..\SportClubsChallenges.Model\SportClubsChallenges.Model.csproj" />
+    <ProjectReference Include="..\SportClubsChallenges.Services\SportClubsChallenges.Domain.csproj" />
+    <ProjectReference Include="..\SportClubsChallenges.Utils\SportClubsChallenges.Utils.csproj" />
+  </ItemGroup>
+
+
+</Project>

@@ -40,6 +40,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{021591
 		connectionstrings.json = connectionstrings.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportClubsChallenges.Api", "SportClubsChallenges.Api\SportClubsChallenges.Api.csproj", "{0E2B35D0-3455-4E1C-A251-035A654B11A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,12 @@ Global
 		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
 		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.ReleaseWeb|Any CPU.Build.0 = ReleaseWeb|Any CPU
+		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
+		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
