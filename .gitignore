@@ -341,3 +341,6 @@ healthchecksdb
 
 # DB Migrations
 SportClubsChallenges.Database/Migrations/*
+
+# Settings for Development env
+commonsettings.Development.json

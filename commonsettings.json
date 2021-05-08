@@ -1,5 +1,5 @@
 {
-  "SportClubsChallengeAzureFunctionsUrl": "https://sportclubschallengesazurefunctions.azurewebsites.net",
-  "StravaClientId": "60033",
-  "StravaClientSecret": "45b4066142165ecd3dee2d28556da83d77081bea"
+  "SportClubsChallengeAzureFunctionsUrl": "http://localhost:7071/",
+  "StravaClientId": "",
+  "StravaClientSecret": ""
 }

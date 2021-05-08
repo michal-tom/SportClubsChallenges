@@ -42,8 +42,11 @@
 
         private static ServiceProvider ConfigureServices()
         {
+            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
             IConfigurationBuilder builder = new ConfigurationBuilder()
                .AddJsonFile("commonsettings.json", optional: false, reloadOnChange: true)
+               .AddJsonFile($"commonsettings.{environmentName}.json", optional: true, reloadOnChange: true)
                .AddJsonFile("connectionstrings.json", optional: false, reloadOnChange: true)
                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                .AddEnvironmentVariables();

@@ -39,9 +39,11 @@ namespace SportClubsChallenges.Web
                     configBuilder.SetBasePath(Directory.GetCurrentDirectory())
                         // When running using dotnet run
                         .AddJsonFile(Path.Combine(solutionMainFolder, "commonsettings.json"), optional: true, reloadOnChange: true)
+                        .AddJsonFile(Path.Combine(solutionMainFolder, $"commonsettings.{env.EnvironmentName}.json"), optional: true, reloadOnChange: true)
                         .AddJsonFile(Path.Combine(solutionMainFolder, "connectionstrings.json"), optional: true, reloadOnChange: true)
                         // When app is published
                         .AddJsonFile("commonsettings.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile($"commonsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                         .AddJsonFile("connectionstrings.json", optional: true, reloadOnChange: true)
                         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
