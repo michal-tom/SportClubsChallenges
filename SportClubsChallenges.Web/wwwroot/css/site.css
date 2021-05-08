@@ -115,3 +115,21 @@ div.text-center > p:last-child {
 .padding-right-zero {
     padding-right: 0 !important;
 }
+
+/**Needed to display blazor error footer*/
+#blazor-error-ui {
+    background: lightyellow;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
