@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://go.microsoft.com/fwlink/?linkid=2134798
 # More GitHub Actions for Azure: https://go.microsoft.com/fwlink/?linkid=2135048
 
-name: Azure App Service - SportClubsChallengesAPI(Production), Build and deploy DotnetCore app
+name: Build and deploy ASP.Net Core app to Azure Web App - SportClubsChallengesAPI
 
 on:
   push:
@@ -13,21 +13,22 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    # checkout the repo
     - name: 'Checkout Github Action'
       uses: actions/checkout@master
-
 
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.301'
+      
+    - name: 'Clean nuget cache'
+      run: dotnet clean ./SportClubsChallenges.sln --configuration ReleaseApi && dotnet nuget locals all --clear
 
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build --configuration ReleaseApi
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish -c ReleaseApi -o ${{env.DOTNET_ROOT}}/myapp
 
     - name: Run Azure webapp deploy action using publish profile credentials
       uses: azure/webapps-deploy@v2

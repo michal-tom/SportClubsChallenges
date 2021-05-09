@@ -30,6 +30,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{791A9D51-B1C1-4BE6-A709-8C29139E539C}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\master_SportClubsChallenges.yml = .github\workflows\master_SportClubsChallenges.yml
+		.github\workflows\master_SportClubsChallengesApi.yml = .github\workflows\master_SportClubsChallengesApi.yml
 		.github\workflows\master_SportClubsChallengesAzureFunctions.yml = .github\workflows\master_SportClubsChallengesAzureFunctions.yml
 	EndProjectSection
 EndProject
@@ -40,12 +41,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{021591
 		connectionstrings.json = connectionstrings.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportClubsChallenges.Api", "SportClubsChallenges.Api\SportClubsChallenges.Api.csproj", "{0E2B35D0-3455-4E1C-A251-035A654B11A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportClubsChallenges.Api", "SportClubsChallenges.Api\SportClubsChallenges.Api.csproj", "{0E2B35D0-3455-4E1C-A251-035A654B11A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		ReleaseApi|Any CPU = ReleaseApi|Any CPU
 		ReleaseAzFunc|Any CPU = ReleaseAzFunc|Any CPU
 		ReleaseWeb|Any CPU = ReleaseWeb|Any CPU
 	EndGlobalSection
@@ -54,6 +56,7 @@ Global
 		{15D9473F-DC79-4621-B5D1-E06B92466661}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15D9473F-DC79-4621-B5D1-E06B92466661}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15D9473F-DC79-4621-B5D1-E06B92466661}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15D9473F-DC79-4621-B5D1-E06B92466661}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
 		{15D9473F-DC79-4621-B5D1-E06B92466661}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{15D9473F-DC79-4621-B5D1-E06B92466661}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
 		{15D9473F-DC79-4621-B5D1-E06B92466661}.ReleaseWeb|Any CPU.Build.0 = ReleaseWeb|Any CPU
@@ -61,6 +64,8 @@ Global
 		{77C5B06F-8FA4-4083-93F8-12C54B041A06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77C5B06F-8FA4-4083-93F8-12C54B041A06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77C5B06F-8FA4-4083-93F8-12C54B041A06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77C5B06F-8FA4-4083-93F8-12C54B041A06}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
+		{77C5B06F-8FA4-4083-93F8-12C54B041A06}.ReleaseApi|Any CPU.Build.0 = ReleaseApi|Any CPU
 		{77C5B06F-8FA4-4083-93F8-12C54B041A06}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{77C5B06F-8FA4-4083-93F8-12C54B041A06}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{77C5B06F-8FA4-4083-93F8-12C54B041A06}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
@@ -69,6 +74,8 @@ Global
 		{75F6626D-0AEF-4ECE-B6E7-1468B89CAFA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75F6626D-0AEF-4ECE-B6E7-1468B89CAFA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75F6626D-0AEF-4ECE-B6E7-1468B89CAFA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75F6626D-0AEF-4ECE-B6E7-1468B89CAFA0}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
+		{75F6626D-0AEF-4ECE-B6E7-1468B89CAFA0}.ReleaseApi|Any CPU.Build.0 = ReleaseApi|Any CPU
 		{75F6626D-0AEF-4ECE-B6E7-1468B89CAFA0}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{75F6626D-0AEF-4ECE-B6E7-1468B89CAFA0}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{75F6626D-0AEF-4ECE-B6E7-1468B89CAFA0}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
@@ -77,6 +84,8 @@ Global
 		{C23EDA9E-84B1-4361-B630-D4582BE38B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C23EDA9E-84B1-4361-B630-D4582BE38B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C23EDA9E-84B1-4361-B630-D4582BE38B6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C23EDA9E-84B1-4361-B630-D4582BE38B6F}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
+		{C23EDA9E-84B1-4361-B630-D4582BE38B6F}.ReleaseApi|Any CPU.Build.0 = ReleaseApi|Any CPU
 		{C23EDA9E-84B1-4361-B630-D4582BE38B6F}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{C23EDA9E-84B1-4361-B630-D4582BE38B6F}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{C23EDA9E-84B1-4361-B630-D4582BE38B6F}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
@@ -85,6 +94,8 @@ Global
 		{D156EFB2-B1B6-463D-9FBB-49FBC0737453}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D156EFB2-B1B6-463D-9FBB-49FBC0737453}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D156EFB2-B1B6-463D-9FBB-49FBC0737453}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D156EFB2-B1B6-463D-9FBB-49FBC0737453}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
+		{D156EFB2-B1B6-463D-9FBB-49FBC0737453}.ReleaseApi|Any CPU.Build.0 = ReleaseApi|Any CPU
 		{D156EFB2-B1B6-463D-9FBB-49FBC0737453}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{D156EFB2-B1B6-463D-9FBB-49FBC0737453}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{D156EFB2-B1B6-463D-9FBB-49FBC0737453}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
@@ -93,6 +104,7 @@ Global
 		{A99E9189-87F2-41C8-B079-2AE7CF58EA90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A99E9189-87F2-41C8-B079-2AE7CF58EA90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A99E9189-87F2-41C8-B079-2AE7CF58EA90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A99E9189-87F2-41C8-B079-2AE7CF58EA90}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
 		{A99E9189-87F2-41C8-B079-2AE7CF58EA90}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{A99E9189-87F2-41C8-B079-2AE7CF58EA90}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{A99E9189-87F2-41C8-B079-2AE7CF58EA90}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
@@ -100,6 +112,7 @@ Global
 		{2036B48B-DE90-4D2B-BE75-9A22D4F67D11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2036B48B-DE90-4D2B-BE75-9A22D4F67D11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2036B48B-DE90-4D2B-BE75-9A22D4F67D11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2036B48B-DE90-4D2B-BE75-9A22D4F67D11}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
 		{2036B48B-DE90-4D2B-BE75-9A22D4F67D11}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{2036B48B-DE90-4D2B-BE75-9A22D4F67D11}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{2036B48B-DE90-4D2B-BE75-9A22D4F67D11}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
@@ -107,6 +120,7 @@ Global
 		{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
 		{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{3FF6E92D-8841-4BDB-B0C1-C5A81976ECF5}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
@@ -114,12 +128,15 @@ Global
 		{A803C10B-45BA-4D93-924F-E15115D7FB48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A803C10B-45BA-4D93-924F-E15115D7FB48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A803C10B-45BA-4D93-924F-E15115D7FB48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A803C10B-45BA-4D93-924F-E15115D7FB48}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
 		{A803C10B-45BA-4D93-924F-E15115D7FB48}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{A803C10B-45BA-4D93-924F-E15115D7FB48}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
 		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
+		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.ReleaseApi|Any CPU.Build.0 = ReleaseApi|Any CPU
 		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{960FC3E1-7C61-4C32-AC95-9B1C7A627C92}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
@@ -128,6 +145,7 @@ Global
 		{B2F0E31A-F52D-45ED-9AA3-9094F0F26C9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2F0E31A-F52D-45ED-9AA3-9094F0F26C9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2F0E31A-F52D-45ED-9AA3-9094F0F26C9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2F0E31A-F52D-45ED-9AA3-9094F0F26C9C}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
 		{B2F0E31A-F52D-45ED-9AA3-9094F0F26C9C}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{B2F0E31A-F52D-45ED-9AA3-9094F0F26C9C}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{B2F0E31A-F52D-45ED-9AA3-9094F0F26C9C}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
@@ -135,6 +153,8 @@ Global
 		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
+		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.ReleaseApi|Any CPU.Build.0 = ReleaseApi|Any CPU
 		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.ReleaseAzFunc|Any CPU.Build.0 = ReleaseAzFunc|Any CPU
 		{9CEBB0D2-BFB6-4D03-BE06-7C1AAFCF65B1}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
@@ -143,6 +163,8 @@ Global
 		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.ReleaseApi|Any CPU.ActiveCfg = ReleaseApi|Any CPU
+		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.ReleaseApi|Any CPU.Build.0 = ReleaseApi|Any CPU
 		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.ReleaseAzFunc|Any CPU.ActiveCfg = ReleaseAzFunc|Any CPU
 		{0E2B35D0-3455-4E1C-A251-035A654B11A7}.ReleaseWeb|Any CPU.ActiveCfg = ReleaseWeb|Any CPU
 	EndGlobalSection

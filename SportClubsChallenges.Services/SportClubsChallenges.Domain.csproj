@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Configurations>Debug;Release;ReleaseWeb;ReleaseAzFunc</Configurations>
+    <Configurations>Debug;Release;ReleaseWeb;ReleaseAzFunc;ReleaseApi</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

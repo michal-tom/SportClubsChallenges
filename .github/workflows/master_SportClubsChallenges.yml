@@ -7,20 +7,20 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@master
+    - name: 'Checkout Github Action'
+      uses: actions/checkout@master
 
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.301'
-        
+      
     - name: 'Clean nuget cache'
       run: dotnet clean ./SportClubsChallenges.sln --configuration ReleaseWeb && dotnet nuget locals all --clear
 

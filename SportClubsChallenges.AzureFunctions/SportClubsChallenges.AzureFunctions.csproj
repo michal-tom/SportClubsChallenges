@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
     <UserSecretsId>7637f04c-c29e-45f0-92ee-0a7e26081935</UserSecretsId>
-    <Configurations>Debug;Release;ReleaseWeb;ReleaseAzFunc</Configurations>
+    <Configurations>Debug;Release;ReleaseWeb;ReleaseAzFunc;ReleaseApi</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="appsettings.json" />
