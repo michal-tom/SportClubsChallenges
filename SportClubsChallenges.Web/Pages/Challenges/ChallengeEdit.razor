@@ -3,6 +3,7 @@
 
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
+@using Blazority.Shared;
 @using SportClubsChallenges.Utils.Enums;
 
 @inject IChallengeService challengeService
@@ -92,7 +93,7 @@ else
     private Dictionary<byte, string> activityTypeProfiles = new Dictionary<byte, string>();
     private Dictionary<byte, string> challengeCompetitionTypes = new Dictionary<byte, string>();
 
-    private HashSet<KeyValuePair<byte, string>> selectedActivityTypes = new HashSet<KeyValuePair<byte, string>>();
+    private ObservableSet<KeyValuePair<byte, string>> selectedActivityTypes = new ObservableSet<KeyValuePair<byte, string>>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -107,13 +108,14 @@ else
             {
                 challenge = new ChallengeDetailsDto();
                 challenge.Club = new ClubDto { Id = clubs.First().Id, Name = clubs.First().Name };
-                selectedActivityTypes = activityTypes.ToHashSet();
+                selectedActivityTypes = new ObservableSet<KeyValuePair<byte, string>>(activityTypes);
                 pageTitle = "Create new challenge";
             }
             else
             {
                 challenge = await challengeService.GetChallenge(this.ChallengeId.Value);
-                selectedActivityTypes = activityTypes.Where(p => challenge.ActivityTypesIds.Contains(p.Key)).ToHashSet();
+                var filteredActivityTypes = activityTypes.Where(p => challenge.ActivityTypesIds.Contains(p.Key));
+                selectedActivityTypes = new ObservableSet<KeyValuePair<byte, string>>(filteredActivityTypes);
                 pageTitle = $"Edit challenge {challenge.Name}";
             }
         }
@@ -150,15 +152,15 @@ else
 
         if (profile == ActivityTypeProfileEnum.All.ToString())
         {
-            selectedActivityTypes = activityTypes.ToHashSet();
+            selectedActivityTypes = new ObservableSet<KeyValuePair<byte, string>>(activityTypes);
         }
         else if (profile == ActivityTypeProfileEnum.Bike.ToString())
         {
-            selectedActivityTypes = challengeService.GetBikeActivityTypes().ToHashSet();
+            selectedActivityTypes = new ObservableSet<KeyValuePair<byte, string>>(challengeService.GetBikeActivityTypes());
         }
         else if (profile == ActivityTypeProfileEnum.Running.ToString())
         {
-            selectedActivityTypes = challengeService.GetRunningActivityTypes().ToHashSet();
+            selectedActivityTypes = new ObservableSet<KeyValuePair<byte, string>>(challengeService.GetRunningActivityTypes());
         }
     }
 }
