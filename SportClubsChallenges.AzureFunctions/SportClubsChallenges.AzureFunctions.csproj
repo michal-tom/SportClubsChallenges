@@ -10,9 +10,6 @@
     <None Remove="appsettings.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\commonsettings.Development.json" Link="commonsettings.Development.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\commonsettings.json" Link="commonsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
