@@ -1,10 +1,9 @@
 namespace SportClubsChallenges.AzureFunctions.Queue
 {
     using System.Threading.Tasks;
-    using Microsoft.Azure.WebJobs;
+    using Microsoft.Azure.Functions.Worker;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
-    using Microsoft.WindowsAzure.Storage.Queue;
     using AutoMapper;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Domain.Interfaces;
@@ -32,33 +31,33 @@ namespace SportClubsChallenges.AzureFunctions.Queue
             this.mapper = mapper;
         }
 
-        [FunctionName("SyncAthleteActivities")]
-        public async Task Run(
-            [QueueTrigger("athletes-activities-sync", Connection = "ConnectionStrings:SportClubsChallengeStorage")] string queueItem,
-            [Queue("athlete-challenges-update")] CloudQueue updateAthleteChallengesQueue,
-            ILogger log)
+        [Function("SyncAthleteActivities")]
+        [QueueOutput("athlete-challenges-update")]
+        public async Task<string> Run(
+            [QueueTrigger("athletes-activities-sync")] string queueItem,
+            FunctionContext context)
         {
-            log.LogInformation($"Queue trigger function {nameof(SyncAthleteActivities)} processed with item: {queueItem}");
+            var logger = context.GetLogger(nameof(SyncAthleteActivities));
+            logger.LogInformation($"Queue trigger function {nameof(SyncAthleteActivities)} processed with item: {queueItem}");
 
             if (string.IsNullOrEmpty(queueItem) || !long.TryParse(queueItem, out long athleteId))
             {
-                log.LogError($"Cannot parse '{queueItem}' to athlete identifier");
-                return;
+                logger.LogError($"Cannot parse '{queueItem}' to athlete identifier.");
+                return null;
             }
 
             var athlete = await this.db.Athletes.AsNoTracking().FirstOrDefaultAsync(p => p.Id == athleteId);
             if (athlete == null)
             {
-                log.LogWarning($"Athlete with id={athleteId} does not exists.");
-                return;
+                logger.LogWarning($"Athlete with id={athleteId} does not exists.");
+                return null;
             }
 
             var job = new GetAthletesActivitiesJob(this.db, this.activityService, this.stravaWrapper, this.tokenService, this.mapper);
             await job.Run(athleteId);
 
-            log.LogInformation($"Queuing update classification of athlete {athlete.FirstName} {athlete.LastName}.");
-            await updateAthleteChallengesQueue.CreateIfNotExistsAsync();
-            await updateAthleteChallengesQueue.AddMessageAsync(new CloudQueueMessage(athleteId.ToString()));
+            logger.LogInformation($"Queuing update classification of athlete {athlete.FirstName} {athlete.LastName}.");
+            return athleteId.ToString();
         }
     }
 }

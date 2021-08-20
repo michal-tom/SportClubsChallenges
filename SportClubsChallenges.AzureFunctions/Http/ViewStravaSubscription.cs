@@ -2,9 +2,8 @@ namespace SportClubsChallenges.AzureFunctions.Http
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Azure.WebJobs;
-    using Microsoft.Azure.WebJobs.Extensions.Http;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Azure.Functions.Worker.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using SportClubsChallenges.AzureFunctions.Consts;
@@ -25,12 +24,13 @@ namespace SportClubsChallenges.AzureFunctions.Http
             this.ClientSecret = configuration["StravaClientSecret"];
         }
 
-        [FunctionName("ViewStravaSubscription")]
+        [Function("ViewStravaSubscription")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Admin, "get", "post", Route = FunctionsConsts.ViewSubscriptionRoute)] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Admin, "get", "post", Route = FunctionsConsts.ViewSubscriptionRoute)] HttpRequestData req,
+            FunctionContext context)
         {
-            log.LogInformation("HTTP trigger function {0}.", nameof(ViewStravaSubscription));
+            var logger = context.GetLogger(nameof(ViewStravaSubscription));
+            logger.LogInformation("HTTP trigger function {0}.", nameof(ViewStravaSubscription));
 
             var responseMessage = await this.stravaSubscriptionService.ViewSubscription(this.ClientId, this.ClientSecret);
             

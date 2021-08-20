@@ -2,9 +2,8 @@ namespace SportClubsChallenges.AzureFunctions.Http
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Azure.WebJobs;
-    using Microsoft.Azure.WebJobs.Extensions.Http;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Azure.Functions.Worker.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using SportClubsChallenges.AzureFunctions.Consts;
@@ -25,20 +24,21 @@ namespace SportClubsChallenges.AzureFunctions.Http
             this.ClientSecret = configuration["StravaClientSecret"];
         }
 
-        [FunctionName("DeleteStravaSubscription")]
+        [Function("DeleteStravaSubscription")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Admin, "get", "post", Route = FunctionsConsts.DeleteSubscriptionRoute)] HttpRequest req,
-            ILogger log,
+            [HttpTrigger(AuthorizationLevel.Admin, "get", "post", Route = FunctionsConsts.DeleteSubscriptionRoute)] HttpRequestData req,
+            FunctionContext context,
             long id)
         {
-            log.LogInformation("HTTP trigger function {0}.", nameof(DeleteStravaSubscription));
+            var logger = context.GetLogger(nameof(DeleteStravaSubscription));
+            logger.LogInformation("HTTP trigger function {0}.", nameof(DeleteStravaSubscription));
 
             if (id <= 0)
             {
                 return new BadRequestObjectResult("Subscription id required.");
             }
 
-            log.LogInformation($"Removing subscription with id: {id}.");
+            logger.LogInformation($"Removing subscription with id: {id}.");
 
             var responseMessage = await this.stravaSubscriptionService.DeleteSubscription(id, this.ClientId, this.ClientSecret);
 

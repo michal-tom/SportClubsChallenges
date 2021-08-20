@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SportClubsChallenges.AzureFunctions": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

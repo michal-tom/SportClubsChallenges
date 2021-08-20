@@ -3,14 +3,10 @@
     "appInsights1": {
       "type": "appInsights.sdk"
     },
-    "storage1": {
-      "type": "storage.emulator",
-      "connectionId": "AzureWebJobsStorage"
-    },
     "secrets1": {
       "type": "secrets.user"
     },
-    "storage2": {
+    "storage1": {
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/sportclubschallengestor",
       "type": "storage.azure",
       "connectionId": "SportClubsChallengeStorage",

@@ -1,11 +1,11 @@
 namespace SportClubsChallenges.AzureFunctions.Queue
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.Azure.WebJobs;
+    using Microsoft.Azure.Functions.Worker;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
-    using Microsoft.WindowsAzure.Storage.Queue;
     using SportClubsChallenges.Database.Data;
 
     public class UpdateAthleteChallengesClassifications
@@ -17,40 +17,35 @@ namespace SportClubsChallenges.AzureFunctions.Queue
             this.db = db;
         }
 
-        [FunctionName("UpdateAthleteChallengesClassifications")]
-        public async Task Run(
-            [QueueTrigger("athlete-challenges-update", Connection = "ConnectionStrings:SportClubsChallengeStorage")] string queueItem,
-            [Queue("challenges-rank-update")] CloudQueue updateChallengeQueue,
-            ILogger log)
+        [Function("UpdateAthleteChallengesClassifications")]
+        [QueueOutput("challenges-rank-update")]
+        public async Task<IEnumerable<string>> Run(
+            [QueueTrigger("athlete-challenges-update")] string queueItem,
+            FunctionContext context)
         {
-            log.LogInformation($"Queue trigger function {nameof(UpdateAthleteChallengesClassifications)} processed with item: {queueItem}");
+            var logger = context.GetLogger(nameof(UpdateAthleteChallengesClassifications));
+            logger.LogInformation($"Queue trigger function {nameof(UpdateAthleteChallengesClassifications)} processed with item: {queueItem}");
 
             if (string.IsNullOrEmpty(queueItem) || !long.TryParse(queueItem, out long athleteId))
             {
-                log.LogError($"Cannot parse '{queueItem}' to athlete identifier.");
-                return;
+                logger.LogError($"Cannot parse '{queueItem}' to athlete identifier.");
+                return null;
             }
 
             var athlete = await this.db.Athletes.AsNoTracking().FirstOrDefaultAsync(p => p.Id == athleteId);
             if (athlete == null)
             {
-                log.LogWarning($"Athlete with id={athleteId} does not exists.");
-                return;
+                logger.LogWarning($"Athlete with id={athleteId} does not exists.");
+                return null;
             }
 
-            await updateChallengeQueue.CreateIfNotExistsAsync();
-
-            var activeChallenges = this.db.ChallengeParticipants
+            var activeChallengesIds = this.db.ChallengeParticipants
                 .Include(p => p.Challenge)
                 .AsNoTracking()
                 .Where(p => p.AthleteId == athleteId && p.Challenge.IsActive)
-                .Select(p => p.Challenge);
+                .Select(p => p.Challenge.Id);
 
-            foreach(var challenge in activeChallenges)
-            {
-                log.LogInformation($"Queuing update classification of challenge '{challenge.Name}'.");
-                await updateChallengeQueue.AddMessageAsync(new CloudQueueMessage(challenge.Id.ToString()));
-            }
+            return activeChallengesIds.Select(p => p.ToString());
         }
     }
 }

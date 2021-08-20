@@ -1,38 +1,40 @@
 namespace SportClubsChallenges.AzureFunctions.Http
 {
+    using System.Web;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Azure.WebJobs;
-    using Microsoft.Azure.WebJobs.Extensions.Http;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Azure.Functions.Worker.Http;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using SportClubsChallenges.AzureFunctions.Consts;
 
     public static class ValidateStravaSubscriptionCallback
     {
-        [FunctionName("ValidateStravaSubscriptionCallback")]
+        [Function("ValidateStravaSubscriptionCallback")]
         public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = FunctionsConsts.EventsRoute)] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = FunctionsConsts.EventsRoute)] HttpRequestData req,
+            FunctionContext context)
         {
-            log.LogInformation("HTTP trigger function {0}.", nameof(ValidateStravaSubscriptionCallback));
+            var logger = context.GetLogger(nameof(ValidateStravaSubscriptionCallback));
+            logger.LogInformation("HTTP trigger function {0}.", nameof(ValidateStravaSubscriptionCallback));
 
-            string token = req.Query["hub.verify_token"];
-            string challenge = req.Query["hub.challenge"];
+            var query = HttpUtility.ParseQueryString(req.Url.Query);
+            var token = query["hub.verify_token"];
+            var challenge = query["hub.challenge"];
 
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(challenge))
             {
-                log.LogError($"Received callback token or challenge is empty.");
+                logger.LogError($"Received callback token or challenge is empty.");
                 return new BadRequestResult();
             }
 
             if (!token.Equals(FunctionsConsts.SubscriptionCallbackToken))
             {
-                log.LogError($"Received callback token '{token}' is not valid with expected '{FunctionsConsts.SubscriptionCallbackToken}'.");
+                logger.LogError($"Received callback token '{token}' is not valid with expected '{FunctionsConsts.SubscriptionCallbackToken}'.");
                 return new BadRequestResult();
             }
 
-            log.LogInformation("Request validated.");
+            logger.LogInformation("Request validated.");
 
             return new JsonResult(new ValidateCallbackResponse { HubChallenge = challenge });
         }

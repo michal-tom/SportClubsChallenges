@@ -2,7 +2,7 @@ namespace SportClubsChallenges.AzureFunctions.Queue
 {
     using System.Threading.Tasks;
     using AutoMapper;
-    using Microsoft.Azure.WebJobs;
+    using Microsoft.Azure.Functions.Worker;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using SportClubsChallenges.Database.Data;
@@ -28,23 +28,24 @@ namespace SportClubsChallenges.AzureFunctions.Queue
             this.mapper = mapper;
         }
 
-        [FunctionName("SyncAthleteClubs")]
+        [Function("SyncAthleteClubs")]
         public async Task Run(
-            [QueueTrigger("athletes-clubs-sync", Connection = "ConnectionStrings:SportClubsChallengeStorage")] string queueItem,
-            ILogger log)
+            [QueueTrigger("athletes-clubs-sync")] string queueItem,
+            FunctionContext context)
         {
-            log.LogInformation($"Queue trigger function {nameof(SyncAthleteActivities)} processed with item: {queueItem}");
+            var logger = context.GetLogger(nameof(SyncAthleteClubs));
+            logger.LogInformation($"Queue trigger function {nameof(SyncAthleteActivities)} processed with item: {queueItem}");
 
             if (string.IsNullOrEmpty(queueItem) || !long.TryParse(queueItem, out long athleteId))
             {
-                log.LogError($"Cannot parse '{queueItem}' to athlete identifier");
+                logger.LogError($"Cannot parse '{queueItem}' to athlete identifier");
                 return;
             }
 
             var athlete = await this.db.Athletes.AsNoTracking().FirstOrDefaultAsync(p => p.Id == athleteId);
             if (athlete == null)
             {
-                log.LogWarning($"Athlete with id={athleteId} does not exists.");
+                logger.LogWarning($"Athlete with id={athleteId} does not exists.");
                 return;
             }
 

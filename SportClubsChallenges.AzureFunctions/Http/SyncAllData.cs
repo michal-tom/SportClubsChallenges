@@ -1,18 +1,17 @@
 namespace SportClubsChallenges.AzureFunctions.Http
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Azure.WebJobs;
-    using Microsoft.Azure.WebJobs.Extensions.Http;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Azure.Functions.Worker.Http;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Jobs;
     using SportClubsChallenges.Strava;
-    using System.Linq;
-    using Microsoft.EntityFrameworkCore;
 
     public class SyncAllData
     {
@@ -35,12 +34,13 @@ namespace SportClubsChallenges.AzureFunctions.Http
             this.mapper = mapper;
         }
 
-        [FunctionName("SyncAllData")]
+        [Function("SyncAllData")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Admin, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Admin, "get", "post", Route = null)] HttpRequestData req,
+            FunctionContext context)
         {
-            log.LogInformation("HTTP trigger function {0}.", nameof(SyncAllData));
+            var logger = context.GetLogger(nameof(SyncAllData));
+            logger.LogInformation("HTTP trigger function {0}.", nameof(SyncAllData));
 
             var activitiesJob = new GetAthletesActivitiesJob(this.db, this.activityService, this.stravaWrapper, this.tokenService, this.mapper);
             await activitiesJob.Run();

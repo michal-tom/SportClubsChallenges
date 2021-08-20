@@ -2,7 +2,7 @@ namespace SportClubsChallenges.AzureFunctions.Schedule
 {
     using System;
     using System.Threading.Tasks;
-    using Microsoft.Azure.WebJobs;
+    using Microsoft.Azure.Functions.Worker;
     using Microsoft.Extensions.Logging;
     using AutoMapper;
     using SportClubsChallenges.Database.Data;
@@ -31,12 +31,13 @@ namespace SportClubsChallenges.AzureFunctions.Schedule
             this.mapper = mapper;
         }
 
-        [FunctionName("SyncAthletesData")]
+        [Function("SyncAthletesData")]
         public async Task Run(
             [TimerTrigger("0 0 1 * * *")]TimerInfo myTimer,
-            ILogger log)
+            FunctionContext context)
         {
-            log.LogInformation($"Timer trigger function {nameof(SyncAthletesData)} executed at: {DateTime.Now}");
+            var logger = context.GetLogger(nameof(SyncAthletesData));
+            logger.LogInformation($"Timer trigger function {nameof(SyncAthletesData)} executed at: {DateTime.Now}");
 
             var job = new GetAthletesActivitiesJob(this.db, this.activityService, this.stravaWrapper, this.tokenService, this.mapper);
             await job.Run();

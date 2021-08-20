@@ -1,5 +1,6 @@
 ﻿namespace SportClubsChallenges.Strava
 {
+    using System;
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -35,6 +36,11 @@
 
         public async Task<string> ViewSubscription(string clientId, string clientSecret)
         {
+            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
+            {
+                throw new ArgumentException("Empty Strava Client Id and/or Secret");
+            }
+            
             var parameters = new Dictionary<string, string> {
                 { "client_id", clientId },
                 { "client_secret", clientSecret }

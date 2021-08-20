@@ -3,10 +3,9 @@ namespace SportClubsChallenges.AzureFunctions
     using System;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Microsoft.Azure.WebJobs;
+    using Microsoft.Azure.Functions.Worker;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
-    using Microsoft.WindowsAzure.Storage.Queue;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
@@ -35,32 +34,33 @@ namespace SportClubsChallenges.AzureFunctions
             this.mapper = mapper;
         }
 
-        [FunctionName("ProcessStravaEvents")]
-        public async Task Run(
-            [QueueTrigger("strava-events", Connection = "ConnectionStrings:SportClubsChallengeStorage")] string queueItem,
-            [Queue("athlete-challenges-update")] CloudQueue updateAthleteChallengesQueue,
-            ILogger log)
+        [Function("ProcessStravaEvents")]
+        [QueueOutput("athlete-challenges-update")]
+        public async Task<string> Run(
+            [QueueTrigger("strava-events")] string queueItem,
+            FunctionContext context)
         {
-            log.LogInformation($"Queue trigger function {nameof(ProcessStravaEvents)} processed with item: {queueItem}");
+            var logger = context.GetLogger(nameof(ProcessStravaEvents));
+            logger.LogInformation($"Queue trigger function {nameof(ProcessStravaEvents)} processed with item: {queueItem}");
 
             var stravaEvent = JsonHelper.Deserialize<StravaEvent>(queueItem);
             if (stravaEvent == null || stravaEvent.ObjectId == default(long) || stravaEvent.AthleteId == default(long))
             {
-                log.LogWarning($"Received an unrecognized event from Strava: {queueItem}.");
-                return;
+                logger.LogWarning($"Received an unrecognized event from Strava: {queueItem}.");
+                return null;
             }
 
             var athlete = await this.db.Athletes.AsNoTracking().Include(p => p.AthleteStravaToken).FirstOrDefaultAsync(p => p.Id == stravaEvent.AthleteId);
             if (athlete == null)
             {
-                log.LogWarning($"Athlete with id={stravaEvent.AthleteId} does not exists.");
-                return;
+                logger.LogWarning($"Athlete with id={stravaEvent.AthleteId} does not exists.");
+                return null;
             }
 
             switch (stravaEvent.ObjectType)
             {
                 case ObjectType.Activity:
-                    await this.ProcessStravaActivityEvent(stravaEvent, athlete, log);
+                    await this.ProcessStravaActivityEvent(stravaEvent, athlete, logger);
                     break;
                 case ObjectType.Athlete:
                     // TODO: Deauthorize athlete
@@ -69,9 +69,8 @@ namespace SportClubsChallenges.AzureFunctions
                     throw new ArgumentOutOfRangeException(nameof(stravaEvent.ObjectType), "Unsupported type of Strava event object");
             }
 
-            log.LogInformation($"Queuing update classification of athlete {athlete.FirstName} {athlete.LastName}.");
-            await updateAthleteChallengesQueue.CreateIfNotExistsAsync();
-            await updateAthleteChallengesQueue.AddMessageAsync(new CloudQueueMessage(stravaEvent.AthleteId.ToString()));
+            logger.LogInformation($"Queuing update classification of athlete {athlete.FirstName} {athlete.LastName}.");
+            return stravaEvent.AthleteId.ToString();
         }
 
         private async Task ProcessStravaActivityEvent(StravaEvent stravaEvent, Athlete athlete, ILogger log)
