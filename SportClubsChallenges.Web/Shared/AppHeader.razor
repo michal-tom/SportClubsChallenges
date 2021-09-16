@@ -1,0 +1,28 @@
+﻿<Header ColorOption="7">
+    <BrandingRegion>
+        <Branding>
+            <CustomIcon>
+                <img src="/images/scs.png" class="scs-logo">
+            </CustomIcon>
+            <ChildContent>Sport Clubs Challenges</ChildContent>
+        </Branding>
+    </BrandingRegion>
+
+    <Actions>
+        <AuthorizeView>
+            <Authorized>
+                <NavItem href="/profile">
+                    <Icon Shape="user" />
+                </NavItem>
+                <NavItem href="/profile" class="padding-left-zero">
+                    <span>@(context.User?.Identity?.Name)</span>
+                </NavItem>
+                <NavItem href="@StravaHelper.GetMainPageUrl()" class="strava-poweredby">
+                </NavItem>
+                <NavItem href="/logout">
+                    <Icon Shape="logout" />
+                </NavItem>
+            </Authorized>
+        </AuthorizeView>
+    </Actions>
+</Header>

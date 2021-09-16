@@ -115,7 +115,7 @@ else
     private List<ChallengeRankPositionDto> rankList;
 
     [CascadingParameter]
-    public MainLayout Layout { get; set; }
+    public AppLayout Layout { get; set; }
 
     private bool IsJoinButtonDisabled => challengeDetails == null
         || challengeDetails.Status == ChallengeStatusEnum.Finished
