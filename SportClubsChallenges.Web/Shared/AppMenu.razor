@@ -1,35 +1,13 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <nav class="subnav">
-            <ul class="nav">
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                        Home
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/challenges/list">
-                        Challenges
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/activities/list">
-                        Activities
-                    </NavLink>
-                </li>
-                <AuthorizeView Roles="Admin" Context="AdminContext">
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="/admin">
-                            Admin
-                        </NavLink>
-                    </li>
-                </AuthorizeView>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/profile">
-                        Profile
-                    </NavLink>
-                </li>
-            </ul>
-        </nav>
+        <SubNav>
+            <NavItem Active="true" href="/" Match="NavLinkMatch.All">Home</NavItem>
+            <NavItem href="/challenges/list">Challenges</NavItem>
+            <NavItem href="/activities/list">Activities</NavItem>
+            <AuthorizeView Roles="Admin" Context="AdminContext">
+                <NavItem href="/admin">Admin</NavItem>
+            </AuthorizeView>
+            <NavItem href="/profile">Profile</NavItem>
+        </SubNav>
     </Authorized>
 </AuthorizeView>
