@@ -24,15 +24,15 @@ else
             <Form Model="@club" TItem="ClubDto" Layout="FormLayout.Compact" OnValidSubmit="() => EditClub()">
                 <div class="clr-row">
                     <div class="clr-col-md-12">
-                        <Text @bind-Value="club.Name" Label="Name" HelpText="Enter club name" ValidationFor="() => club.Name" Disabled="true" />
+                        <Text @bind-Value="club.Name" Label="Name" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter club name" ValidationFor="() => club.Name" Disabled="true" />
 
-                        <Text @bind-Value="club.SportType" Label="Sport type" HelpText="Enter club sport type" ValidationFor="() => club.SportType" Disabled="true" />
+                        <Text @bind-Value="club.SportType" Label="Sport type" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter club sport type" ValidationFor="() => club.SportType" Disabled="true" />
 
-                        <Text @bind-Value="club.Owner" Label="Owner" HelpText="Enter club owner" ValidationFor="() => club.Owner" />
+                        <Text @bind-Value="club.Owner" Label="Owner" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter club owner" ValidationFor="() => club.Owner" />
 
-                        <Text @bind-Value="club.Url" Label="Url suffix" HelpText="Enter club url suffix address in Strava" ValidationFor="() => club.Url" />
+                        <Text @bind-Value="club.Url" Label="Url suffix" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter club url suffix address in Strava" ValidationFor="() => club.Url" />
 
-                        <Number @bind-Value="club.MembersCount" Label="Members" HelpText="Enter club members count in Strava" ValidationFor="() => club.MembersCount" />
+                        <Number @bind-Value="club.MembersCount" Label="Members" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter club members count in Strava" ValidationFor="() => club.MembersCount" />
                     </div>
                 </div>
                 <div class="row panel-centered">

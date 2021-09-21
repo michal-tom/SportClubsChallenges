@@ -24,23 +24,23 @@ else
              <Form Model="@athlete" TItem="AthleteDto" Layout="FormLayout.Compact" OnValidSubmit="() => EditAthlete()">
                  <div class="clr-row">
                      <div class="clr-col-md-12">
-                         <Text @bind-Value="athlete.FirstName" Label="First name" HelpText="Enter athlete first name" ValidationFor="() => athlete.FirstName" Disabled="true" />
+                         <Text @bind-Value="athlete.FirstName" Label="First name" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter athlete first name" ValidationFor="() => athlete.FirstName" Disabled="true" />
 
-                         <Text @bind-Value="athlete.LastName" Label="Last name" HelpText="Enter athlete last name" ValidationFor="() => athlete.LastName" Disabled="true" />
+                         <Text @bind-Value="athlete.LastName" Label="Last name" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter athlete last name" ValidationFor="() => athlete.LastName" Disabled="true" />
 
-                         <Text @bind-Value="athlete.City" Label="City" HelpText="Enter athlete city" ValidationFor="() => athlete.City" Disabled="true" />
+                         <Text @bind-Value="athlete.City" Label="City" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter athlete city" ValidationFor="() => athlete.City" Disabled="true" />
 
-                         <Text @bind-Value="athlete.Country" Label="Country" HelpText="Enter athlete country" ValidationFor="() => athlete.Country" Disabled="true" />
+                         <Text @bind-Value="athlete.Country" Label="Country" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter athlete country" ValidationFor="() => athlete.Country" Disabled="true" />
 
-                         <Text @bind-Value="athlete.Gender" Label="Gender" HelpText="Enter athlete gender" ValidationFor="() => athlete.Gender" Disabled="true" />
+                         <Text @bind-Value="athlete.Gender" Label="Gender" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter athlete gender" ValidationFor="() => athlete.Gender" Disabled="true" />
 
-                         <Datepicker @bind-Value="athlete.FirstLoginDate" Label="First login date" DateFormat="dd/MM/yyyy" HelpText="Pick a first login date" ValidationFor="() => athlete.FirstLoginDate" />
+                         <DateTimepicker @bind-Value="athlete.FirstLoginDate" Label="First login date" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" DateFormat="dd/MM/yyyy" TimeFormat="HH:mm" HelpText="Pick a first login date" ValidationFor="() => athlete.FirstLoginDate" />
 
-                         <Datepicker @bind-Value="athlete.LastLoginDate" Label="Last login date" DateFormat="dd/MM/yyyy" HelpText="Pick a last login date" ValidationFor="() => athlete.LastLoginDate" />
+                         <DateTimepicker @bind-Value="athlete.LastLoginDate" Label="Last login date" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" DateFormat="dd/MM/yyyy" TimeFormat="HH:mm" HelpText="Pick a last login date" ValidationFor="() => athlete.LastLoginDate" />
 
-                         <Datepicker @bind-Value="athlete.LastSyncDate" Label="Last sync date" DateFormat="dd/MM/yyyy" HelpText="Pick a last sync date" ValidationFor="() => athlete.LastSyncDate" />
+                         <DateTimepicker @bind-Value="athlete.LastSyncDate" Label="Last sync date" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" DateFormat="dd/MM/yyyy" TimeFormat="HH:mm" HelpText="Pick a last sync date" ValidationFor="() => athlete.LastSyncDate" />
 
-                         <CheckboxContainer Label="Is Admin">
+                         <CheckboxContainer Label="Is Admin" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9">
                              <Checkbox @bind-Value="@athlete.IsAdmin" />
                          </CheckboxContainer>
                      </div>

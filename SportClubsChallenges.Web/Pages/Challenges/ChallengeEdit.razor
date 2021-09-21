@@ -29,32 +29,30 @@ else
             <Form Model="@challenge" TItem="ChallengeDetailsDto" Layout="FormLayout.Compact" OnValidSubmit="() => AddOrEditChallenge()">
                 <div class="clr-row">
                     <div class="clr-col-md-12">
-                        <Select @bind-Value="challenge.Club" Items="@clubs" Label="Club" HelpText="Pick a club from list" ValueFunc="@(p => p?.Id.ToString())" NameFunc="@(p => p?.Name)" Disabled="@(challenge.Id > 0)" />
+                        <Select @bind-Value="challenge.Club" Items="@clubs" Label="Club" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Pick a club from list" ValueFunc="@(p => p?.Id.ToString())" NameFunc="@(p => p?.Name)" Disabled="@(challenge.Id > 0)" />
 
-                        <Text @bind-Value="challenge.Name" Label="Name" HelpText="Enter challenge name" ValidationFor="() => challenge.Name" />
+                        <Text @bind-Value="challenge.Name" Label="Name" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter challenge name" ValidationFor="() => challenge.Name" />
 
-                        <Textarea @bind-Value="challenge.Description" Label="Description" HelpText="Enter challenge description" ValidationFor="() => challenge.Description" />
+                        <Textarea @bind-Value="challenge.Description" Label="Description" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Enter challenge description" ValidationFor="() => challenge.Description" />
 
-                        <Datepicker @bind-Value="challenge.StartDate" Label="Entry Date" DateFormat="dd/MM/yyyy" HelpText="Pick a start date of challenge" ValidationFor="() => challenge.StartDate" />
+                        <DateRangepicker @bind-StartDate="challenge.StartDate" @bind-EndDate="challenge.EndDate" Label="Date range" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Pick a date range for the challenge"  />
 
-                        <Datepicker @bind-Value="challenge.EndDate" Label="Entry Date" DateFormat="dd/MM/yyyy" HelpText="Pick a end date of challenge" ValidationFor="() => challenge.EndDate" />
-
-                        <CheckboxContainer Label="Active">
+                        <CheckboxContainer Label="Active" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9">
                             <Checkbox @bind-Value="@challenge.IsActive" />
                         </CheckboxContainer>
 
-                        <Select @bind-Value="challenge.CompetitionTypeDescription" Items="@challengeCompetitionTypes.Select(p => p.Value).ToList()" Label="Challenge type" HelpText="Pick a challenge type from list" />
+                        <Select @bind-Value="challenge.CompetitionTypeDescription" Items="@challengeCompetitionTypes.Select(p => p.Value).ToList()" Label="Challenge type" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9" HelpText="Pick a challenge type from list" />
 
                         <clr-select-container class="clr-form-control clr-row " blazority="">
-                            <label class="clr-control-label clr-col-12 clr-col-md-2" for="clr-select-1">Activities types</label>
-                            <div class="clr-control-container clr-col-md-10 clr-col-12 ">
+                            <label class="clr-control-label clr-col-12 clr-col-md-3" for="clr-select-1">Activities types</label>
+                            <div class="clr-control-container clr-col-md-9 clr-col-12 ">
                                 <div class="clr-row">
                                     <div class="clr-col-md-12">
-                                       
-                                            <div class="clr-control-container">
-                                                <RadioGroupControl Value="challenge.ActivityTypesProfile" Items="activityTypeProfiles.Select(p => p.Value).ToList()" Inline="false" ValueExpression="@( () => challenge.ActivityTypesProfile )" ValueChanged="@( (string s) => ActivityTypesProfileChanged(s) )"></RadioGroupControl>
-                                            </div>
-                                        
+
+                                        <div class="clr-control-container">
+                                            <RadioGroupControl Value="challenge.ActivityTypesProfile" Items="activityTypeProfiles.Select(p => p.Value).ToList()" Inline="false" ValueExpression="@( () => challenge.ActivityTypesProfile )" ValueChanged="@( (string s) => ActivityTypesProfileChanged(s) )"></RadioGroupControl>
+                                        </div>
+
                                     </div>
                                     <div class="clr-col-md-12">
                                         <Datagrid Items="activityTypes" Selection="SelectionMode.Multi" SelectType="SelectionType.Control" @bind-SelectedItems="selectedActivityTypes" CanSelectRow="@CanSelectActivityType" Fixed="FixedMode.All" style="height: 150px; width: 200px;" Compact="true">
@@ -65,7 +63,7 @@ else
                             </div>
                         </clr-select-container>
 
-                        <CheckboxContainer Label="Additional parameters">
+                        <CheckboxContainer Label="Additional parameters" LabelCol="clr-col-12 clr-col-md-3" ControlCol="clr-col-12 clr-col-md-9">
                             <Checkbox @bind-Value="@challenge.PreventManualActivities" Label="Prevent manual activities" />
                             <Checkbox @bind-Value="@challenge.IncludeOnlyGpsActivities" Label="Prevent non-GPS activities" />
                         </CheckboxContainer>
