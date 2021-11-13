@@ -36,12 +36,12 @@ else
                     @if (activity.Distance > 0)
                     {
                         @:&nbsp;
-                        <span><clr-icon shape="route" class="small-icon"></clr-icon> @UnitHelper.GetDistanceDescription(activity.Distance)</span>
+                        <span><Icon Shape="route" class="small-icon"></Icon> @UnitHelper.GetDistanceDescription(activity.Distance)</span>
                     }
                     @if (activity.Duration > 0)
                     {
                         @:&nbsp;
-                        <span><clr-icon shape="timer" class="small-icon"></clr-icon> @UnitHelper.GetTimeDescription(activity.Duration)</span>
+                        <span><Icon Shape="timer" class="small-icon"></Icon> @UnitHelper.GetTimeDescription(activity.Duration)</span>
                     }                  
                 </StepDescription>
             </TimelineStep>

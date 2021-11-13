@@ -21,7 +21,7 @@ else
         <div class="clr-col-md-4 clr-col-12">
             <Card>
                 <CardHeader>
-                    <clr-icon shape="info-standard"></clr-icon>
+                    <Icon Shape="info-standard"></Icon>
                     <span>General info</span>
                 </CardHeader>
                 <CardBody>
@@ -45,7 +45,7 @@ else
         <div class="clr-col-md-4 clr-col-12">
             <Card>
                 <CardHeader>
-                    <clr-icon shape="id-badge"></clr-icon>
+                    <Icon Shape="id-badge"></Icon>
                     <span>Clubs</span>
                     <Badge Status="Status.Info">@clubs?.Count</Badge>
                 </CardHeader>
@@ -95,12 +95,12 @@ else
         <div class="clr-col-md-4 clr-col-12">
             <Card>
                 <CardHeader>
-                    <clr-icon shape="bar-chart"></clr-icon>
+                    <Icon Shape="bar-chart"></Icon>
                     <span>Stats</span>
                 </CardHeader>
                 <CardBody>
                     <CardBlock>
-                        <CardText>Last data sync: @(athlete.LastSyncDate?.ToString("dd/MM/yyyy HH:mm") ?? "N/A") <a role="button"><clr-icon shape="refresh" @onclick="ConfirmSync"></clr-icon></a></CardText>
+                        <CardText>Last data sync: @(athlete.LastSyncDate?.ToString("dd/MM/yyyy HH:mm") ?? "N/A") <a role="button"><Icon Shape="refresh" @onclick="ConfirmSync"></Icon></a></CardText>
                         <CardText>Favorite activity: 
                             @if (stats.PreferedActivityType == null)
                             {
