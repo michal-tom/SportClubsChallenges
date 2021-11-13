@@ -33,8 +33,16 @@ else
                 </StepTitle>
                 <StepDescription>
                     <Label>@activity.ActivityType</Label>
-                    <clr-icon shape="route" class="small-icon"></clr-icon> @UnitHelper.GetDistanceDescription(activity.Distance)
-                    <clr-icon shape="timer" class="small-icon"></clr-icon> @UnitHelper.GetTimeDescription(activity.Duration)
+                    @if (activity.Distance > 0)
+                    {
+                        @:&nbsp;
+                        <span><clr-icon shape="route" class="small-icon"></clr-icon> @UnitHelper.GetDistanceDescription(activity.Distance)</span>
+                    }
+                    @if (activity.Duration > 0)
+                    {
+                        @:&nbsp;
+                        <span><clr-icon shape="timer" class="small-icon"></clr-icon> @UnitHelper.GetTimeDescription(activity.Duration)</span>
+                    }                  
                 </StepDescription>
             </TimelineStep>
         }
