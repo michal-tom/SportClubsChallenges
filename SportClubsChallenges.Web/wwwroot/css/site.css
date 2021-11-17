@@ -44,6 +44,10 @@ div.horizontal-centered-tabs > clr-tabs > ul {
     margin-top: 0 !important;
 }
 
+clr-modal .clr-form clr-toggle-container {
+    margin-top: 0 !important;
+}
+
 .card:first-child {
     margin-top: 0 !important;
 }
@@ -108,12 +112,9 @@ div.text-center > p:last-child {
     margin-top: 0.5rem;
 }
 
-.padding-left-zero {
+.username-navitem {
     padding-left: 0 !important;
-}
-
-.padding-right-zero {
-    padding-right: 0 !important;
+    padding-right: 8px !important;
 }
 
 /**Needed to display blazor error footer*/

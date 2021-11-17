@@ -11,7 +11,9 @@
             <div class="content-area">
                 <AlertWrapper @ref="alertWrapper" />
                 <PopupWrapper @ref="popupWrapper" />
+                <NotificationsPopup @ref="notificationsPopup" />
                 @Body
+                <NotificationRouter />
             </div>
         </div>
     </div>
@@ -21,4 +23,5 @@
 @code {
     public AlertWrapper alertWrapper;
     public PopupWrapper popupWrapper;
+    public NotificationsPopup notificationsPopup;
 }

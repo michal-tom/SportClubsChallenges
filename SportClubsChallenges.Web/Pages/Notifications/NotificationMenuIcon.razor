@@ -1,0 +1,44 @@
+﻿@inject INotificationService notificationService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+<Icon Shape="envelope" Badge=@NotificationBadgeIcon @onclick="() => OpenNotificationModalWindow()" />
+
+@code {
+    [CascadingParameter]
+    public AppLayout Layout { get; set; }
+
+    private IconBadge? NotificationBadgeIcon { get; set; }
+
+    private long athleteId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            var user = httpContextAccessor.HttpContext.User;
+            this.athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+            await this.SetNotificationBadge();
+        } 
+    }
+
+    private void OpenNotificationModalWindow()
+    {
+        this.Layout.notificationsPopup.OpenNotificationModalWindow(SetNotificationBadge);
+    }
+
+    private async Task SetNotificationBadge()
+    {
+        var unreadNotificationsCount = await notificationService.GetAthleteUnreadNotificationsCount(this.athleteId);
+        if (unreadNotificationsCount > 0)
+        {
+            this.NotificationBadgeIcon = IconBadge.Danger;
+        }
+        else
+        {
+            this.NotificationBadgeIcon = null;
+        }
+
+        StateHasChanged();
+    }
+}

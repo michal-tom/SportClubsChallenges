@@ -106,6 +106,13 @@
 
             this.CreateMap<AthleteStravaToken, StravaToken>()
                 .ForMember(dest => dest.DatabaseId, opt => opt.MapFrom(src => src.Id));
+
+            this.CreateMap<Notification, NotificationDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text))
+                .ForMember(dest => dest.IsRead, opt => opt.MapFrom(src => src.IsRead))
+                .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => TimeZoneInfo.ConvertTime(src.CreationDate, cestTimezone).LocalDateTime));
         }
     }
 }

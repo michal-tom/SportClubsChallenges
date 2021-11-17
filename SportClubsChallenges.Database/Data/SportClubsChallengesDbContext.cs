@@ -18,6 +18,7 @@
         public DbSet<ChallengeParticipant> ChallengeParticipants { get; set; }
         public DbSet<ChallengeActivityType> ChallengeActivityTypes { get; set; }
         public DbSet<Activity> Activities { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

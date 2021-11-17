@@ -14,8 +14,11 @@
                 <NavItem href="/profile">
                     <Icon Shape="user" />
                 </NavItem>
-                <NavItem href="/profile" class="padding-left-zero">
+                <NavItem href="/profile" class="username-navitem">
                     <span>@(context.User?.Identity?.Name)</span>
+                </NavItem>
+                <NavItem href="javascript:void(0);">
+                    <NotificationMenuIcon></NotificationMenuIcon>
                 </NavItem>
                 <NavItem href="@StravaHelper.GetMainPageUrl()" class="strava-poweredby">
                 </NavItem>

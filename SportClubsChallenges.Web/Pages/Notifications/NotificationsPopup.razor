@@ -1,0 +1,163 @@
+﻿@inject INotificationService notificationService
+@inject IIdentityService identityService
+@inject IHttpContextAccessor httpContextAccessor
+
+<Modal Open="NotificationModalWindowOpened" Closable=true Size="ModalSize.Large" OpenChanged="NotificationModalWindowOpenChange">
+    <ModalTitle>Notifications</ModalTitle>
+    <ModalBody>
+        @if (notifications == null)
+        {
+            <Loading />
+        }
+        else
+        {
+            <div class="clr-row clr-justify-content-start clr-align-items-end">
+                <div class="clr-col">
+                    <Form Model="@gridFilteringModel">
+                        <ToggleContainer >
+                            <Toggle ValueExpression="@(() => gridFilteringModel.ShowOnlyUnread)" ValueChanged="@((bool showOnlyUnread) => ShowOnlyUnreadChanged(showOnlyUnread) )" Label="Show only unread" />
+                        </ToggleContainer>
+                    </Form>
+                </div>
+                <div class="clr-col" style="text-align: right">
+                    <Button Label="Mark all as read" Outline="true" Small="true" Variant="Primary" OnClick="() => MarkAllAsRead()"></Button>
+                    <Button Label="Remove all" Outline="true" Small="true" Variant="Primary" OnClick="() => RemoveAll()"></Button>
+                </div>
+            </div>
+            <Datagrid TRowData="NotificationDto" Items="notifications" RowClass="GetNotificationGridRowClass" Placeholder="You have no any notifications!" Fixed="FixedMode.All" style="max-height: 100%;">
+                <DatagridColumn TRowData="NotificationDto" Title="Title" Field="c => c.Title" CanSort="true" CanFilter="true" />
+                <DatagridColumn TRowData="NotificationDto" Title="Date" Field="c => c.CreationDate" CanSort="true" CanFilter="true" />
+                <DatagridColumn TRowData="NotificationDto" Title="Actions">
+                    <a role="button">
+                    @if (context.IsRead)
+                    {
+                        <Icon Shape="eye-hide" Size="24" @onclick="() => ChangeNotificationReadStatus(context.Id, false)"></Icon>
+                    }
+                    else
+                    {
+                        <Icon Shape="eye" Size="24" @onclick="() => ChangeNotificationReadStatus(context.Id, true)"></Icon>     
+                    }
+                    </a>
+                    <a role="button">
+                        <Icon Shape="remove" Size="24" @onclick="() => DeleteNotification(context.Id)"></Icon>
+                    </a>
+                </DatagridColumn>
+                <DatagridRowDetail TRowData="NotificationDto" CanExpandRow="(IndexedItem<NotificationDto> dto) => true">
+                    @context.Text
+                </DatagridRowDetail>
+                <DatagridFooter TRowData="NotificationDto">
+                    <DatagridPagination @ref="Paginator" TRowData="NotificationDto" PageSize="5" PageSizes="new int[] { 5, 10, 25, 50 }" PageSizeLabel="Notifications per page">
+                        @(Paginator.Pager.StartIndex + 1) - @(Paginator.Pager.EndIndex + 1) of @(Paginator.Pager.ItemCount) notifications
+                    </DatagridPagination>
+                </DatagridFooter>
+            </Datagrid>
+        }
+    </ModalBody>
+    <ModalFooter>
+        <Button Variant="Primary" OnClick="e => NotificationModalWindowOpened = false">Ok</Button>
+    </ModalFooter>
+</Modal>
+
+@code {
+    private class GridFilteringModel
+    {
+        public bool ShowOnlyUnread { get; set; }
+    }
+
+    private GridFilteringModel gridFilteringModel = new GridFilteringModel();
+
+    private bool NotificationModalWindowOpened { get; set; }
+
+    private DatagridPagination<NotificationDto> Paginator;
+
+    private Func<Task> onCloseNotificationModalWindow { get; set; }
+
+    private List<NotificationDto> notifications;
+
+    private long athleteId;
+
+    protected override void OnInitialized()
+    {
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            var user = httpContextAccessor.HttpContext.User;
+            this.athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
+        } 
+    }
+
+    public void OpenNotificationModalWindow(Func<Task> onCloseNotificationModalWindow)
+    {
+        this.onCloseNotificationModalWindow = onCloseNotificationModalWindow;
+        this.NotificationModalWindowOpened = true;
+        StateHasChanged();
+    }
+
+    private async void NotificationModalWindowOpenChange(bool opened)
+    {
+        if (opened)
+        {
+            await LoadNotifications();
+        }
+        else
+        {
+            this.NotificationModalWindowOpened = false;
+            await this.onCloseNotificationModalWindow();
+        }
+    }
+
+    private async Task LoadNotifications()
+    {
+        notifications = await notificationService.GetAthleteNotifications(this.athleteId, gridFilteringModel.ShowOnlyUnread);
+        StateHasChanged();
+    }
+
+    private async Task DeleteNotification(long id)
+    {
+        await notificationService.DeleteNotification(id);
+        await LoadNotifications();
+    }
+
+    private async Task ChangeNotificationReadStatus(long id, bool isRead)
+    {
+        await notificationService.ChangeNotificationReadStatus(id, isRead);
+        await LoadNotifications();
+    }
+
+    private Func<NotificationDto, int, string> GetNotificationGridRowClass = (notification, columnNumber) =>
+    {
+        if (!notification.IsRead)
+        {
+            return "font-bold";
+        }
+
+        return string.Empty;
+    };
+
+    private async Task MarkAllAsRead()
+    {
+        foreach(var notification in notifications.Where(p => !p.IsRead))
+        {
+            await notificationService.ChangeNotificationReadStatus(notification.Id, true);
+            notification.IsRead = true;
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task RemoveAll()
+    {
+        foreach(var notification in notifications)
+        {
+            await notificationService.DeleteNotification(notification.Id);
+        }
+
+        notifications.RemoveAll(p => true);
+        StateHasChanged();
+    }
+
+    private async Task ShowOnlyUnreadChanged(bool showOnlyUnread)
+    {
+        gridFilteringModel.ShowOnlyUnread = showOnlyUnread;
+        await LoadNotifications();
+    }
+}

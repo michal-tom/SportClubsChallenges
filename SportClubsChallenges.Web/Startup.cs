@@ -65,6 +65,7 @@ namespace SportClubsChallenges.Web
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IAzureStorageRepository, AzureStorageRepository>();
         }
 
