@@ -2,7 +2,23 @@
 @inject IIdentityService identityService
 @inject IHttpContextAccessor httpContextAccessor
 
-<Icon Shape="envelope" Badge=@NotificationBadgeIcon @onclick="() => OpenNotificationModalWindow()" />
+<a href="javascript:void(0)" role="tooltip" aria-haspopup="true" class="tooltip tooltip-md tooltip-bottom-left">
+    <Icon Shape="envelope" Badge=@NotificationBadgeIcon @onclick="() => OpenNotificationModalWindow()" />
+    <span class="tooltip-content">
+        @if (this.unreadNotificationsCount > 1)
+        {
+            <span>There are @this.unreadNotificationsCount new notifications.</span>
+        }
+        else if (this.unreadNotificationsCount ==1 )
+        {
+            <span>There is one new notification.</span>
+        }
+        else
+        {
+            <span>There is no new notifications.</span>
+        }
+    </span>
+</a>
 
 @code {
     [CascadingParameter]
@@ -10,7 +26,9 @@
 
     private IconBadge? NotificationBadgeIcon { get; set; }
 
-    private long athleteId;
+    private long athleteId { get; set; }
+
+    private long unreadNotificationsCount { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -29,8 +47,8 @@
 
     private async Task SetNotificationBadge()
     {
-        var unreadNotificationsCount = await notificationService.GetAthleteUnreadNotificationsCount(this.athleteId);
-        if (unreadNotificationsCount > 0)
+        this.unreadNotificationsCount = await notificationService.GetAthleteUnreadNotificationsCount(this.athleteId);
+        if (this.unreadNotificationsCount > 0)
         {
             this.NotificationBadgeIcon = IconBadge.Danger;
         }

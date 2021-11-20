@@ -37,6 +37,7 @@
                     services.AddDbContext<SportClubsChallengesDbContext>(options => options.UseSqlServer(connectionstring));
 
                     services.AddScoped<IActivityService, ActivityService>();
+                    services.AddScoped<INotificationService, NotificationService>();
 
                     services.AddHttpClient<StravaApiWrapper>();
                     services.AddHttpClient<StravaSubscriptionService>();

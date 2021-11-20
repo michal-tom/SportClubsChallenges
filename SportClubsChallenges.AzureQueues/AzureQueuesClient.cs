@@ -9,6 +9,7 @@
         private const string SyncAthleteActivitiesQueueName = "athletes-activities-sync";
         private const string SyncAthleteClubsQueueName = "athletes-clubs-sync";
         private const string UpdateChallengeRankQueueName = "challenges-rank-update";
+        private const string CreateChallengeNotificationsQueueName = "challenges-notifications-create";
 
         public AzureQueuesClient(IAzureStorageRepository storageRepository)
         {
@@ -28,6 +29,11 @@
         public async Task UpdateChallengeRank(long challengeId)
         {
             await this.storageRepository.CreateMessage(UpdateChallengeRankQueueName, challengeId.ToString());
+        }
+
+        public async Task CreateChallengeNotifications(long challengeId)
+        {
+            await this.storageRepository.CreateMessage(CreateChallengeNotificationsQueueName, challengeId.ToString());
         }
     }
 }

@@ -43,7 +43,7 @@
                     </a>
                 </DatagridColumn>
                 <DatagridRowDetail TRowData="NotificationDto" CanExpandRow="(IndexedItem<NotificationDto> dto) => true">
-                    @context.Text
+                    @((MarkupString)context.Text)
                 </DatagridRowDetail>
                 <DatagridFooter TRowData="NotificationDto">
                     <DatagridPagination @ref="Paginator" TRowData="NotificationDto" PageSize="5" PageSizes="new int[] { 5, 10, 25, 50 }" PageSizeLabel="Notifications per page">

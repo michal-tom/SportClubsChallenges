@@ -13,5 +13,7 @@
         Task ChangeNotificationReadStatus(long notificationId, bool isRead);
 
         Task DeleteNotification(long notificationId);
+
+        Task CreateNewChallengesNotification(long challengeId, string challengeName, string clubName, List<long> athletesIds);
     }
 }

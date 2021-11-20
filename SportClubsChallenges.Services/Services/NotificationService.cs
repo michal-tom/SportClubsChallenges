@@ -3,8 +3,10 @@
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using SportClubsChallenges.Database.Data;
+    using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Model.Dto;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -44,6 +46,31 @@
         {
             var notification = db.Notifications.Find(notificationId);
             db.Notifications.Remove(notification);
+
+            await db.SaveChangesAsync();
+        }
+
+        public async Task CreateNewChallengesNotification(long challengeId, string challengeName, string clubName, List<long> athletesIds)
+        {
+            var notificationTitle = "New challenge was created!";
+            var notificationText = $"New challenge <b>{challengeName}</b> for club <b>{clubName}</b> was already created!" +
+                "<br />" +
+                "<br />" +
+                $"Go to <a href='/challenges/details/{challengeId}'>{challengeName}</a> and join to this challenge!";
+            var notificationDate = DateTimeOffset.Now;
+
+            foreach (var athleteId in athletesIds)
+            {
+                var notification = new Notification
+                {
+                    Title = notificationTitle,
+                    Text = notificationText,
+                    AthleteId = athleteId,
+                    CreationDate = notificationDate,
+                    IsRead = false
+                };
+                db.Notifications.Add(notification);
+            }
 
             await db.SaveChangesAsync();
         }

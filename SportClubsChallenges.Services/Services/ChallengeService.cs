@@ -90,7 +90,7 @@
             }
             else
             {
-                this.AddChallenge(dto);
+                await this.AddChallenge(dto);
             }
 
             await db.SaveChangesAsync();
@@ -189,7 +189,6 @@
             return EnumsHelper.GetEnumWithAttribute<ActivityTypeEnum, BikeActivityAttribute>();
         }
 
-
         public Dictionary<byte, string> GetRunningActivityTypes()
         {
             return EnumsHelper.GetEnumWithAttribute<ActivityTypeEnum, RunActivityAttribute>();
@@ -200,19 +199,25 @@
             return EnumsHelper.GetEnumValues<ActivityTypeProfileEnum>();
         }
 
-        private void AddChallenge(ChallengeDetailsDto dto)
+        private async Task AddChallenge(ChallengeDetailsDto dto)
         {
             var entity = mapper.Map<Challenge>(dto);
-            entity.CreationDate = DateTimeOffset.Now;
-            entity.EditionDate = DateTimeOffset.Now;
+            var currentDate = DateTimeOffset.Now;
+            entity.CreationDate = currentDate;
+            entity.EditionDate = currentDate;
             entity.Club = db.Clubs.Find(dto.ClubId);
             entity.Author = db.Athletes.Find(dto.AuthorId);
             entity.ChallengeActivityTypes = new List<ChallengeActivityType>();
+
             foreach (var activityTypeId in dto.ActivityTypesIds)
             {
                 entity.ChallengeActivityTypes.Add(new ChallengeActivityType { ChallengeId = entity.Id, ActivityTypeId = activityTypeId });
             }
+
             db.Challenges.Add(entity);
+            await db.SaveChangesAsync();
+
+            await this.QueueChallengeCreateNotifications(entity.Id);
         }
 
         private void EditChallenge(ChallengeDetailsDto dto)
@@ -230,6 +235,12 @@
             {
                 entity.ChallengeActivityTypes.Add(new ChallengeActivityType { ChallengeId = entity.Id, ActivityTypeId = activityTypeId });
             }
+        }
+
+        public async Task QueueChallengeCreateNotifications(long challengeId)
+        {
+            var queuesClient = new AzureQueuesClient(this.storageRepository);
+            await queuesClient.CreateChallengeNotifications(challengeId);
         }
     }
 }

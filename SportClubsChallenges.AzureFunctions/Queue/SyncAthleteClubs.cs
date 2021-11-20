@@ -34,7 +34,7 @@ namespace SportClubsChallenges.AzureFunctions.Queue
             FunctionContext context)
         {
             var logger = context.GetLogger(nameof(SyncAthleteClubs));
-            logger.LogInformation($"Queue trigger function {nameof(SyncAthleteActivities)} processed with item: {queueItem}");
+            logger.LogInformation($"Queue trigger function {nameof(SyncAthleteClubs)} processed with item: {queueItem}");
 
             if (string.IsNullOrEmpty(queueItem) || !long.TryParse(queueItem, out long athleteId))
             {
