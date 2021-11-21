@@ -113,7 +113,6 @@ namespace SportClubsChallenges.AzureFunctions
 
             if (newActivityId.HasValue)
             {
-                log.LogInformation($"Service: {this.notificationService} {newActivityId} {athlete}, {activity} {stravaActivity}.");
                 await this.notificationService.CreateNewActivityNotification(newActivityId.Value, athlete.Id, activity.Name, stravaActivity.Type);
             }
 
