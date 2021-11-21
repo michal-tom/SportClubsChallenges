@@ -113,7 +113,7 @@ namespace SportClubsChallenges.AzureFunctions
 
             if (newActivityId.HasValue)
             {
-                await this.notificationService.CreateNewActivityNotification(newActivityId.Value, athlete.Id, activity.Name, activity.ActivityType.ToString());
+                await this.notificationService.CreateNewActivityNotification(newActivityId.Value, athlete.Id, activity.Name, stravaActivity.Type);
             }
 
             log.LogInformation($"Activity with id={stravaEvent.ObjectId} was successfully processed.");

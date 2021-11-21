@@ -56,7 +56,7 @@
             var notificationText = $"New challenge <b>{challengeName}</b> for club <b>{clubName}</b> was already created!" +
                 "<br />" +
                 "<br />" +
-                $"Go to <a href='/challenges/details/{challengeId}'>{challengeName}</a> and join to this challenge!";
+                $"Please visit <a href='/challenges/details/{challengeId}'>{challengeName}</a> and join to this challenge!";
             var notificationDate = DateTimeOffset.Now;
 
             foreach (var athleteId in athletesIds)
