@@ -12,7 +12,7 @@
 
         Task<List<ActivityDto>> GetAllActivities();
 
-        Task AddActivity(Activity activity);
+        Task<long?> AddActivity(Activity activity);
 
         Task SyncActivities(long athleteId, List<Activity> activities, DateTimeOffset startDate);
 

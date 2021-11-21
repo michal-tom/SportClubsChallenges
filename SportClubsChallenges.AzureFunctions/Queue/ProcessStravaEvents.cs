@@ -19,16 +19,19 @@ namespace SportClubsChallenges.AzureFunctions
 
         private readonly IActivityService activityService;
 
+        private readonly INotificationService notificationService;
+
         private readonly IStravaApiWrapper stravaWrapper;
 
         private readonly ITokenService tokenService;
 
         private readonly IMapper mapper;
 
-        public ProcessStravaEvents(SportClubsChallengesDbContext db, IActivityService activityService, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
+        public ProcessStravaEvents(SportClubsChallengesDbContext db, IActivityService activityService, INotificationService notificationService, IStravaApiWrapper stravaWrapper, ITokenService tokenService, IMapper mapper)
         {
             this.db = db;
             this.activityService = activityService;
+            this.notificationService = notificationService;
             this.stravaWrapper = stravaWrapper;
             this.tokenService = tokenService;
             this.mapper = mapper;
@@ -106,7 +109,12 @@ namespace SportClubsChallenges.AzureFunctions
             }
 
             var activity = this.mapper.Map<Activity>(stravaActivity);
-            await this.activityService.AddActivity(activity);
+            var newActivityId = await this.activityService.AddActivity(activity);
+
+            if (newActivityId.HasValue)
+            {
+                await this.notificationService.CreateNewActivityNotification(newActivityId.Value, athlete.Id, activity.Name, activity.ActivityType.ToString());
+            }
 
             log.LogInformation($"Activity with id={stravaEvent.ObjectId} was successfully processed.");
         }

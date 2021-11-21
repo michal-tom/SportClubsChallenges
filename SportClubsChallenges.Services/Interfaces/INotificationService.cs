@@ -15,5 +15,7 @@
         Task DeleteNotification(long notificationId);
 
         Task CreateNewChallengesNotification(long challengeId, string challengeName, string clubName, List<long> athletesIds);
+
+        Task CreateNewActivityNotification(long activityId, long athleteId, string activityName, string activityType);
     }
 }

@@ -74,5 +74,21 @@
 
             await db.SaveChangesAsync();
         }
+
+        public async Task CreateNewActivityNotification(long activityId, long athleteId, string activityName, string activityType)
+        {
+            var notification = new Notification
+            {
+                Title = "New activity uploaded!",
+                Text = $"New <b>{activityType}</b> activity <b>{activityName}</b> was already uploaded to Strava!",
+                AthleteId = athleteId,
+                CreationDate = DateTimeOffset.Now,
+                IsRead = false
+            };
+
+            db.Notifications.Add(notification);
+
+            await db.SaveChangesAsync();
+        }
     }
 }

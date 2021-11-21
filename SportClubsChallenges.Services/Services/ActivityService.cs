@@ -40,7 +40,7 @@
             return await mapper.ProjectTo<ActivityDto>(db.Activities.OrderByDescending(p => p.StartDate)).ToListAsync();
         }
 
-        public async Task AddActivity(Activity activity)
+        public async Task<long?> AddActivity(Activity activity)
         {
             var activityInDb = await this.db.Activities.FirstOrDefaultAsync(p => p.Id == activity.Id);
             if (activityInDb == null)
@@ -48,7 +48,7 @@
                 
                 this.db.Activities.Add(activity);
                 await this.db.SaveChangesAsync();
-                return; 
+                return activity.Id; 
             }
 
             if (IsActivityChanged(activity, activityInDb))
@@ -56,6 +56,8 @@
                 UpdateActivity(activity, activityInDb);
                 await this.db.SaveChangesAsync();
             }
+
+            return null;
         }
 
         public async Task SyncActivities(long athleteId, List<Activity> activitesFromStrava, DateTimeOffset startDate)
