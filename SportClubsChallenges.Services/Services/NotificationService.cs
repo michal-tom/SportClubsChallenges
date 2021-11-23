@@ -25,7 +25,10 @@
 
         public async Task<List<NotificationDto>> GetAthleteNotifications(long athleteId, bool showOnlyUnread)
         {
-            var notifications = this.db.Notifications.Where(p => p.AthleteId == athleteId && (!showOnlyUnread || !p.IsRead));
+            var notifications = this.db.Notifications
+                .Where(p => p.AthleteId == athleteId && (!showOnlyUnread || !p.IsRead))
+                .OrderByDescending(p => p.Id);
+
             return await mapper.ProjectTo<NotificationDto>(notifications).ToListAsync();
         }
 

@@ -88,6 +88,7 @@
     public void OpenNotificationModalWindow(Func<Task> onCloseNotificationModalWindow)
     {
         this.onCloseNotificationModalWindow = onCloseNotificationModalWindow;
+        this.gridFilteringModel.ShowOnlyUnread = false;
         this.NotificationModalWindowOpened = true;
         StateHasChanged();
     }
