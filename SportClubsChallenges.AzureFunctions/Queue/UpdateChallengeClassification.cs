@@ -1,7 +1,6 @@
 namespace SportClubsChallenges.AzureFunctions.Queue
 {
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.SignalR.Client;
     using Microsoft.Azure.Functions.Worker;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
@@ -18,10 +17,8 @@ namespace SportClubsChallenges.AzureFunctions.Queue
         }
 
         [Function("UpdateChallengeClassification")]
-        [SignalROutput(HubName = "notifications")]
-        public async Task<MyMessage> Run(
+        public async Task Run(
             [QueueTrigger("challenges-rank-update")] string queueItem,
-            [SignalRConnectionInfoInput(HubName = "import")] MyConnectionInfo connectionInfo,
             FunctionContext context)
         {
             var logger = context.GetLogger(nameof(UpdateChallengeClassification));
@@ -30,79 +27,20 @@ namespace SportClubsChallenges.AzureFunctions.Queue
             if (string.IsNullOrEmpty(queueItem) || !long.TryParse(queueItem, out long challengeId))
             {
                 logger.LogError($"Cannot parse '{queueItem}' to challenge identifier.");
-                return null;
+                return;
             }
 
             var challenge = await this.db.Challenges.AsNoTracking().FirstOrDefaultAsync(p => p.Id == challengeId);
             if (challenge == null)
             {
                 logger.LogWarning($"Challenge with id={challengeId} does not exists.");
-                return null;
+                return;
             }
 
             logger.LogInformation($"Updating classification of challenge '{challenge.Name}'");
 
             var job = new UpdateChallengesClassificationsJob(this.db);
             await job.Run(challengeId);
-
-            return new MyMessage()
-            {
-                Target = "aBroadcast",
-                Arguments = new[] { challenge.Name, challenge.Name },
-                ConnectionId = "123"
-            };
         }
-
-        public class MyConnectionInfo
-        {
-            public string Url { get; set; }
-
-            public string AccessToken { get; set; }
-        }
-
-        public class MyMessage
-        {
-            public string Target { get; set; }
-
-            public object[] Arguments { get; set; }
-
-            public string ConnectionId { get; set; }
-
-            public string UserId { get; set; }
-        }
-
-        //[Function("UpdateChallengeClassification")]
-        //public async Task Run(
-        //    [QueueTrigger("challenges-rank-update")] string queueItem,
-        //    FunctionContext context)
-        //{
-        //    var logger = context.GetLogger(nameof(UpdateChallengeClassification));
-        //    logger.LogInformation($"Queue trigger function {nameof(UpdateChallengeClassification)} processed with item: {queueItem}");
-
-        //    if (string.IsNullOrEmpty(queueItem) || !long.TryParse(queueItem, out long challengeId))
-        //    {
-        //        logger.LogError($"Cannot parse '{queueItem}' to challenge identifier.");
-        //        return;
-        //    }
-
-        //    var challenge = await this.db.Challenges.AsNoTracking().FirstOrDefaultAsync(p => p.Id == challengeId);
-        //    if (challenge == null)
-        //    {
-        //        logger.LogWarning($"Challenge with id={challengeId} does not exists.");
-        //        return;
-        //    }
-
-        //    logger.LogInformation($"Updating classification of challenge '{challenge.Name}'");
-
-        //    var job = new UpdateChallengesClassificationsJob(this.db);
-        //    await job.Run(challengeId);
-
-        //    var conn = new HubConnectionBuilder()
-        //    .WithUrl("https://localhost:44346/notifications")
-        //    .Build();
-
-        //    await conn.StartAsync();
-        //    await conn.InvokeAsync("Broadcast", "me", "some message");
-        //}
     }
 }
