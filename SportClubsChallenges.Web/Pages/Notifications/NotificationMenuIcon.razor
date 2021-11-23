@@ -1,6 +1,9 @@
-﻿@inject INotificationService notificationService
+﻿@using Microsoft.AspNetCore.SignalR.Client
+
+@inject INotificationService notificationService
 @inject IIdentityService identityService
 @inject IHttpContextAccessor httpContextAccessor
+@inject NavigationManager navigationManager
 
 <a href="javascript:void(0)" role="tooltip" aria-haspopup="true" class="tooltip tooltip-md tooltip-bottom-left">
     <Icon Shape="envelope" Badge=@NotificationBadgeIcon @onclick="() => OpenNotificationModalWindow()" />
@@ -24,6 +27,8 @@
     [CascadingParameter]
     public AppLayout Layout { get; set; }
 
+    private HubConnection hubConnection;
+
     private IconBadge? NotificationBadgeIcon { get; set; }
 
     private long athleteId { get; set; }
@@ -37,7 +42,16 @@
             var user = httpContextAccessor.HttpContext.User;
             this.athleteId = identityService.GetAthleteIdFromIdentity(user.Identity as ClaimsIdentity);
             await this.SetNotificationBadge();
+            await this.ConfigureHubConnection();
         } 
+    }
+
+    public  async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
     }
 
     private void OpenNotificationModalWindow()
@@ -58,5 +72,19 @@
         }
 
         StateHasChanged();
+    }
+
+    private async Task ConfigureHubConnection()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(navigationManager.ToAbsoluteUri($"/notifications?athleteId={athleteId}"))
+            .Build();
+
+        hubConnection.On<string>("Notify", async (message) =>
+        {
+            await this.SetNotificationBadge();
+        });
+
+        await hubConnection.StartAsync();
     }
 }

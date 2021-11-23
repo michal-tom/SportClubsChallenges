@@ -10,7 +10,6 @@
     using SportClubsChallenges.Mappings;
     using SportClubsChallenges.Strava;
     using System;
-    using System.IO;
 
     public  class Program
     {

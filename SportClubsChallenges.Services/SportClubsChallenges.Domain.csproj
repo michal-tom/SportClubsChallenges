@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OAuth.Strava" Version="5.0.12" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.10" />
   </ItemGroup>
 
   <ItemGroup>

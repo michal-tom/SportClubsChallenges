@@ -1,4 +1,5 @@
 {
+  "SportClubsChallengeWebAppUrl": "https://localhost:44346/",
   "SportClubsChallengeAzureFunctionsUrl": "http://localhost:7071/",
   "StravaClientId": "",
   "StravaClientSecret": ""

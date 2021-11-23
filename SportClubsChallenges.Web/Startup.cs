@@ -1,5 +1,6 @@
 namespace SportClubsChallenges.Web
 {
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using AspNet.Security.OAuth.Strava;
@@ -7,6 +8,7 @@ namespace SportClubsChallenges.Web
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.ResponseCompression;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,7 @@ namespace SportClubsChallenges.Web
     using SportClubsChallenges.Domain.Interfaces;
     using SportClubsChallenges.Domain.Services;
     using SportClubsChallenges.Mappings;
+    using SportClubsChallenges.Web.Hubs;
 
     public class Startup
     {
@@ -67,6 +70,11 @@ namespace SportClubsChallenges.Web
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IAzureStorageRepository, AzureStorageRepository>();
+
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,6 +102,7 @@ namespace SportClubsChallenges.Web
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapHub<NotificationHub>(NotificationHub.HubUrl);
             });
         }
 

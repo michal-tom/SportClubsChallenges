@@ -1,7 +1,9 @@
 ﻿namespace SportClubsChallenges.Domain.Services
 {
     using AutoMapper;
+    using Microsoft.AspNetCore.SignalR.Client;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
     using SportClubsChallenges.Database.Data;
     using SportClubsChallenges.Database.Entities;
     using SportClubsChallenges.Domain.Interfaces;
@@ -17,10 +19,13 @@
 
         private readonly IMapper mapper;
 
-        public NotificationService(IMapper mapper, SportClubsChallengesDbContext db)
+        private readonly string NotificationHubUrl;
+
+        public NotificationService(IMapper mapper, SportClubsChallengesDbContext db, IConfiguration configuration)
         {
             this.mapper = mapper;
             this.db = db;
+            this.NotificationHubUrl = configuration["SportClubsChallengeWebAppUrl"].TrimEnd('/') + "/notifications";
         }
 
         public async Task<List<NotificationDto>> GetAthleteNotifications(long athleteId, bool showOnlyUnread)
@@ -76,6 +81,8 @@
             }
 
             await db.SaveChangesAsync();
+
+            await this.NotifyCurrentlyLoggedUsers(athletesIds, notificationTitle);
         }
 
         public async Task CreateNewActivityNotification(long activityId, long athleteId, string activityName, string activityType)
@@ -92,6 +99,16 @@
             db.Notifications.Add(notification);
 
             await db.SaveChangesAsync();
+
+            await this.NotifyCurrentlyLoggedUsers(new List<long> { athleteId }, notification.Title);
+        }
+
+        private async Task NotifyCurrentlyLoggedUsers(List<long> athletesIds, string message)
+        {
+            var hubConnection = new HubConnectionBuilder().WithUrl(this.NotificationHubUrl).Build();
+
+            await hubConnection.StartAsync();
+            await hubConnection.InvokeAsync("NotifyLoggedUsers", athletesIds, message);
         }
     }
 }
